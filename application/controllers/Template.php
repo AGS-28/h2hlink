@@ -390,10 +390,7 @@ class Template extends CI_Controller {
 	}
 	public function pages_404()
 	{
-		$data = [
-			'title_meta' => view('partials/title-meta', ['title' => 'Error_404'])
-		];
-		return view('pages-404', $data);
+		$this->load->view('template/template_lib/pages-404');
 	}
 	public function pages_500()
 	{
