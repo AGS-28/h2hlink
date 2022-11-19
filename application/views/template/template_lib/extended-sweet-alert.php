@@ -1,29 +1,3 @@
-<?= $this->include('partials/head-main') ?>
-
-<head>
-
-    <?= $title_meta ?>
-
-    <!-- Sweet Alert-->
-    <link href="assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
-
-    <?= $this->include('partials/head-css') ?>
-
-</head>
-
-<?= $this->include('partials/body') ?>
-
-<!-- <body data-layout="horizontal"> -->
-
-<!-- Begin page -->
-<div id="layout-wrapper">
-
-    <?= $this->include('partials/menu') ?>
-
-    <!-- ============================================================== -->
-    <!-- Start right Content here -->
-    <!-- ============================================================== -->
-    <div class="main-content">
 
         <div class="page-content">
             <div class="container-fluid">
@@ -167,29 +141,3 @@
             </div> <!-- container-fluid -->
         </div>
         <!-- End Page-content -->
-
-
-        <?= $this->include('partials/footer') ?>
-    </div>
-    <!-- end main content-->
-
-</div>
-<!-- END layout-wrapper -->
-
-
-<?= $this->include('partials/right-sidebar') ?>
-
-<!-- JAVASCRIPT -->
-<?= $this->include('partials/vendor-scripts') ?>
-
-<!-- Sweet Alerts js -->
-<script src="assets/libs/sweetalert2/sweetalert2.min.js"></script>
-
-<!-- Sweet alert init js-->
-<script src="assets/js/pages/sweetalert.init.js"></script>
-
-<script src="assets/js/app.js"></script>
-
-</body>
-
-</html>

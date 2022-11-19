@@ -4,7 +4,8 @@ class Auth extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		// $this->load->model('Model_profile');
+		$this->load->model('Model_auth');
+		cek_session(0,'');
 	}
 
 	public function index()
@@ -18,6 +19,7 @@ class Auth extends CI_Controller {
 		$data['addmenu'] 	= false;
 		$data['addcss'] 	= '';
 		$data['addjs'] 		= '<script src="'.base_url().'assets/js/pages/pass-addon.init.js"></script>';
+		$data['addjs'] 		.= '<script src="'.base_url().'assets/main/js/login.js"></script>';
 		$data['title_meta'] = $this->load->view('template/partials/title-meta', $tittle,true);
 		
 		//Page Data Content
@@ -26,6 +28,19 @@ class Auth extends CI_Controller {
 		$data['content']    	= $this->load->view('main/view/login',$param,true);
 		$this->load->view('main/template',$data);
 	}
+
+    public function crypt()
+    {
+        $password = $this->input->post('password');
+        echo json_encode(encryptpassword($password));
+
+    }
+
+    public function login()
+    {
+       echo json_encode($this->Model_auth->login());
+
+    }
 
 	public function logout() {
 		$this->session->sess_destroy();

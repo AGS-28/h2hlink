@@ -19,7 +19,7 @@
                                     <form class="custom-form mt-4 pt-2" action="/">
                                         <div class="mb-3">
                                             <label class="form-label">Username</label>
-                                            <input type="text" class="form-control" id="username" placeholder="Masukan username anda...">
+                                            <input type="text" class="form-control" id="username" name ="username" placeholder="Masukan username anda...">
                                         </div>
                                         <div class="mb-3">
                                             <div class="d-flex align-items-start">
@@ -34,12 +34,13 @@
                                             </div>
                                             
                                             <div class="input-group auth-pass-inputgroup">
-                                                <input type="password" class="form-control" placeholder="Masukan password" aria-label="Password" aria-describedby="password-addon">
+                                                <input type="password" name ="password" id="password" class="form-control" placeholder="Masukan password" aria-label="Password" aria-describedby="password-addon">
                                                 <button class="btn btn-light ms-0" type="button" id="password-addon"><i class="mdi mdi-eye-outline"></i></button>
                                             </div>
+                                            <input type="hidden" name="sendpassword" id="sendpassword" />
                                         </div>
                                         <div class="mb-3">
-                                            <button class="btn btn-primary w-100 waves-effect waves-light" type="submit">Masuk</button>
+                                            <button class="btn btn-primary w-100 waves-effect waves-light" id="btn-login" type="button">Masuk</button>
                                         </div>
                                     </form>
 

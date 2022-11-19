@@ -74,7 +74,7 @@ if ( ! function_exists('encryptpassword'))
 				'driver' => 'openssl',
                 'cipher' => 'aes-256',
                 'mode' => 'ctr',
-                'key' => md5(hash('whirlpool', 'muhammadafifpratama'))
+                'key' => md5(hash('whirlpool', 'AGSSWPortal'))
         	)
 		);
 		$encrpypted = $CI->encryption->encrypt($param);
@@ -94,7 +94,7 @@ if ( ! function_exists('decryptpassword'))
 				'driver' => 'openssl',
                 'cipher' => 'aes-256',
                 'mode' => 'ctr',
-                'key' => md5(hash('whirlpool', 'muhammadafifpratama'))
+                'key' => md5(hash('whirlpool', 'AGSSWPortal'))
         	)
 		);
 		$decrypted = base64_decode($encryptedparam);
@@ -125,14 +125,27 @@ if ( ! function_exists('decryptid'))
 
 if ( ! function_exists('cek_session'))
 {
-	function cek_session($arrRole)
+	function cek_session($arrRole = '',$tipe)
 	{
 		$CI =& get_instance();
-		if(!in_array($CI->session->userdata('sess_roleid'), $arrRole))
+		// var_dump($CI->session->userdata('id_groups'));exit;
+		if ($tipe == 'main') 
 		{
-			$url = base_url().'index.php/auth/logout';
-			header('Location: '.$url);
+			if(!in_array($CI->session->userdata('id_groups'), $arrRole) || $CI->session->userdata('id_groups') == NULL)
+			{
+				$url = base_url().'index.php/auth/logout';
+				header('Location: '.$url);
+			}
 		}
+		else 
+		{
+			if($CI->session->userdata('username') !== NULL)
+			{
+				$url = base_url().'index.php/home';
+				header('Location: '.$url);
+			}
+		}
+		
 	}
 }
 

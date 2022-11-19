@@ -25,6 +25,7 @@
     <link href="<?= base_url(); ?>assets/css/icons.min.css" rel="stylesheet" type="text/css" />
     <!-- App Css-->
     <link href="<?= base_url(); ?>assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
+    <link href="<?= base_url(); ?>assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
      <!-- AddCSS -->
 
      <?php if(isset($addcss)) echo $addcss; ?>
@@ -213,6 +214,7 @@
 <!-- Plugins js-->
 <script src="<?= base_url(); ?>assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js"></script>
 <script src="<?= base_url(); ?>assets/libs/admin-resources/jquery.vectormap/maps/jquery-jvectormap-world-mill-en.js"></script>
+<script src="<?= base_url(); ?>assets/libs/sweetalert2/sweetalert2.min.js"></script>
 <!-- App js -->
 <?php if(isset($addjs)) echo $addjs; ?>
 <script src="<?= base_url(); ?>assets/js/app.js"></script>

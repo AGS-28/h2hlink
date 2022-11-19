@@ -6,7 +6,25 @@ Website: https://themesbrand.com/
 Contact: themesbrand@gmail.com
 File: Main Js File
 */
-
+function post_ajax(url, postdata) {
+    var result = false;
+    $.ajax({
+            url: url,
+            type: "POST",
+            dataType: "text",
+            processData: false,
+            contentType: false,
+            async: false,
+            data: postdata,
+        })
+        .done(function(resp) {
+            result = resp;
+        })
+        .fail(function() {
+            result = "Fail";
+        });
+    return result;
+}
 
 (function ($) {
 

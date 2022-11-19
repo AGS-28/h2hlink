@@ -139,12 +139,12 @@
             <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item bg-soft-light border-start border-end" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <img class="rounded-circle header-profile-user" src="<?= base_url(); ?>assets/images/users/avatar-1.jpg" alt="Header Avatar">
-                    <span class="d-none d-xl-inline-block ms-1 fw-medium">Shawn L.</span>
+                    <span class="d-none d-xl-inline-block ms-1 fw-medium"><?= $this->session->userdata('name'); ?></span>
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                     <!-- item-->
-                    <a class="dropdown-item" href="apps-contacts-profile"><i class="mdi mdi-face-profile font-size-16 align-middle me-1"></i> <?= 'Tentang Akun' ?></a>
+                    <a class="dropdown-item" href="apps-contacts-profile"><i class="mdi mdi-face-profile font-size-16 align-middle me-1"></i> <?= $this->session->userdata('username') ?></a>
                    <a class="dropdown-item" href="auth-lock-screen"><i class="mdi mdi-lock font-size-16 align-middle me-1"></i> <?= 'Update Password' ?></a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="<?= site_url(); ?>/auth/logout"><i class="mdi mdi-logout font-size-16 align-middle me-1"></i> <?= 'Logout' ?></a>

@@ -4,11 +4,12 @@ class Home extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		// $this->load->model('Model_profile');
+		cek_session(array(1,2,3),'main');
 	}
 
 	public function index()
 	{
+		// var_dump($this->session->userdata());exit;
 		//Tittle
 		$tittle['title'] 	= 'Dashboard';
 		$tittle['li_1'] 	= 'WS Portal';
