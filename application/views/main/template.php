@@ -32,6 +32,16 @@
     <!-- Responsive datatable examples -->
     <link href="<?= base_url(); ?>assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
     <link href="<?= base_url(); ?>assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+
+    <link href="<?= base_url(); ?>assets/libs/choices.js/public/assets/styles/choices.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- color picker css -->
+    <link href="<?= base_url(); ?>assets/libs/@simonwep/pickr/themes/classic.min.css" rel="stylesheet" type="text/css" /> <!-- 'classic' theme -->
+    <link href="<?= base_url(); ?>assets/libs/@simonwep/pickr/themes/monolith.min.css" rel="stylesheet" type="text/css"/> <!-- 'monolith' theme -->
+    <link href="<?= base_url(); ?>assets/libs/@simonwep/pickr/themes/nano.min.css" rel="stylesheet" type="text/css"/> <!-- 'nano' theme -->
+
+    <!-- datepicker css -->
+    <link href="<?= base_url(); ?>assets/libs/flatpickr/flatpickr.min.css" rel="stylesheet" type="text/css">
      <!-- AddCSS -->
 
      <?php if(isset($addcss)) echo $addcss; ?>
@@ -247,11 +257,22 @@ else
 <!-- Responsive examples -->
 <script src="<?= base_url(); ?>assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="<?= base_url(); ?>assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
-<script src="<?= base_url(); ?>assets/libs/sweetalert2/sweetalert2.min.js"></script>
+<script src="<?= base_url(); ?>assets/libs/choices.js/public/assets/scripts/choices.min.js"></script>
+
+<!-- color picker js -->
+<script src="<?= base_url(); ?>assets/libs/@simonwep/pickr/pickr.min.js"></script>
+<script src="<?= base_url(); ?>assets/libs/@simonwep/pickr/pickr.es5.min.js"></script>
+
+<!-- datepicker js -->
+<script src="<?= base_url(); ?>assets/libs/flatpickr/flatpickr.min.js"></script>
+
+<!-- init js -->
+<script src="<?= base_url(); ?>assets/js/pages/form-advanced.init.js"></script>
 <!-- end ilham -->
 
 <!-- App js -->
 <script src="<?= base_url(); ?>assets/libs/sweetalert2/sweetalert2.min.js"></script>
+
 <?php if(isset($addjs)) echo $addjs; ?>
 <?php if($addmenu) { ?>
 <script src="<?= base_url(); ?>assets/js/app.js"></script>

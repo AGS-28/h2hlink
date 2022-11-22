@@ -1,0 +1,133 @@
+<?php
+class Model_tracking extends CI_Model {
+
+    function get_data_client()
+    {
+        $sql = "SELECT * FROM profile.clients";
+        $result = $this->db->query($sql);
+        $arr_result = $result->result_array();
+
+        return $arr_result;
+    }
+
+    function get_data_partner()
+    {
+        $sql = "SELECT * FROM profile.partners";
+        $result = $this->db->query($sql);
+        $arr_result = $result->result_array();
+
+        return $arr_result;
+    }
+
+    function get_data_end_point()
+    {
+        $sql = "SELECT * FROM profile.partner_endpoints";
+        $result = $this->db->query($sql);
+        $arr_result = $result->result_array();
+
+        return $arr_result;
+    }
+
+    function get_data()
+    {
+        $start 		= $this->input->post('start');
+		$length 	= $this->input->post('length');
+		$post 		= $this->input->post('formdata');
+		$arrPost 	= postajax_toarray($post);
+        $addSql     = '';
+        
+        if($arrPost['no_aju'] != null) {
+            $addSql .= ' AND a.no_aju = '.$this->db->escape($arrPost['no_aju']);
+        }
+        
+        if($arrPost['create_date'] != null) {
+            $arr_tanggal = explode(' to ', $arrPost['create_date']);
+
+            $addSql .= ' AND a.created_at BETWEEN '.$this->db->escape($arr_tanggal[0]).' AND '.$this->db->escape($arr_tanggal[1]);
+        }
+
+        if($arrPost['nib'] != null) {
+            if(is_array($arrPost['nib'])) {
+                $nib = implode("','", $arrPost['nib']);
+            } else {
+                $nib = $arrPost['nib'];
+            }
+
+            $addSql .= " AND b.nib IN ('".$nib."')";
+        }
+
+        if($arrPost['npwp'] != null) {
+            if(is_array($arrPost['npwp'])) {
+                $npwp = implode("','", $arrPost['npwp']);
+            } else {
+                $npwp = $arrPost['npwp'];
+            }
+
+            $addSql .= " AND b.npwp IN ('".$npwp."')";
+        }
+
+        if($arrPost['client_name'] != null) {
+            if(is_array($arrPost['client_name'])) {
+                $client_name = implode("','", $arrPost['client_name']);
+            } else {
+                $client_name = $arrPost['client_name'];
+            }
+
+            $addSql .= " AND b.id IN ('".$client_name."')";
+        }
+
+        if($arrPost['client_partner'] != null) {
+            if(is_array($arrPost['client_partner'])) {
+                $client_partner = implode("','", $arrPost['client_partner']);
+            } else {
+                $client_partner = $arrPost['client_partner'];
+            }
+
+            $addSql .= " AND c.id IN ('".$client_partner."')";
+        }
+
+        if($arrPost['end_point'] != null) {
+            if(is_array($arrPost['end_point'])) {
+                $end_point = implode("','", $arrPost['end_point']);
+            } else {
+                $end_point = $arrPost['end_point'];
+            }
+
+            $addSql .= " AND d.id IN ('".$end_point."')";
+        }
+        
+        $sql_total 	= ' SELECT a.id, a.message_type, e.message_type as urai_message_type, a.message_id, a.message_content, a.no_aju, a."status", b.client_name, b.npwp, b.nib, c.partner_name, d.partner_endpoint, a.created_at as created_at_message, f.result_code, f.result_responses, f.created_at as created_at_responses
+                        FROM trans.headers a 
+                        LEFT JOIN profile.clients b ON b.id = a.client_id
+                        LEFT JOIN profile.partners c ON c.id = a.partner_id
+                        LEFT JOIN profile.partner_endpoints d ON d.id = a.partner_endpoint_id
+                        LEFT JOIN referensi.message_type e ON e.id = a.message_type
+                        LEFT JOIN trans.responses f ON f.transaction_id = a.id
+                        WHERE 1=1 '.$addSql;
+		$result_total 	= $this->db->query($sql_total);
+		$banyak 		= $result_total->num_rows();
+
+		if($banyak > 0){
+			$sql = 'SELECT a.id, a.message_type, e.message_type as urai_message_type, a.message_id, a.message_content, a.no_aju, a."status", b.client_name, b.npwp, b.nib, c.partner_name, d.partner_endpoint, a.created_at as created_at_message, f.result_code, f.result_responses, f.created_at as created_at_responses
+                    FROM trans.headers a 
+                    LEFT JOIN profile.clients b ON b.id = a.client_id
+                    LEFT JOIN profile.partners c ON c.id = a.partner_id
+                    LEFT JOIN profile.partner_endpoints d ON d.id = a.partner_endpoint_id
+                    LEFT JOIN referensi.message_type e ON e.id = a.message_type
+                    LEFT JOIN trans.responses f ON f.transaction_id = a.id
+                    WHERE 1=1 '.$addSql.'
+                    LIMIT '.$length.' OFFSET '.$start;
+			$result 		= $this->db->query($sql);
+			$arrayReturn 	= $result->result_array();
+
+			$return['totalRow'] = $banyak;
+			$return['arrData'] 	= $arrayReturn;
+		}else{
+			$return['totalRow'] = 0;
+			$return['arrData'] 	= array();
+		}		
+
+		return $return;
+    }
+
+}
