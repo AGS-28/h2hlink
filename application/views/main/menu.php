@@ -173,7 +173,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" >
+                    <a href="<?= site_url(); ?>/tracking">
                         <i data-feather="map"></i>
                         <span data-key="t-maps"><?= 'Tracking' ?></span>
                     </a>
