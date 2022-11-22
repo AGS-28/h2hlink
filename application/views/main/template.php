@@ -41,7 +41,11 @@
     <div id="layout-wrapper">
     <!-- add menu -->
         
-    <?php $this->load->view('main/menu'); ?>
+    <?php 
+    $data_menu['menu'] = $this->session->userdata('menu');
+    $this->load->view('main/menu',$data_menu); 
+    
+    ?>
 
     <!--  add content -->
         <div class="main-content">

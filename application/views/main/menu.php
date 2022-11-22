@@ -1,3 +1,4 @@
+<?php //var_dump($menu);exit; ?>
 <header id="page-topbar">
     <div class="navbar-header">
         <div class="d-flex">
@@ -166,72 +167,41 @@
             <ul class="metismenu list-unstyled" id="side-menu">
                 <li class="menu-title" data-key="t-menu"><?= 'Menu' ?></li>
 
-                <li>
-                    <a href="<?= site_url()?>/home">
-                        <i data-feather="home"></i>
-                        <span data-key="t-dashboard"><?= 'Dashboard' ?></span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" >
-                        <i data-feather="map"></i>
-                        <span data-key="t-maps"><?= 'Tracking' ?></span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="javascript: void(0);" class="has-arrow">
-                        <i data-feather="grid"></i>
-                        <span data-key="t-apps"><?= 'WS Setting' ?></span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
+                <?php 
+                    foreach ($menu as $key => $value) { 
+                        $addclass = '';
+                        $addlink = site_url().$value->link;
+                        if($value->is_parent == "t")
+                        { 
+                            $addclass   = 'class="has-arrow"';
+                            $addlink    = "javascript: void(0);";
+                        }
+                        ?>
                         <li>
-                            <a href="<?= site_url(); ?>/template/calendar">
-                                <span data-key="t-calendar"><?= 'Client Setup' ?></span>
+                            <a href="<?= $addlink ?>" <?= $addclass ?> >
+                                <i data-feather="<?= $value->fa_class ?>"></i>
+                                <span ><?= $value->menu_name ?></span>
                             </a>
+                            <?php 
+                            $dataofParent = getMenu($this->session->userdata('id_groups'),$value->id_menu);
+                            if (count($dataofParent) > 0) 
+                            { ?>
+                                <ul class="sub-menu" aria-expanded="false">
+                                    <?php foreach ($dataofParent as $key2 => $valueofParent) { ?>
+                                        <li>
+                                            <a href="<?= site_url().$valueofParent->link; ?>/template/calendar">
+                                                <span data-key="t-calendar"><?=  $valueofParent->menu_name; ?></span>
+                                            </a>
+                                        </li>
+                                    <?php } ?>
+                                </ul>
+                            <?php 
+                            } 
+                            
+                            ?>
                         </li>
-        
-                        <li>
-                            <a href="<?= site_url(); ?>/template/chat">
-                                <span data-key="t-chat"><?= 'Protocol' ?></span>
-                            </a>
-                        </li>
-    
-                    </ul>
-                </li>
-
-                <li>
-                    <a href="javascript: void(0);" class="has-arrow">
-                        <i data-feather="file-text"></i>
-                        <span data-key="t-pages"><?= 'Rekapitulasi' ?></span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="pages-starter" data-key="t-starter-page"><?= 'Rekap Hit' ?></a></li>
-                        <li><a href="pages-maintenance" data-key="t-maintenance"><?= 'Rekap Respond' ?></a></li>
-                        <li><a href="pages-comingsoon" data-key="t-coming-soon"><?= 'Rekap Log'?></a></li>
-                        <li><a href="pages-timeline" data-key="t-timeline"><?= 'Rekap Error' ?></a></li>
-                    </ul>
-                </li>
-
-                <li>
-                    <a href="javascript: void(0);" class="has-arrow">
-                        <i data-feather="layout"></i>
-                        <span data-key="t-horizontal"><?= 'CMS' ?></span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="#" data-key="t-starter-page"><?= 'Master Role' ?></a></li>
-                        <li><a href="#" data-key="t-maintenance"><?= 'Menu Role' ?></a></li>
-                        <li><a href="#" data-key="t-coming-soon"><?= 'Data User'?></a></li>
-                        <li><a href="#" data-key="t-timeline"><?= 'Data Client' ?></a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#" >
-                        <i data-feather="users"></i>
-                        <span data-key="t-authentication"><?= 'User' ?></span>
-                    </a>
-                </li>
-
+                    
+                <?php } ?>
             </ul>
         </div>
         <!-- Sidebar -->

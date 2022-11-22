@@ -158,6 +158,26 @@ if(!function_exists('NumberDB'))
 		return $angka;
 	}
 }
+if(!function_exists('getMenu'))
+{
+	function getMenu($id_group,$parent = null)
+    {
+		$CI =& get_instance();
+		$addsql = "and b.parent is null";
+		if ($parent) {
+			$addsql = " and b.parent = ".$parent;
+		}
+        $getmenu = "select b.*,a.id_group
+                        from referensi.group_menu a
+                        left join referensi.menu b on b.id_menu = a.id_menu 
+                    where a.id_group = ".$id_group.$addsql." order by b.short asc;";
+        $menudata   = $CI->db->query($getmenu);
+        $returnMenu = $menudata->result();
+
+        return $returnMenu;
+        
+    }
+}
 
 if (!function_exists('FormatHS'))
 {

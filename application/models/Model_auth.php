@@ -47,6 +47,7 @@ class Model_auth extends CI_Model {
                                 
                                 break;
                         }
+
                         $set_session = $exec->result_array();
                         foreach ($set_session as $key => $param) 
                         {
@@ -54,6 +55,8 @@ class Model_auth extends CI_Model {
                                 $this->session->set_userdata($key, $value);
                             }
                         }
+                        
+                        $this->session->set_userdata('menu',getMenu($datauser->id_groups));
                         $status      = 1;
                     }
                     else 
@@ -87,6 +90,7 @@ class Model_auth extends CI_Model {
         $returnData['txt']      = $txt;
         return $returnData;
 	}
+
 
 
 }
