@@ -36,17 +36,17 @@ class Model_tracking extends CI_Model {
 		$arrPost 	= postajax_toarray($post);
         $addSql     = '';
         
-        if($arrPost['no_aju'] != null) {
+        if(isset($arrPost['no_aju'])) {
             $addSql .= ' AND a.no_aju = '.$this->db->escape($arrPost['no_aju']);
         }
         
-        if($arrPost['create_date'] != null) {
+        if($arrPost['create_date'] != '') {
             $arr_tanggal = explode(' to ', $arrPost['create_date']);
 
             $addSql .= ' AND a.created_at BETWEEN '.$this->db->escape($arr_tanggal[0]).' AND '.$this->db->escape($arr_tanggal[1]);
         }
 
-        if($arrPost['nib'] != null) {
+        if(isset($arrPost['nib'])) {
             if(is_array($arrPost['nib'])) {
                 $nib = implode("','", $arrPost['nib']);
             } else {
@@ -56,7 +56,7 @@ class Model_tracking extends CI_Model {
             $addSql .= " AND b.nib IN ('".$nib."')";
         }
 
-        if($arrPost['npwp'] != null) {
+        if(isset($arrPost['npwp'])) {
             if(is_array($arrPost['npwp'])) {
                 $npwp = implode("','", $arrPost['npwp']);
             } else {
@@ -66,7 +66,7 @@ class Model_tracking extends CI_Model {
             $addSql .= " AND b.npwp IN ('".$npwp."')";
         }
 
-        if($arrPost['client_name'] != null) {
+        if(isset($arrPost['client_name'])) {
             if(is_array($arrPost['client_name'])) {
                 $client_name = implode("','", $arrPost['client_name']);
             } else {
@@ -76,7 +76,7 @@ class Model_tracking extends CI_Model {
             $addSql .= " AND b.id IN ('".$client_name."')";
         }
 
-        if($arrPost['client_partner'] != null) {
+        if(isset($arrPost['client_partner'])) {
             if(is_array($arrPost['client_partner'])) {
                 $client_partner = implode("','", $arrPost['client_partner']);
             } else {
@@ -86,7 +86,7 @@ class Model_tracking extends CI_Model {
             $addSql .= " AND c.id IN ('".$client_partner."')";
         }
 
-        if($arrPost['end_point'] != null) {
+        if(isset($arrPost['end_point'])) {
             if(is_array($arrPost['end_point'])) {
                 $end_point = implode("','", $arrPost['end_point']);
             } else {
