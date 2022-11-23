@@ -1,11 +1,13 @@
 pages:
   stage: deploy
   before_script:
-  - 'which ssh-agent || ( apt-get install -qq openssh-client )'
+  - 'command -v ssh-agent >/dev/null || ( apk add --update openssh )' 
   - eval $(ssh-agent -s)
-  - ssh-add <(echo "$SSH_PRIVATE_KEY")
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
   - mkdir -p ~/.ssh
-  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+  - chmod 700 ~/.ssh
+  - ssh-keyscan $VM_IPADDRESS >> ~/.ssh/known_hosts
+  - chmod 644 ~/.ssh/known_hosts
   script:
   - ssh $SSH_USER@$VM_IPADDRESS "cd var/www/html/ && git checkout Development && git pull origin Development && exit"
   only:
