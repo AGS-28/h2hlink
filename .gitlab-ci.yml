@@ -1,7 +1,11 @@
-image: alpine:latest
-
 pages:
   stage: deploy
+  before_script:
+  - 'which ssh-agent || ( apt-get install -qq openssh-client )'
+  - eval $(ssh-agent -s)
+  - ssh-add <(echo "$SSH_PRIVATE_KEY")
+  - mkdir -p ~/.ssh
+  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
   script:
   - ssh $SSH_USER@$VM_IPADDRESS "cd var/www/html/ && git checkout Development && git pull origin Development && exit"
   only:
