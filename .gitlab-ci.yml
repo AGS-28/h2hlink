@@ -9,7 +9,9 @@ pages:
   - ssh-keyscan $VM_IPADDRESS >> ~/.ssh/known_hosts
   - chmod 644 ~/.ssh/known_hosts
   script:
-  - ssh $SSH_USER@$VM_IPADDRESS "mkdir .public && cp -r * .public && mv .public public && sudo git config --global --add safe.directory /var/www/html/ags-gw-portal && cd /var/www/html/ags-gw-portal && sudo git pull origin Development && exit"
+  - ssh $SSH_USER@$VM_IPADDRESS "sudo git config --global --add safe.directory /var/www/html/ags-gw-portal && cd /var/www/html/ags-gw-portal && sudo git pull origin Development"
+  - cd /home/gwska-web 
+  - mkdir public
   artifacts:
     paths:
     - public
