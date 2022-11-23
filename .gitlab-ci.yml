@@ -12,6 +12,6 @@ pages:
   - ssh $SSH_USER@$VM_IPADDRESS "sudo git config --global --add safe.directory /var/www/html/ags-gw-portal && cd /var/www/html/ags-gw-portal && sudo git pull origin Development && exit"
   artifacts:
     paths:
-    - ags-gw-portal
+    - public
   only:
   - Development
