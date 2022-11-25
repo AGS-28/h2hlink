@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <?= $this->include('partials/head-main') ?>
 
 <head>
@@ -27,6 +28,8 @@
     <div class="main-content">
 =======
 >>>>>>> main_afif
+=======
+>>>>>>> main_ilham
 
         <div class="page-content">
             <div class="container-fluid">
@@ -170,6 +173,7 @@
             </div> <!-- container-fluid -->
         </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <!-- End Page-content -->
 
 
@@ -200,3 +204,6 @@
 =======
         <!-- End Page-content -->
 >>>>>>> main_afif
+=======
+        <!-- End Page-content -->
+>>>>>>> main_ilham

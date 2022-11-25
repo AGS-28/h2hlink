@@ -125,8 +125,14 @@
                                             </div>
                                             <div class="col-sm-7">
                                                 <div class="input-group">
+<<<<<<< HEAD
                                                     <input type="text" class="form-control" title="aju number" id="no_aju" name="no_aju" placeholder="aju number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                                     <div class="input-group-text" onclick="cari_data('form_table');" style="cursor: pointer;"><i class="bx bx-search"></i></div>
+=======
+                                                    <input type="text" class="form-control" title="aju number" id="no_aju" name="no_aju" placeholder="Aju number..." onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                                    <button class="btn btn-primary" type="button" onclick="cari_data('form_table');"><i class="bx bx-search-alt align-middle"></i></button>
+                                                    <!-- <div class="input-group-text" onclick="cari_data('form_table');" style="cursor: pointer;"><i class="bx bx-search"></i></div> -->
+>>>>>>> main_ilham
                                                 </div>
                                             </div>
                                         </form>
@@ -136,6 +142,24 @@
                         </div>
                     </div>
                     <div class="card-body">
+<<<<<<< HEAD
+=======
+						<div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <b><div id="modal_header"></div></b>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body" id="modal_body" style="text-align: center;">
+                                    </div>
+                                    <!-- <div class="modal-footer">
+                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+>>>>>>> main_ilham
                         <div class="table-responsive">
                             <table id="table_data" class="table table-bordered dt-responsive nowrap w-100" width="100%">
                                 <thead style="width:100%">

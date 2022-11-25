@@ -4,6 +4,7 @@ $(document).ready(function() {
         dom: 'Bfrtip',
         buttons: []
     });
+    
     flatpickr('#create_date', {
         mode: "range"
     });
@@ -20,7 +21,6 @@ $(document).ready(function() {
 function cari_data(form) {
         var errorString = "Please complete the following data : <br\>";
         var panjangAwal = errorString.length;
-
 
         $('#'+form).find('input[type="text"],select,textarea,input[type="file"]').each(function() {
             // if($('#'+this.id).css('display') != 'none') {
@@ -102,11 +102,52 @@ function cari_data(form) {
             });
         }
 
-        function show_modal() {
-            alert('aaa');
-            // $('#exampleModalScrollable').modal({
-            //     show: 'false'
-            // })
+    }
+
+    function show_modal(id, tipe) {
+        var title_header = '';
+        if(tipe == 0) {
+            title_header = 'Data Request';
         }
 
+        if(tipe == 1) {
+            title_header = 'Data Respons';
+        }
+
+        if(tipe == 2) {
+            title_header = 'Views Data';
+        }
+
+        $('#modal_header').html(title_header);
+
+        loading('modal_body', true);
+        $('#exampleModalScrollable').modal('toggle');
+        
+        var url = baseurl + "index.php/tracking/get_message_respons/"+Math.random();
+        $.post( url, { id: id, tipe: tipe })
+        .done(function( data ) {
+            loading('modal_body', false);
+            $('#modal_body').html(data);
+        });
+    }
+
+    function loading(id, stat) {
+        var loading = '<div><div class="spinner-grow text-primary m-1" role="status">'+
+                                        '<span class="sr-only">Loading...</span>'+
+                                    '</div>'+
+                                    '<div class="spinner-grow text-secondary m-1" role="status">'+
+                                        '<span class="sr-only">Loading...</span>'+
+                                    '</div>'+
+                                    '<div class="spinner-grow text-success m-1" role="status">'+
+                                        '<span class="sr-only">Loading...</span>'+
+                                    '</div>'+
+                                    '<div class="spinner-grow text-info m-1" role="status">'+
+                                        '<span class="sr-only">Loading...</span>'+
+                                    '</div>'+
+                                '</div>';
+        if(stat) {
+            $('#'+id).html(loading);
+        } else {
+            $('#'+id).html('');
+        }
     }

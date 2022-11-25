@@ -6,9 +6,6 @@ Website: https://themesbrand.com/
 Contact: themesbrand@gmail.com
 File: Main Js File
 */
-<<<<<<< HEAD
-
-=======
 function post_ajax(url, postdata) {
     var result = false;
     $.ajax({
@@ -28,8 +25,6 @@ function post_ajax(url, postdata) {
         });
     return result;
 }
->>>>>>> main_afif
-
 (function ($) {
 
     'use strict';
