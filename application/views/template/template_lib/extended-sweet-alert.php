@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?= $this->include('partials/head-main') ?>
 
 <head>
@@ -24,6 +25,8 @@
     <!-- Start right Content here -->
     <!-- ============================================================== -->
     <div class="main-content">
+=======
+>>>>>>> main_afif
 
         <div class="page-content">
             <div class="container-fluid">
@@ -166,6 +169,7 @@
                 </div> <!-- end row -->
             </div> <!-- container-fluid -->
         </div>
+<<<<<<< HEAD
         <!-- End Page-content -->
 
 
@@ -193,3 +197,6 @@
 </body>
 
 </html>
+=======
+        <!-- End Page-content -->
+>>>>>>> main_afif

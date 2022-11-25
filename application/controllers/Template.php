@@ -12,7 +12,19 @@ class Template extends CI_Controller {
 	{
 		$this->load->view('template/template_lib/login');
 	}
+	public function encrypt()
+	{
+		echo encryptpassword('Pass123abc.');
+	}
 
+	public function user()
+	{
+		$sql = 'SELECT * from profile.user';
+		$ret = $this->db->query($sql);
+		echo "<pre>";
+		var_dump($ret->result());
+	}
+	
 	public function dashboard()
 	{
 		//Tittle
@@ -390,10 +402,7 @@ class Template extends CI_Controller {
 	}
 	public function pages_404()
 	{
-		$data = [
-			'title_meta' => view('partials/title-meta', ['title' => 'Error_404'])
-		];
-		return view('pages-404', $data);
+		$this->load->view('template/template_lib/pages-404');
 	}
 	public function pages_500()
 	{
@@ -414,11 +423,22 @@ class Template extends CI_Controller {
 	// UI Elements
 	public function ui_alerts()
 	{
-		$data = [
-			'title_meta' => view('partials/title-meta', ['title' => 'Alerts']),
-			'page_title' => view('partials/page-title', ['title' => 'Alerts', 'li_1' => 'Components', 'li_2' => 'Alerts'])
-		];
-		return view('ui-alerts', $data);
+		$tittle['title'] 	= 'Alerts';
+		$tittle['li_1'] 	= 'Components';
+		$tittle['li_2'] 	= 'Alerts';
+
+		//Teamplate
+		$data['addcss'] 	= '';
+		$data['addjs'] 		= '<script src="'.base_url().'assets/js/main.js"></script>';
+		$data['addjs'] 		.= '<script src="'.base_url().'assets/js/pages/calendar.init.js"></script>';
+		$data['title_meta'] = $this->load->view('template/partials/title-meta', $tittle,true);
+		
+		//Page Data Content
+		$param['page_title'] 	= $this->load->view('template/partials/page-title', $tittle,true);
+		
+		$data['content']    	= $this->load->view('template/template_lib/ui-alerts',$param,true);
+		$this->load->view('template/template',$data);
+		
 	}
 	public function ui_buttons()
 	{
@@ -555,11 +575,21 @@ class Template extends CI_Controller {
 	}
 	public function extended_sweet_alert()
 	{
-		$data = [
-			'title_meta' => view('partials/title-meta', ['title' => 'SweetAlert_2']),
-			'page_title' => view('partials/page-title', ['title' => 'SweetAlert_2', 'li_1' => 'Extended', 'li_2' => 'SweetAlert 2'])
-		];
-		return view('extended-sweet-alert', $data);
+		$tittle['title'] 	= 'SweetAlert_2';
+		$tittle['li_1'] 	= 'Extended';
+		$tittle['li_2'] 	= 'SweetAlert_2';
+
+		//Teamplate
+		$data['addcss'] 	= '';
+		$data['addjs'] 		= '<script src="'.base_url().'assets/js/pages/sweetalert.init.js">';
+		// $data['addjs'] 		.= '<script src="'.base_url().'assets/js/pages/calendar.init.js"></script>';
+		$data['title_meta'] = $this->load->view('template/partials/title-meta', $tittle,true);
+		
+		//Page Data Content
+		$param['page_title'] 	= $this->load->view('template/partials/page-title', $tittle,true);
+		
+		$data['content']    	= $this->load->view('template/template_lib/extended-sweet-alert',$param,true);
+		$this->load->view('template/template',$data);
 	}
 	public function extended_rating()
 	{

@@ -74,7 +74,11 @@ if ( ! function_exists('encryptpassword'))
 				'driver' => 'openssl',
                 'cipher' => 'aes-256',
                 'mode' => 'ctr',
+<<<<<<< HEAD
                 'key' => md5(hash('whirlpool', 'muhammadafifpratama'))
+=======
+                'key' => md5(hash('whirlpool', 'AGSSWPortal'))
+>>>>>>> main_afif
         	)
 		);
 		$encrpypted = $CI->encryption->encrypt($param);
@@ -94,7 +98,11 @@ if ( ! function_exists('decryptpassword'))
 				'driver' => 'openssl',
                 'cipher' => 'aes-256',
                 'mode' => 'ctr',
+<<<<<<< HEAD
                 'key' => md5(hash('whirlpool', 'muhammadafifpratama'))
+=======
+                'key' => md5(hash('whirlpool', 'AGSSWPortal'))
+>>>>>>> main_afif
         	)
 		);
 		$decrypted = base64_decode($encryptedparam);
@@ -125,6 +133,7 @@ if ( ! function_exists('decryptid'))
 
 if ( ! function_exists('cek_session'))
 {
+<<<<<<< HEAD
 	function cek_session($arrRole)
 	{
 		$CI =& get_instance();
@@ -133,6 +142,29 @@ if ( ! function_exists('cek_session'))
 			$url = base_url().'index.php/auth/logout';
 			header('Location: '.$url);
 		}
+=======
+	function cek_session($arrRole = '',$tipe)
+	{
+		$CI =& get_instance();
+		// var_dump($CI->session->userdata('id_groups'));exit;
+		if ($tipe == 'main') 
+		{
+			if(!in_array($CI->session->userdata('id_groups'), $arrRole) || $CI->session->userdata('id_groups') == NULL)
+			{
+				$url = base_url().'index.php/auth/logout';
+				header('Location: '.$url);
+			}
+		}
+		else 
+		{
+			if($CI->session->userdata('username') !== NULL)
+			{
+				$url = base_url().'index.php/home';
+				header('Location: '.$url);
+			}
+		}
+		
+>>>>>>> main_afif
 	}
 }
 
@@ -145,6 +177,29 @@ if(!function_exists('NumberDB'))
 		return $angka;
 	}
 }
+<<<<<<< HEAD
+=======
+if(!function_exists('getMenu'))
+{
+	function getMenu($id_group,$parent = null)
+    {
+		$CI =& get_instance();
+		$addsql = "and b.parent is null";
+		if ($parent) {
+			$addsql = " and b.parent = ".$parent;
+		}
+        $getmenu = "select b.*,a.id_group
+                        from referensi.group_menu a
+                        left join referensi.menu b on b.id_menu = a.id_menu 
+                    where a.id_group = ".$id_group.$addsql." order by b.short asc;";
+        $menudata   = $CI->db->query($getmenu);
+        $returnMenu = $menudata->result();
+
+        return $returnMenu;
+        
+    }
+}
+>>>>>>> main_afif
 
 if (!function_exists('FormatHS'))
 {
