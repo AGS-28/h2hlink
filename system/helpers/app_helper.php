@@ -74,11 +74,7 @@ if ( ! function_exists('encryptpassword'))
 				'driver' => 'openssl',
                 'cipher' => 'aes-256',
                 'mode' => 'ctr',
-<<<<<<< HEAD
-                'key' => md5(hash('whirlpool', 'muhammadafifpratama'))
-=======
                 'key' => md5(hash('whirlpool', 'AGSSWPortal'))
->>>>>>> main_afif
         	)
 		);
 		$encrpypted = $CI->encryption->encrypt($param);
@@ -98,11 +94,7 @@ if ( ! function_exists('decryptpassword'))
 				'driver' => 'openssl',
                 'cipher' => 'aes-256',
                 'mode' => 'ctr',
-<<<<<<< HEAD
-                'key' => md5(hash('whirlpool', 'muhammadafifpratama'))
-=======
                 'key' => md5(hash('whirlpool', 'AGSSWPortal'))
->>>>>>> main_afif
         	)
 		);
 		$decrypted = base64_decode($encryptedparam);
@@ -133,16 +125,6 @@ if ( ! function_exists('decryptid'))
 
 if ( ! function_exists('cek_session'))
 {
-<<<<<<< HEAD
-	function cek_session($arrRole)
-	{
-		$CI =& get_instance();
-		if(!in_array($CI->session->userdata('sess_roleid'), $arrRole))
-		{
-			$url = base_url().'index.php/auth/logout';
-			header('Location: '.$url);
-		}
-=======
 	function cek_session($arrRole = '',$tipe)
 	{
 		$CI =& get_instance();
@@ -164,7 +146,6 @@ if ( ! function_exists('cek_session'))
 			}
 		}
 		
->>>>>>> main_afif
 	}
 }
 
@@ -177,8 +158,6 @@ if(!function_exists('NumberDB'))
 		return $angka;
 	}
 }
-<<<<<<< HEAD
-=======
 if(!function_exists('getMenu'))
 {
 	function getMenu($id_group,$parent = null)
@@ -199,7 +178,6 @@ if(!function_exists('getMenu'))
         
     }
 }
->>>>>>> main_afif
 
 if (!function_exists('FormatHS'))
 {
