@@ -42,6 +42,10 @@
 
     <!-- datepicker css -->
     <link href="<?= base_url(); ?>assets/libs/flatpickr/flatpickr.min.css" rel="stylesheet" type="text/css">
+
+    <!-- <link href="<?= base_url(); ?>assets/libs/pdfviewer/web/viewer.css" rel="stylesheet" type="text/css"> -->
+    <!-- <link href="<?= base_url(); ?>assets/libs/pdfviewer/web/debugger.css" rel="stylesheet" type="text/css"> -->
+    <link href="<?= base_url(); ?>assets/libs/flatpickr/flatpickr.min.css" rel="stylesheet" type="text/css">
      <!-- AddCSS -->
 
      <?php if(isset($addcss)) echo $addcss; ?>
@@ -268,6 +272,13 @@ else
 
 <!-- init js -->
 <script src="<?= base_url(); ?>assets/js/pages/form-advanced.init.js"></script>
+
+<script src="<?= base_url(); ?>assets/libs/pdfviewer/build/pdf.js"></script>
+<script src="<?= base_url(); ?>assets/libs/pdfviewer/build/pdf.sandbox.js"></script>
+<script src="<?= base_url(); ?>assets/libs/pdfviewer/build/pdf.worker.js"></script>
+
+<script src="<?= base_url(); ?>assets/libs/pdfviewer/web/viewer.js"></script>
+<!-- <script src="<?= base_url(); ?>assets/libs/pdfviewer/web/debugger.js"></script> -->
 <!-- end ilham -->
 
 <!-- App js -->
