@@ -96,39 +96,21 @@ class Model_tracking extends CI_Model {
             $addSql .= " AND d.id IN ('".$end_point."')";
         }
         
-<<<<<<< HEAD
-        $sql_total 	= ' SELECT a.id, a.message_type, e.message_type as urai_message_type, a.message_id, a.message_content, a.no_aju, a."status", b.client_name, b.npwp, b.nib, c.partner_name, d.partner_endpoint, a.created_at as created_at_message, f.result_code, f.result_responses, f.created_at as created_at_responses
-=======
         $sql_total 	= ' SELECT a.id, a.no_aju, b.client_name, b.npwp, b.nib, c.partner_name, d.partner_endpoint, a.created_at as created_at_message
->>>>>>> main_ilham
                         FROM trans.headers a 
                         LEFT JOIN profile.clients b ON b.id = a.client_id
                         LEFT JOIN profile.partners c ON c.id = a.partner_id
                         LEFT JOIN profile.partner_endpoints d ON d.id = a.partner_endpoint_id
-<<<<<<< HEAD
-                        LEFT JOIN referensi.message_type e ON e.id = a.message_type
-                        LEFT JOIN trans.responses f ON f.transaction_id = a.id
-=======
->>>>>>> main_ilham
                         WHERE 1=1 '.$addSql;
 		$result_total 	= $this->db->query($sql_total);
 		$banyak 		= $result_total->num_rows();
 
 		if($banyak > 0){
-<<<<<<< HEAD
-			$sql = 'SELECT a.id, a.message_type, e.message_type as urai_message_type, a.message_id, a.message_content, a.no_aju, a."status", b.client_name, b.npwp, b.nib, c.partner_name, d.partner_endpoint, a.created_at as created_at_message, f.result_code, f.result_responses, f.created_at as created_at_responses
-=======
 			$sql = 'SELECT a.id, a.no_aju, b.client_name, b.npwp, b.nib, c.partner_name, d.partner_endpoint, a.created_at as created_at_message
->>>>>>> main_ilham
                     FROM trans.headers a 
                     LEFT JOIN profile.clients b ON b.id = a.client_id
                     LEFT JOIN profile.partners c ON c.id = a.partner_id
                     LEFT JOIN profile.partner_endpoints d ON d.id = a.partner_endpoint_id
-<<<<<<< HEAD
-                    LEFT JOIN referensi.message_type e ON e.id = a.message_type
-                    LEFT JOIN trans.responses f ON f.transaction_id = a.id
-=======
->>>>>>> main_ilham
                     WHERE 1=1 '.$addSql.'
                     LIMIT '.$length.' OFFSET '.$start;
 			$result 		= $this->db->query($sql);
@@ -144,8 +126,6 @@ class Model_tracking extends CI_Model {
 		return $return;
     }
 
-<<<<<<< HEAD
-=======
     function get_message_respons()
     {
         $id = $this->input->post('id');
@@ -167,5 +147,4 @@ class Model_tracking extends CI_Model {
         return $data;
     }
 
->>>>>>> main_ilham
 }
