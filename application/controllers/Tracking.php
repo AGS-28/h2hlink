@@ -44,31 +44,19 @@ class Tracking extends CI_Controller {
 			$html[] = $no;
 			$html[] = '<b> Name : <font color="#d75350">'.$data['client_name'].'</font></b><br/><b> NIB : </b>'.$data['nib'].'<br/><b> NPWP : </b>'.$data['npwp'];
 			$html[] = '<b> Name : <font color="#4549a2">'.$data['partner_name'].'</font><br/> End Point : </b>'.$data['partner_endpoint'];
-			$html[] = '<b> Aju Number : <font color="#4549a2">'.$data['no_aju'].'</font><br/> Status : </b>'.$data['status'];
-			$json_pretty = json_decode(json_encode($data['message_content']));
+			$html[] = '<b> Aju Number : <font color="#4549a2">'.$data['no_aju'].'</font><br/> Created : </b>'.$data['created_at_message'];
+			// $json_pretty = json_decode(json_encode($data['message_content']));
 			$html[] = '
 						<div class="dropdown">
 							<button class="btn btn-link font-size-16 shadow-none py-0 text-muted dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 								<i class="bx bx-dots-horizontal-rounded"></i>
 							</button>
 							<ul class="dropdown-menu dropdown-menu-end">
-								<li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#exampleModalScrollable">Message</a></li>
+								<li><a class="dropdown-item" href="#" onclick="show_modal('.$data['id'].',0);">Request</a></li>
+								<li><a class="dropdown-item" href="#" onclick="show_modal('.$data['id'].',1);">Respons</a></li>
+								<li><a class="dropdown-item" href="#" onclick="show_modal('.$data['id'].',2);">Views</a></li>
 							</ul>
 						</div>
-						<div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-scrollable">
-                                <div class="modal-content">
-                                    <div class="modal-body" style="text-align: left;">
-										<p>Message Id : '.$data["message_id"].'</p>
-										<p>Message Type : '.$data["urai_message_type"].'</p>
-                                        <p>Message Content : <pre>'.$json_pretty.'</pre></p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 					';
 			$row[]  = $html;
 
@@ -82,6 +70,40 @@ class Tracking extends CI_Controller {
 
         unset($row);
         echo json_encode($return);
+	}
+
+	public function get_message_respons()
+	{
+		$data['data'] = $this->Model_tracking->get_message_respons();
+		echo $this->load->view('main/view/modal_tracking',$data,true);
+	}
+
+	public function show_table_document() 
+	{
+		$post 		= $this->input->post('formdata');
+		$arr_post 	= postajax_toarray($post);
+		$index_data = (int)$arr_post['index_data'];
+		for ($i = 0; $i < $index_data; $i++) {
+			if (isset($html)) {
+				unset($html);
+			}
+
+			$html[] = $i;
+			$html[] = $arr_post['hide_aju_number['.$i.']'];
+			$html[] = $arr_post['hide_document_type['.$i.']'];
+			$html[] = $arr_post['hide_document_number['.$i.']'];
+			$html[] = $arr_post['hide_document_date['.$i.']'];
+			$html[] = '<button type="button" class="btn btn-soft-light btn-sm w-xs waves-effect btn-label waves-light"><i class="bx bx-download label-icon"></i> File</button>';
+			$row[]  = $html;
+		}
+
+		$return['data'] 			= isset($row) ? $row : array();
+		$return['recordsTotal'] 	= $index_data;
+		$return['recordsFiltered'] 	= $index_data;
+		$return['error'] 			= '';
+
+		unset($row);
+		echo json_encode($return);
 	}
 
 }
