@@ -77,9 +77,9 @@
                                             </div>
                                         </div>
                                         <div class="row mb-4">
-                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Create Date Range</label>
+                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Create Date</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="create_date" name="create_date" title="Create Date">
+                                                <input type="text" class="form-control date-range" id="create_date" name="create_date" title="Create Date">
                                             </div>
                                         </div>
                                     </div>
@@ -125,14 +125,9 @@
                                             </div>
                                             <div class="col-sm-7">
                                                 <div class="input-group">
-<<<<<<< HEAD
-                                                    <input type="text" class="form-control" title="aju number" id="no_aju" name="no_aju" placeholder="aju number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                                                    <div class="input-group-text" onclick="cari_data('form_table');" style="cursor: pointer;"><i class="bx bx-search"></i></div>
-=======
                                                     <input type="text" class="form-control" title="aju number" id="no_aju" name="no_aju" placeholder="Aju number..." onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                                     <button class="btn btn-primary" type="button" onclick="cari_data('form_table');"><i class="bx bx-search-alt align-middle"></i></button>
                                                     <!-- <div class="input-group-text" onclick="cari_data('form_table');" style="cursor: pointer;"><i class="bx bx-search"></i></div> -->
->>>>>>> main_ilham
                                                 </div>
                                             </div>
                                         </form>
@@ -142,8 +137,6 @@
                         </div>
                     </div>
                     <div class="card-body">
-<<<<<<< HEAD
-=======
 						<div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
                                 <div class="modal-content">
@@ -159,9 +152,8 @@
                                 </div>
                             </div>
                         </div>
->>>>>>> main_ilham
                         <div class="table-responsive">
-                            <table id="table_data" class="table table-bordered dt-responsive nowrap w-100" width="100%">
+                            <table id="table_data" class="table_data table table-bordered dt-responsive nowrap w-100" width="100%">
                                 <thead style="width:100%">
                                     <tr align="center">
                                         <th>No</th>

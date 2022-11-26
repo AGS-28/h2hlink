@@ -1,11 +1,200 @@
-/*
-Template Name: Minia - Bootstrap 5 Admin & Dashboard Template
-Author: Themesbrand
-Version: 1.1.0
-Website: https://themesbrand.com/
-Contact: themesbrand@gmail.com
-File: Main Js File
-*/
+function alert_sukses(iddata="",_callback = false,tittle = "Success...") {
+    var timerInterval;
+        Swal.fire({
+        title: tittle,
+        html: 'I will close in <b></b> seconds.',
+        timer: 2000,
+        icon: 'success',
+        timerProgressBar: true,
+        didOpen:function () {
+            Swal.showLoading()
+            timerInterval = setInterval(function() {
+            var content = Swal.getHtmlContainer()
+            if (content) {
+                var b = content.querySelector('b')
+                if (b) {
+                b.textContent = Swal.getTimerLeft()
+                }
+            }
+            }, 100)
+        },
+        onClose: function () {
+            clearInterval(timerInterval)
+        }
+        }).then(function (result) {
+            if (_callback) {
+                _callback(iddata)
+            }
+        });
+}
+
+function confirm_delete(content='Anda yakin melakukan aksi ini ?',_callback,iddata='',title='Konfirmasi',type='orange')
+{
+   swal.fire({
+         title: content,
+         text: "Klik Hapus jika yakin!",
+         icon: "warning",
+         showCancelButton: true,
+         confirmButtonText: "Hapus",
+         cancelButtonText: "Batal",
+      }).then(function(result){
+        if (result.dismiss !== Swal.DismissReason.cancel) 
+        {
+            _callback(iddata)
+        }
+      });
+}
+
+function confirm_kirim(func,param = '',content='Are you sure submit action ?',title='Confirmation',type='orange')
+{
+    Swal.fire({
+        title: title,
+        text: content,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, do it!',
+        cancelButtonText: 'No, cancel!',
+        confirmButtonClass: 'btn btn-success mt-2',
+        cancelButtonClass: 'btn btn-danger ms-2 mt-2',
+        buttonsStyling: false
+    }).then(function (result) {
+        if (result.dismiss !== Swal.DismissReason.cancel) 
+        {
+           func(param);
+        } else if (result.dismiss === Swal.DismissReason.cancel) 
+        {
+            var timerInterval;
+            Swal.fire({
+            title: "Cancelled",
+            html: 'I will close in <b></b> seconds.',
+            timer: 1000,
+            icon: 'error',
+            timerProgressBar: true,
+            didOpen:function () {
+                Swal.showLoading()
+                timerInterval = setInterval(function() {
+                var content = Swal.getHtmlContainer()
+                if (content) {
+                    var b = content.querySelector('b')
+                    if (b) {
+                    b.textContent = Swal.getTimerLeft()
+                    }
+                }
+                }, 100)
+            },
+            onClose: function () {
+                clearInterval(timerInterval)
+            }
+            });
+        }
+    });
+}
+
+function alert_error(tittle = "Warning!", icon = "warning" , button = "Close",errorString = "") {
+    swal.fire({
+        title: tittle,
+        html: errorString,
+        icon: icon,
+        button: button,
+    });
+}
+
+function get_data(form,url,validate = false,tableid = "table_data",columnDefs = [{}]) {
+    var errorString = "Please complete the following data : <br\>";
+    var panjangAwal = errorString.length;
+
+    $('#'+form).find('input[type="text"],select,textarea,input[type="file"]').each(function() {
+        if(validate) {
+            if(this.value == "" && this.title != '') {
+                errorString += "- "+this.title+"  <br\>";
+            }
+        }  
+    });
+
+    var panjangAkhir = errorString.length;
+    console.log(panjangAkhir);
+    console.log(panjangAwal);
+    panjangAkhir = errorString.length;
+    if (panjangAwal == panjangAkhir) {
+        if ($.fn.DataTable.isDataTable("#" + tableid)) {
+            $("#" + tableid).DataTable().destroy();
+        }
+
+        var formdata = JSON.stringify($("#"+form).serializeArray());
+        $("#" + tableid).DataTable({
+            destroy: true,
+            // autoWidth: true,
+            processing: true,
+            serverSide: true,
+            responsive: false,
+            // select: true,
+            searching: false,
+            // order: [0],
+            dom: 'Bfrtip',
+            buttons: [],
+            ajax: {
+                url: url,
+                type: "POST",
+                data: {
+                    formdata
+                },
+            },
+            oLanguage: {
+                sProcessing: '<div><div class="spinner-grow text-primary m-1" role="status">'+
+                                    '<span class="sr-only">Loading...</span>'+
+                                '</div>'+
+                                '<div class="spinner-grow text-secondary m-1" role="status">'+
+                                    '<span class="sr-only">Loading...</span>'+
+                                '</div>'+
+                                '<div class="spinner-grow text-success m-1" role="status">'+
+                                    '<span class="sr-only">Loading...</span>'+
+                                '</div>'+
+                                '<div class="spinner-grow text-info m-1" role="status">'+
+                                    '<span class="sr-only">Loading...</span>'+
+                                '</div>'+
+                            '</div>'
+            },
+            drawCallback: function() {
+                $('[data-toggle="popover"]').popover({
+                    html: true,
+                    content: function() {
+                        return $("#primary-popover-content").html();
+                    },
+                });
+            },
+            columnDefs: columnDefs,
+        });
+    } else {
+        alert_error(errorString);
+    }
+
+}
+
+function loading(id, stat) {
+    var loading = '<div><div class="spinner-grow text-primary m-1" role="status">'+
+                                    '<span class="sr-only">Loading...</span>'+
+                                '</div>'+
+                                '<div class="spinner-grow text-secondary m-1" role="status">'+
+                                    '<span class="sr-only">Loading...</span>'+
+                                '</div>'+
+                                '<div class="spinner-grow text-success m-1" role="status">'+
+                                    '<span class="sr-only">Loading...</span>'+
+                                '</div>'+
+                                '<div class="spinner-grow text-info m-1" role="status">'+
+                                    '<span class="sr-only">Loading...</span>'+
+                                '</div>'+
+                            '</div>';
+    if(stat) {
+        $('#'+id).html(loading);
+    } else {
+        $('#'+id).html('');
+    }
+}
+
+function close_modal(id) {
+    $("#"+ id).modal('hide');
+}
+
 function post_ajax(url, postdata) {
     var result = false;
     $.ajax({
@@ -32,6 +221,16 @@ function post_ajax(url, postdata) {
     var language = localStorage.getItem('minia-language');
     // Default Language
     var default_lang = 'en';
+
+    $(".table_data").DataTable({
+        searching: false,
+        dom: 'Bfrtip',
+        buttons: []
+    });
+
+    flatpickr('.date-range', {
+        mode: "range"
+    });
 
     function setLanguage(lang) {
         if (document.getElementById("header-lang-img")) {
