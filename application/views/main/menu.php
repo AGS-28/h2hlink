@@ -189,7 +189,7 @@
                                 <ul class="sub-menu" aria-expanded="false">
                                     <?php foreach ($dataofParent as $key2 => $valueofParent) { ?>
                                         <li>
-                                            <a href="<?= site_url().$valueofParent->link; ?>/template/calendar">
+                                            <a href="<?= site_url().$valueofParent->link; ?>">
                                                 <span data-key="t-calendar"><?=  $valueofParent->menu_name; ?></span>
                                             </a>
                                         </li>
