@@ -239,5 +239,57 @@ if(!function_exists('cek_spasi'))
 	}
 }
 
+if (!function_exists('pretty_print'))
+{
+	function pretty_print($json_data)
+	{
+		$space = 0;
+		$flag = false;
+
+		echo"<pre>";
+		for($counter=0; $counter<strlen($json_data); $counter++)
+		{
+			if( $json_data[$counter] == '}' || $json_data[$counter] == ']' )
+			{
+				$space--;
+				echo"\n";
+				echo str_repeat(' ', ($space*2));
+			}
+
+			if( $json_data[$counter] == '"'&& ($json_data[$counter-1] == ',' || $json_data[$counter-2] == ',') )
+			{
+				echo"\n";
+				echo str_repeat(' ', ($space*2));
+			}
+			
+			if( $json_data[$counter] == '"'&& !$flag )
+			{
+				if( $json_data[$counter-1] == ':' || $json_data[$counter-2] == ':' )
+					// echo'<span style="color:blue;font-weight:bold">';
+					echo'<span style="color:black;">';
+				else
+					// echo'<span style="color:red">';
+					echo'<span style="color:black">';
+			}
+			
+			echo$json_data[$counter];
+			
+			if( $json_data[$counter] == '"'&&$flag )
+				echo'</span>';
+			
+			if( $json_data[$counter] == '"' )
+				$flag= !$flag;
+
+			if( $json_data[$counter] == '{' || $json_data[$counter] == '[' )
+			{
+				$space++;
+				echo"\n";
+				echo str_repeat(' ', ($space*2));
+			}
+		}
+		echo"</pre>";
+	}
+}
+
 
 ?>
