@@ -1,7 +1,8 @@
+
 <!doctype html>
 <html lang="en">
 
-    <head>
+<head>
         
         <meta charset="utf-8" />
         <title>Error 404 | AGS Web Portal</title>
@@ -9,6 +10,8 @@
         <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
         <meta content="Themesbrand" name="author" />
         <!-- App favicon -->
+
+       
         <link rel="shortcut icon" href="<?= base_url(); ?>assets/images/favicon.ico">
 
         <!-- preloader css -->
@@ -20,7 +23,7 @@
         <link href="<?= base_url(); ?>assets/css/icons.min.css" rel="stylesheet" type="text/css" />
         <!-- App Css-->
         <link href="<?= base_url(); ?>assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
-
+<
     </head>
 
     <body>
@@ -35,7 +38,7 @@
                             <h1 class="display-1 fw-semibold">4<span class="text-primary mx-2">0</span>4</h1>
                             <h4 class="text-uppercase">Sorry, page not found</h4>
                             <div class="mt-5 text-center">
-                                <a class="btn btn-primary waves-effect waves-light" href="<?= site_url(); ?>/home">Back to Dashboard</a>
+                             <a class="btn btn-primary waves-effect waves-light" href="<?= site_url(); ?>/home">Back to Dashboard</a>
                             </div>
                         </div>
                     </div>
