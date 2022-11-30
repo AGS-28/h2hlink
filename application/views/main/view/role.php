@@ -28,6 +28,7 @@
                                                 <div class="input-group">
                                                     <input type="text" class="form-control" title="searchkey" id="searchkey" name="searchkey" placeholder="Search..." >
                                                     <button class="btn btn-primary" type="button" onclick="get_data_all('form_table');"><i class="bx bx-search-alt align-middle"></i></button>
+                                                </div>
                                             </div>
                                         </form>
                                     </div>
@@ -63,11 +64,9 @@
                                                             </div>
                                                         </div>
                                                         <div class="row mb-4">
-                                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Client Partner</label>
+                                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Status</label>
                                                             <div class="col-sm-9">
-                                                                <select class="form-control" name="status" id="status" multiple>
-                                                                    <option value="t"> Active</option>
-                                                                    <option value="f"> Non Active</option>
+                                                                <select class="form-control" name="status" id="status" >
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -76,6 +75,8 @@
                                                 <div class="col-lg-6 ms-lg-auto">
                                                     <div class="mt-4 mt-lg-0">
                                                         <!-- right input -->
+                                                        <input type="hidden" name="updated" id ="updated" value="0">
+                                                        <input type="hidden" name="idnya" id ="idnya" value="0">
                                                     </div>
                                                 </div>
                                                 <hr>
@@ -83,7 +84,7 @@
                                                     <div class="mt-12 mt-lg-0">
                                                         <div class="row mb-12 text-center">
                                                             <div>
-                                                                <button type="submit"  id="add-item-modal" class="btn btn-primary waves-effect btn-label waves-light"><i class="bx bx-check label-icon"></i> Add Item</button> &nbsp;
+                                                                <button type="submit"  id="add-item-modal" class="btn btn-primary waves-effect btn-label waves-light"><i class="bx bx-check label-icon"></i> Save</button> &nbsp;
                                                                 <button type="reset" class="btn btn-danger waves-effect btn-label waves-light"><i class="bx bx-rotate-left label-icon"></i> Reset</button>
                                                             </div>
                                                         </div>

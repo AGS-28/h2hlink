@@ -271,7 +271,6 @@ else
 <script src="<?= base_url(); ?>assets/libs/flatpickr/flatpickr.min.js"></script>
 
 <!-- init js -->
-<script src="<?= base_url(); ?>assets/js/pages/form-advanced.init.js"></script>
 
 <script src="<?= base_url(); ?>assets/libs/pdfviewer/build/pdf.js"></script>
 <script src="<?= base_url(); ?>assets/libs/pdfviewer/build/pdf.sandbox.js"></script>

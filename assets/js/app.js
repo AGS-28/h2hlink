@@ -1,3 +1,39 @@
+function add(form,url,validate=false) 
+{
+    var errorString = "Please complete the following data : <br\>";
+    var panjangAwal = errorString.length;
+
+    $('#'+form).find('input[type="text"],select,textarea,input[type="file"]').each(function() {
+        if(validate) {
+            if(this.value == "" && this.title != '') {
+                errorString += "- "+this.title+"  <br\>";
+            }
+        }  
+    });
+
+    var panjangAkhir = errorString.length;
+    if (panjangAwal == panjangAkhir) {
+
+        var formdata = JSON.stringify($("#"+form).serializeArray());
+        var postdata = new FormData();
+        postdata.append('postdata',formdata);
+
+        var data = post_ajax(url,postdata);
+        var respondData = JSON.parse(data);
+        if (respondData == 1) 
+        {
+            alert_sukses("modal_add",close_modal);
+            get_data_all();
+        }
+        else
+        {
+            alert_error("Failed at adding item");
+        }
+    } else {
+        alert_error(errorString);
+    }
+}
+
 function alert_sukses(iddata="",_callback = false,tittle = "Success...") {
     var timerInterval;
         Swal.fire({
@@ -112,8 +148,7 @@ function get_data(form,url,validate = false,tableid = "table_data",columnDefs = 
     });
 
     var panjangAkhir = errorString.length;
-    console.log(panjangAkhir);
-    console.log(panjangAwal);
+
     panjangAkhir = errorString.length;
     if (panjangAwal == panjangAkhir) {
         if ($.fn.DataTable.isDataTable("#" + tableid)) {
