@@ -12,8 +12,8 @@
                         <h4 class="card-title"><i class="bx bx-search"></i> Searching</h4>
                         <p class="card-title-desc">Please click the icon at the top right corner to display the search form</p>
                     </div>
-                    <div class="card-body p-4">
-                        <form class="form-horizontal" method="post" action="javascript:void(0)" name="form_tracking" id="form_tracking" style="display: none;" onsubmit="cari_data('form_tracking');">
+                    <div class="card-body p-4 form-horizontal" style="display: none;">
+                        <form class="" method="post" action="javascript:void(0)" name="form_tracking" id="form_tracking" onsubmit="cari_data('form_tracking');">
                             <div class="row">
                                 <div class="col-lg-6 ms-lg-auto">
                                     <div class="mt-4 mt-lg-0">
@@ -126,7 +126,7 @@
                                             <div class="col-sm-7">
                                                 <div class="input-group">
                                                     <input type="text" class="form-control" title="aju number" id="no_aju" name="no_aju" placeholder="Aju number..." onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                                                    <button class="btn btn-primary" type="button" onclick="cari_data('form_table');"><i class="bx bx-search-alt align-middle"></i></button>
+                                                    <button class="btn btn-primary" type="button" onclick="cari_data('form_table',true);"><i class="bx bx-search-alt align-middle"></i></button>
                                                     <!-- <div class="input-group-text" onclick="cari_data('form_table');" style="cursor: pointer;"><i class="bx bx-search"></i></div> -->
                                                 </div>
                                             </div>
@@ -146,9 +146,6 @@
                                     </div>
                                     <div class="modal-body" id="modal_body" style="text-align: center;">
                                     </div>
-                                    <!-- <div class="modal-footer">
-                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                                    </div> -->
                                 </div>
                             </div>
                         </div>

@@ -57,6 +57,7 @@ class Model_cms extends CI_Model {
 
         return $data;
     }
+    
     function hapus_role($id)
     {
         $data = 0;

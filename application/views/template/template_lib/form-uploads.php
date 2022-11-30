@@ -15,7 +15,7 @@
 
 <!-- <body data-layout="horizontal"> -->
 
-<!-- Begin page -->
+<!-- Begin page --> 
 <div id="layout-wrapper">
 
     <?= $this->include('partials/menu') ?>
@@ -55,12 +55,12 @@
 
                                             <h5>Drop files here or click to upload.</h5>
                                         </div>
+                                        <input type="hidden" name="a" id="a">
                                     </form>
                                 </div>
 
                                 <div class="text-center mt-4">
-                                    <button type="button" class="btn btn-primary waves-effect waves-light">Send
-                                        Files</button>
+                                    <button type="button" class="btn btn-primary waves-effect waves-light">Send Files</button>
                                 </div>
                             </div>
                         </div>

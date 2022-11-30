@@ -5,6 +5,7 @@ class Tracking extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->model('Model_tracking');
+		$this->load->model('Model_master');
 	}
 
 	public function index()
@@ -22,9 +23,9 @@ class Tracking extends CI_Controller {
 		
 		//Page Data Content
 		$param['page_title'] 	 = $this->load->view('main/partials/page-title', $tittle,true);
-		$param['data_client'] 	 = $this->Model_tracking->get_data_client();
-		$param['data_partner'] 	 = $this->Model_tracking->get_data_partner();
-		$param['data_end_point'] = $this->Model_tracking->get_data_end_point();
+		$param['data_client'] 	 = $this->Model_master->get_data_client();
+		$param['data_partner'] 	 = $this->Model_master->get_data_partner();
+		$param['data_end_point'] = $this->Model_master->get_data_end_point();
 		
 		$data['content']    	= $this->load->view('main/view/tracking',$param,true);
 		$this->load->view('main/template',$data);
@@ -54,7 +55,8 @@ class Tracking extends CI_Controller {
 							<ul class="dropdown-menu dropdown-menu-end">
 								<li><a class="dropdown-item" href="#" onclick="show_modal('.$data['id'].',0);">Request</a></li>
 								<li><a class="dropdown-item" href="#" onclick="show_modal('.$data['id'].',1);">Respons</a></li>
-								<li><a class="dropdown-item" href="#" onclick="show_modal('.$data['id'].',2);">Views</a></li>
+								<li><a class="dropdown-item" href="#" onclick="show_modal('.$data['id'].',2);">Views Data</a></li>
+								<li><a class="dropdown-item" href="#" onclick="show_modal('.$data['id'].',3);">Views Draft</a></li>
 							</ul>
 						</div>
 					';
@@ -74,8 +76,30 @@ class Tracking extends CI_Controller {
 
 	public function get_message_respons()
 	{
+		$tipe = $this->input->post('tipe');
 		$data['data'] = $this->Model_tracking->get_message_respons();
-		echo $this->load->view('main/view/modal_tracking',$data,true);
+
+		switch ($tipe) {
+			case '0':
+				echo $this->load->view('main/view/v_json_request',$data,true);
+				break;
+
+			case '1':
+				echo $this->load->view('main/view/v_json_respons',$data,true);
+				break;
+
+			case '2':
+				echo $this->load->view('main/view/v_parsing_json_request',$data,true);
+				break;
+
+			case '3':
+				echo $this->load->view('main/view/v_draft',$data,true);
+				break;
+			
+			default:
+				exit;
+				break;
+		}
 	}
 
 	public function show_table_document() 

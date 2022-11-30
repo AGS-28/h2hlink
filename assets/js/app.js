@@ -100,6 +100,7 @@ function alert_error(tittle = "Warning!", icon = "warning" , button = "Close",er
 }
 
 function get_data(form,url,validate = false,tableid = "table_data",columnDefs = [{}]) {
+    // console.log(form, url, tableid);
     var errorString = "Please complete the following data : <br\>";
     var panjangAwal = errorString.length;
 
@@ -112,8 +113,8 @@ function get_data(form,url,validate = false,tableid = "table_data",columnDefs = 
     });
 
     var panjangAkhir = errorString.length;
-    console.log(panjangAkhir);
-    console.log(panjangAwal);
+    // console.log(panjangAkhir);
+    // console.log(panjangAwal);
     panjangAkhir = errorString.length;
     if (panjangAwal == panjangAkhir) {
         if ($.fn.DataTable.isDataTable("#" + tableid)) {
@@ -214,6 +215,32 @@ function post_ajax(url, postdata) {
         });
     return result;
 }
+
+function showLoading(stat) {
+    if(stat) {
+        var val = 'show';
+    } else {
+        var val = 'hide';
+    }
+
+    var div = '<div>'+
+                    '<div class="spinner-grow text-primary m-1" role="status">'+
+                        '<span class="sr-only">Loading...</span>'+
+                    '</div>'+
+                    '<div class="spinner-grow text-secondary m-1" role="status">'+
+                        '<span class="sr-only">Loading...</span>'+
+                    '</div>'+
+                    '<div class="spinner-grow text-success m-1" role="status">'+
+                        '<span class="sr-only">Loading...</span>'+
+                    '</div>'+
+                '</div>';
+    var customElement = $(div, {});
+    $.LoadingOverlay(val, {
+        image       : "",
+        custom      : customElement
+    });
+}
+
 (function ($) {
 
     'use strict';

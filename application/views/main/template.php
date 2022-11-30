@@ -3,7 +3,28 @@
 
 <head>
     <style type="text/css">
+        .btn_upload{
+            display: inline-block;
+            background-color: #4549a2;
+            border-color: #414598;
+            color: white;
+            padding: 0.5rem;
+            font-family: sans-serif;
+            border-radius: 0.3rem;
+            cursor: pointer;
+            /*margin-top: 1rem;*/
+        }
 
+        .responsive-iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
     </style>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -46,6 +67,9 @@
     <!-- <link href="<?= base_url(); ?>assets/libs/pdfviewer/web/viewer.css" rel="stylesheet" type="text/css"> -->
     <!-- <link href="<?= base_url(); ?>assets/libs/pdfviewer/web/debugger.css" rel="stylesheet" type="text/css"> -->
     <link href="<?= base_url(); ?>assets/libs/flatpickr/flatpickr.min.css" rel="stylesheet" type="text/css">
+    <link href="<?= base_url(); ?>assets/libs/twitter-bootstrap-wizard/prettify.css" rel="stylesheet" type="text/css">
+    <link href="<?= base_url(); ?>assets/libs/dropzone/min/dropzone.min.css" rel="stylesheet" type="text/css" />
+    <!-- <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" /> -->
      <!-- AddCSS -->
 
      <?php if(isset($addcss)) echo $addcss; ?>
@@ -271,7 +295,7 @@ else
 <script src="<?= base_url(); ?>assets/libs/flatpickr/flatpickr.min.js"></script>
 
 <!-- init js -->
-<script src="<?= base_url(); ?>assets/js/pages/form-advanced.init.js"></script>
+<!-- <script src="<?= base_url(); ?>assets/js/pages/form-advanced.init.js"></script> -->
 
 <script src="<?= base_url(); ?>assets/libs/pdfviewer/build/pdf.js"></script>
 <script src="<?= base_url(); ?>assets/libs/pdfviewer/build/pdf.sandbox.js"></script>
@@ -283,6 +307,11 @@ else
 
 <!-- App js -->
 <script src="<?= base_url(); ?>assets/libs/sweetalert2/sweetalert2.min.js"></script>
+<script src="<?= base_url(); ?>assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+<script src="<?= base_url(); ?>assets/libs/twitter-bootstrap-wizard/prettify.js"></script>
+<!-- <script src="<?= base_url(); ?>assets/js/pages/form-wizard.init.js"></script> -->
+<script src="<?= base_url(); ?>assets/libs/dropzone/min/dropzone.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
 
 <?php if(isset($addjs)) echo $addjs; ?>
 <?php if($addmenu) { ?>
@@ -290,7 +319,6 @@ else
 <?php } ?>
 
     <script type="text/javascript">
-
         var baseurl = "<?php echo base_url() ?>";
 
         var siteurl = "<?php echo site_url() ?>";
