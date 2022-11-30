@@ -89,6 +89,89 @@
         </div><!-- end row-->
 
         <div class="row">
+            <div class="col-xl-3 col-md-6">
+                <!-- card -->
+                <div class="card card-h-100">
+                    <!-- card body -->
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-6">
+                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Total Hit Method<br/> Submit COO</span>
+                                <h4 class="mb-3">
+                                    <span class="counter-value" data-target="<?php echo COUNT($data_client); ?>">0</span>
+                                </h4>
+                            </div>
+
+                            <div class="col-6">
+                                <div id="mini-chart1" data-colors='["#5156be"]' class="apex-charts mb-2"></div>
+                            </div>
+                        </div>
+                    </div><!-- end card body -->
+                </div><!-- end card -->
+            </div><!-- end col -->
+
+            <div class="col-xl-3 col-md-6">
+                <!-- card -->
+                <div class="card card-h-100">
+                    <!-- card body -->
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-6">
+                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Total Hit Method<br/> Get Draft COO</span>
+                                <h4 class="mb-3">
+                                    <span class="counter-value" data-target="<?php echo COUNT($data_partner); ?>">0</span>
+                                </h4>
+                            </div>
+                            <div class="col-6">
+                                <div id="mini-chart2" data-colors='["#5156be"]' class="apex-charts mb-2"></div>
+                            </div>
+                        </div>
+                    </div><!-- end card body -->
+                </div><!-- end card -->
+            </div><!-- end col-->
+
+            <div class="col-xl-3 col-md-6">
+                <!-- card -->
+                <div class="card card-h-100">
+                    <!-- card body -->
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-6">
+                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Total Hit Method<br/> Send Draft COO</span>
+                                <h4 class="mb-3">
+                                    <span class="counter-value" data-target="<?php echo COUNT($data_draft); ?>">0</span>
+                                </h4>
+                            </div>
+                            <div class="col-6">
+                                <div id="mini-chart3" data-colors='["#5156be"]' class="apex-charts mb-2"></div>
+                            </div>
+                        </div>
+                    </div><!-- end card body -->
+                </div><!-- end card -->
+            </div><!-- end col -->
+
+            <div class="col-xl-3 col-md-6">
+                <!-- card -->
+                <div class="card card-h-100">
+                    <!-- card body -->
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-6">
+                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Total Hit Method<br/> Upload Document<br/> COO</span>
+                                <h4 class="mb-3">
+                                    <span class="counter-value" data-target="<?php echo COUNT($data_doc_draft); ?>">0</span>
+                                </h4>
+                            </div>
+                            <div class="col-6">
+                                <div id="mini-chart4" data-colors='["#5156be"]' class="apex-charts mb-2"></div>
+                            </div>
+                        </div>
+                    </div><!-- end card body -->
+                </div><!-- end card -->
+            </div><!-- end col -->
+        </div><!-- end row-->
+
+        <div class="row">
             <div class="col-xl-4">
                 <!-- card -->
                 <div class="card card-h-100">
