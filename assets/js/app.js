@@ -149,12 +149,6 @@ function get_data(form,url,validate = false,tableid = "table_data",columnDefs = 
     });
 
     var panjangAkhir = errorString.length;
-<<<<<<< HEAD
-
-=======
-    // console.log(panjangAkhir);
-    // console.log(panjangAwal);
->>>>>>> 688526f5f9f8bc5b1371c818dbfb7bab9cc3ac7a
     panjangAkhir = errorString.length;
     if (panjangAwal == panjangAkhir) {
         if ($.fn.DataTable.isDataTable("#" + tableid)) {
