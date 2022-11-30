@@ -101,7 +101,7 @@ class Model_tracking extends CI_Model {
                         LEFT JOIN profile.clients b ON b.id = a.client_id
                         LEFT JOIN profile.partners c ON c.id = a.partner_id
                         LEFT JOIN profile.partner_endpoints d ON d.id = a.partner_endpoint_id
-                        WHERE 1=1 '.$addSql;
+                        WHERE a.client_id = '.$this->session->userdata('client_id').' '.$addSql;
 		$result_total 	= $this->db->query($sql_total);
 		$banyak 		= $result_total->num_rows();
 
@@ -111,7 +111,7 @@ class Model_tracking extends CI_Model {
                     LEFT JOIN profile.clients b ON b.id = a.client_id
                     LEFT JOIN profile.partners c ON c.id = a.partner_id
                     LEFT JOIN profile.partner_endpoints d ON d.id = a.partner_endpoint_id
-                    WHERE 1=1 '.$addSql.'
+                    WHERE a.client_id = '.$this->session->userdata('client_id').' '.$addSql.'
                     LIMIT '.$length.' OFFSET '.$start;
 			$result 		= $this->db->query($sql);
 			$arrayReturn 	= $result->result_array();
@@ -131,10 +131,11 @@ class Model_tracking extends CI_Model {
         $id = $this->input->post('id');
         $tipe = $this->input->post('tipe');
 
-        $sql = 'SELECT a.message_type, a.message_id, a.message_content, a.created_at as created_at_message, c.message_type as urai_message_type, b.result_code, b.result_responses, b.created_at as created_at_responses
+        $sql = 'SELECT a.message_type, a.message_id, a.message_content, a.created_at as created_at_message, c.message_type as urai_message_type, b.result_code, b.result_responses, b.created_at as created_at_responses, a.partner_endpoint_id
                 FROM trans.headers a 
                 LEFT JOIN trans.responses b ON b.transaction_id = a.id
                 LEFT JOIN referensi.message_type c ON c.id = a.message_type
+                LEFT JOIN profile.partner_endpoints d ON d.id = a.partner_endpoint_id
                 WHERE a.id = '.$id;
 
         $result = $this->db->query($sql);

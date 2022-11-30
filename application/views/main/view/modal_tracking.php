@@ -27,20 +27,17 @@
 </style>
 <script>
     $(document).ready(function() {
-        var document_type = set_id_file();
         flatpickr('#document_date', {});
-        var singleNoSorting = new Choices('#aju_number', {
+        
+        const singleNoSorting = new Choices('#aju_number', {
             shouldSort: true,
-            // searchEnabled: false,
-	        // removeItemButton: true,
-        });
-
-        var singleNoSorting = new Choices('#document_type', {
-            shouldSort: true,
-            // searchEnabled: false,
-	        // removeItemButton: true,
         });
         
+        const singleNoSorting = new Choices('#document_type', {
+            shouldSort: true,
+        });
+        
+        const document_type = set_id_file();
         const file_upload = document.getElementById('file_upload_'+document_type);
         file_upload.addEventListener('change', function(){
             add_file(this);
@@ -51,10 +48,10 @@
             dom: 'Bfrtip',
             buttons: []
         });
-    });
+    }); 
 
     function set_id_file() {
-        var document_type = $('#document_type').val();
+        const document_type = $('#document_type').val();
         $(".btn_upload_input").attr({ id: 'file_upload_'+document_type, name:'file_upload_'+document_type }); 
         $(".btn_upload").attr('for', 'file_upload_'+document_type); 
 
@@ -152,94 +149,16 @@
         $('#exampleModalScrollable1').modal('toggle');
         
         const preview = document.querySelector('iframe');
-        // const object = document.querySelector('object');
         const file = $('#file_upload_'+document_type).prop('files')[0];
         const reader = new FileReader();
 
         reader.addEventListener("load", function () {
-          // convert file to base64 string
             preview.src = reader.result;
         }, false);
 
-        if (file.name) {
+        if (file) {
             reader.readAsDataURL(file);
         }
-    }
-
-    function show_data() {
-        // var myVar = $('[id="hide_aju_number[0]"]').val();
-        // var myVar1 = $('[id="hide_document_type[0]"]').val();
-        // var index_data = $('#index_data').val();
-        // var buttons = [];
-        // var doc_type = [];
-        // var arr_aju = $('#aju_number option');
-        // var arr_tipe_dok = $('#document_type option');
-        
-        // if (typeof myVar !== 'undefined') {
-        //     $.each(arr_aju, function(key, data) {
-        //         console.log(key, data);
-        //         if(data.value == myVar) {
-        //             $("#aju_number option[value='"+ data.value + "']").attr('disabled', false); 
-        //         } else {
-        //             $("#aju_number option[value='"+ data.value + "']").attr('disabled', true); 
-        //         }
-        //     });
-
-        //     $.each(arr_tipe_dok, function(key, data) {
-        //         if(data.value == myVar1) {
-        //             $("#document_type option[value='"+ data.value + "']").attr('disabled', false); 
-        //         } else {
-        //             $("#document_type option[value='"+ data.value + "']").attr('disabled', true); 
-        //         }
-        //     });
-
-        //     buttons.push({
-        //         text: "Save Document",
-        //         titleAttr: "Save Document",
-        //         action: save
-        //     });
-        // } else {
-        //     $.each(arr_aju, function(key, data) {
-        //         $("#aju_number option[value='"+ data.value + "']").attr('disabled', false); 
-        //     });
-
-        //     $.each(arr_tipe_dok, function(key, data) {
-        //         $("#document_type option[value='"+ data.value + "']").attr('disabled', false); 
-        //     });
-        // }
-
-        // var datapost = JSON.stringify($("#form_upload").serializeArray());
-        // var formdata  = new FormData();
-        // formdata.append('formdata',datapost);
-
-        // for (let index = 0; index < index_data; index++) {
-        //     var document_type = $('[id="hide_document_type[' + i + ']"]').val();
-        //     formdata.append('file_upload_'+document_type, $('#file_upload_'+document_type).prop('files')[0]);
-        // }
-
-        // $.ajax({
-        //     type: 'POST',
-        //     url: baseurl + "index.php/tracking/show_table_document/"+Math.random(),
-        //     data: formdata,
-        //     cache: false,
-        //     contentType: false,
-        //     processData: false,
-        //     dataType: 'json',
-        //     success: function(data) {
-        //         // console.log(data.data);
-        //         var table = $('#table_upload').DataTable();    
-        //         $.each(data.data, function(i, item) {
-        //             // console.log(i, item);
-        //             table.row.add([ item[0], item[1], item[2], item[3], item[4], item[5] ]);
-        //         });
-                
-        //         table.draw();
-        //     }
-        // }); 
-    }
-
-    function save() {
-        console.log('masuk');
     }
 </script>
 <div style="text-align: left;">
@@ -262,7 +181,9 @@
                 </div>
                 <button type="button" id="btn_1" class="position-absolute top-0 start-0 translate-middle btn btn-sm btn-primary rounded-pill" style="width: 2rem; height:2rem;" onclick="progress_bar(1,0,'Header','left');">1</button>
                 <button type="button" id="btn_2" class="position-absolute top-0 start-50 translate-middle btn btn-sm btn-secondary rounded-pill" style="width: 2rem; height:2rem;" onclick="progress_bar(2,50,'Invoice','center');">2</button>
-                <button type="button" id="btn_3" class="position-absolute top-0 start-100 translate-middle btn btn-sm btn-secondary rounded-pill" style="width: 2rem; height:2rem;" onclick="progress_bar(3,100,'Document','right');">3</button>
+                <?php if($data[0]['partner_endpoint_id'] == 2) { ?>
+                    <button type="button" id="btn_3" class="position-absolute top-0 start-100 translate-middle btn btn-sm btn-secondary rounded-pill" style="width: 2rem; height:2rem;" onclick="progress_bar(3,100,'Document','right');">3</button>
+                <?php } ?>
             </div>
             <div id="title">Header</div>
             <br/>
@@ -579,25 +500,12 @@
                                             </div>
                                             <div class="modal-body" id="modal_body" style="text-align: center;">
                                                 <iframe class="responsive-iframe" src="" id="iframe-pdf"></iframe>
-                                                <!-- <object
-                                                    data=''
-                                                    type="application/pdf"
-                                                    width="500"
-                                                    height="678"
-                                                >
-
-                                                    <iframe
-                                                    class="responsive-iframe"
-                                                    src=''
-                                                    >
-                                                    </iframe>
-                                                </object> -->
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="table-responsive">
-                                    <button type="button" id="btn_save_doc" class="btn btn-primary waves-effect btn-label waves-light" style="display: none;"><i class="bx bx-check label-icon"></i> Save</button>
+                                    <button type="button" id="btn_save_doc" onclick="save();" class="btn btn-primary waves-effect btn-label waves-light" style="display: none;"><i class="bx bx-check label-icon"></i> Save</button>
                                     <table id="table_upload" class="table table-bordered dt-responsive nowrap w-100" width="100%">
                                         <thead style="width:100%">
                                             <tr align="center">

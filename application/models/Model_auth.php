@@ -24,10 +24,11 @@ class Model_auth extends CI_Model {
             {
                 $id_user    = $ret->row()->id_user;
                 $get_user    = "SELECT a.username,a.id_user,b.groupname,a.email,a.name,a.is_active,a.user_tipe,a.profile_picture,
-                                      a.address,a.phone_number,a.id_groups
+                                      a.address,a.phone_number,a.id_groups, a.client_id
                                     FROM users.user a
                                     LEFT JOIN users.groups b on b.id = a.id_groups
                                 WHERE a.id_user = ".$id_user.";";
+                
                 $exec       = $this->db->query($get_user);
                 $rowuser    = $exec->num_rows();
                 if($rowuser > 0)
