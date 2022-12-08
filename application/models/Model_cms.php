@@ -148,10 +148,10 @@ class Model_cms extends CI_Model {
     function get_endpoint($id)
     {
         $addSql = " AND a.partner_id = ".$this->db->escape($id);
-        $html   = '<span class="badge rounded-pill bg-success">Success</span>';
-        $sql = "SELECT * FROM profile.partner_endpoints a 
-                WHERE 1=1 ".$addSql." AND a.is_deleted  = ".$this->db->escape('f')." 
-                order by a.id ASC ";
+        $html   = '';
+        $sql    = "SELECT * FROM profile.partner_endpoints a 
+                    WHERE 1=1 ".$addSql." AND a.is_deleted  = ".$this->db->escape('f')." 
+                    order by a.id ASC ";
         // echo $sql;exit;
         $result = $this->db->query($sql);
 
@@ -338,6 +338,88 @@ class Model_cms extends CI_Model {
         return $data;
 
     }
+    public function add_item_partner()
+    {
+        $post 		= $this->input->post('postdata');
+		$arrPost 	= postajax_toarray($post);
+
+        $partnerName       = $arrPost['partner-name'];
+        $partnerDetail     = $arrPost['parner-detail'];
+        $arrmethodname     = $arrPost['arrmethodname[]'];
+        $arrType           = $arrPost['arrType[]'];
+        $arrendpoint       = $arrPost['arrendpoint[]'];
+        $arrstatus         = $arrPost['arrstatus[]'];
+        $arrmessageType    = $arrPost['arrmessageType[]'];
+        $data              = 0;
+        $idhdr             = 0;
+        $updated           = 99;
+        
+        $arrayInsertHeader = array(
+            'partner_name' => $partnerName,
+            'desc_partner' => $partnerDetail,
+            'is_active' => 't', 
+            'is_deleted' => 'f', 
+            'created_by' => $this->session->userdata('username'), 
+            'created_at' => date('Y-m-d H:i:s'), 
+            );
+        if ($updated == "1") {
+            $idnya = $arrPost['idnya'];
+            $arrayInsert = array(
+                'name' => $name, 
+                'is_active' => $status, 
+                'updated_by' => $this->session->userdata('username'), 
+                'updated_at' => date('Y-m-d H:i:s'), 
+                );
+            $this->db->where('id',$idnya);
+            $this->db->update('referensi.chanel',$arrayInsertHeader);
+        }
+        else {
+            $this->db->insert('profile.partners',$arrayInsertHeader);
+            $idhdr = $this->db->insert_id();
+
+            if ($idhdr != '0') {
+                if (is_array($arrmethodname)) {
+                    foreach ($arrmethodname as $key => $value) {
+                        $insertMethod = array(
+                                                'method_name'           => $value, 
+                                                'partner_method_type'   => $arrType[$key], 
+                                                'partner_id'            => $idhdr, 
+                                                'partner_endpoint'      => $arrendpoint[$key], 
+                                                'message_id'            => $arrmessageType[$key], 
+                                                'is_active'             => $arrstatus[$key], 
+                                                'is_deleted'            => 'f', 
+                                                'created_at'            => date('Y-m-d H:i:s'), 
+                                                'created_by'            => $this->session->userdata('username'), 
+                                            );
+                        $this->db->insert('profile.partner_endpoints',$insertMethod);
+                    }
+                }
+                else {
+                    $insertMethod = array(
+                        'method_name'           => $arrmethodname, 
+                        'partner_method_type'   => $arrType, 
+                        'partner_id'            => $idhdr, 
+                        'partner_endpoint'      => $arrendpoint, 
+                        'message_id'            => $arrmessageType, 
+                        'is_active'             => $arrstatus, 
+                        'is_deleted'            => 'f', 
+                        'created_at'            => date('Y-m-d H:i:s'), 
+                        'created_by'            => $this->session->userdata('username'), 
+                    );
+                    $this->db->insert('profile.partner_endpoints',$insertMethod);
+                }
+                // var_dump($insertMethod);exit;
+            }
+        }
+        
+        
+        if ($this->db->affected_rows() > 0 ) {
+            $data = 1;
+        }
+
+        return $data;
+
+    }
     public function get_edit_role()
     {
         $id 		= $this->input->post('id');
@@ -394,6 +476,33 @@ class Model_cms extends CI_Model {
         if ($banyak > 0) 
         {
             $returnData = $result->row();
+            $status     = 1;
+        }
+        $data = array(
+                    'thisdata' => $returnData, 
+                    'status' => $status, 
+                );
+
+        return $data;
+
+    }
+    public function getmessagetype()
+    {
+        $id 		= $this->input->post('id');
+        $data       = array();
+        $status     = 0;
+        $addSql     ="";
+
+        if ($id != '') {
+            $addSql = " WHERE a.id = ".$this->db->escape($id);
+        }
+
+        $sql        = "SELECT a.id as value,a.message_type as label FROM referensi.message_type a ".$addSql;
+        $result     = $this->db->query($sql);
+        $banyak     = $result->num_rows();
+        if ($banyak > 0) 
+        {
+            $returnData = $result->result_array();
             $status     = 1;
         }
         $data = array(

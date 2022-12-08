@@ -308,7 +308,11 @@ else
 <script src="<?= base_url(); ?>assets/libs/sweetalert2/sweetalert2.min.js"></script>
 <script src="<?= base_url(); ?>assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
 <script src="<?= base_url(); ?>assets/libs/twitter-bootstrap-wizard/prettify.js"></script>
-<!-- <script src="<?= base_url(); ?>assets/js/pages/form-wizard.init.js"></script> -->
+
+<!-- twitter-bootstrap-wizard js -->
+<script src="<?= base_url(); ?>assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+<script src="<?= base_url(); ?>assets/libs/twitter-bootstrap-wizard/prettify.js"></script>
+
 <script src="<?= base_url(); ?>assets/libs/dropzone/min/dropzone.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
 
@@ -331,7 +335,7 @@ else
 			arr_years.push(start_years + i);
 		} 
 
-        function show_hide_form(header='', form=''){
+        function show_hide_form(header='', form='',bodyhide = 'form-horizontal'){
             const form_tampil = $('#'+header+' i#'+form);
             
             if ( form_tampil.attr('class') ==  'fa fa-chevron-down') {
@@ -342,7 +346,7 @@ else
                 form_tampil.attr('title', 'Sembunyikan Form');
                 
             }
-            $('.form-horizontal').slideToggle("slow");
+            $('.'+bodyhide).slideToggle("slow");
         }
         
     </script>

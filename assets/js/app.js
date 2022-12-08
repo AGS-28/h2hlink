@@ -283,8 +283,23 @@ function get_data_dashboard(func_name, div_id) {
     });
 }
 
-(function ($) {
+function getselectmessagetype(id='') {
+    var postdata    = new FormData();
+    var url         = siteurl+'/cms/getmessagetype';
+    postdata.append('id',id);
+    
+    var data = post_ajax(url,postdata);
+    var respondData = JSON.parse(data);
+    if (respondData.status == 1) {
+        return respondData.thisdata;
+    }
+    else
+    {
+        return "[{ value: '', label: 'Empty'}]";
+    }
+}
 
+(function ($) {
     'use strict';
 
     var language = localStorage.getItem('minia-language');
