@@ -300,7 +300,6 @@ function getselectmessagetype(id='') {
 }
 
 (function ($) {
-
     'use strict';
 
     var language = localStorage.getItem('minia-language');

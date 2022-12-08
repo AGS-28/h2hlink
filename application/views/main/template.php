@@ -335,7 +335,7 @@ else
 			arr_years.push(start_years + i);
 		} 
 
-        function show_hide_form(header='', form=''){
+        function show_hide_form(header='', form='',bodyhide = 'form-horizontal'){
             const form_tampil = $('#'+header+' i#'+form);
             
             if ( form_tampil.attr('class') ==  'fa fa-chevron-down') {
