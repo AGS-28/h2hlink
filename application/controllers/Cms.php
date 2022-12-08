@@ -72,6 +72,7 @@ class Cms extends CI_Controller {
 		$data['addmenu'] 	= true;
 		$data['addcss'] 	= '';
 		$data['addjs'] 		= '<script src="'.base_url().'assets/main/js/partner.js"></script>';
+		$data['addjs'] 		.= '<script src="'.base_url().'assets/js/pages/form-wizard.init.js"></script>';
 		$data['title_meta'] = $this->load->view('main/partials/title-meta', $tittle,true);
 		
 		//Page Data Content
@@ -253,6 +254,10 @@ class Cms extends CI_Controller {
     {
         echo json_encode($this->Model_cms->add_role_item());
     }
+    public function add_item_partner()
+    {
+		echo json_encode($this->Model_cms->add_item_partner());
+    }
     public function get_edit_role()
     {
         echo json_encode($this->Model_cms->get_edit_role());
@@ -307,6 +312,11 @@ class Cms extends CI_Controller {
 
 		unset($row);
 		echo json_encode($return);
+	}
+
+	public function getmessagetype()
+	{
+		echo json_encode($this->Model_cms->getmessagetype());
 	}
 
 }

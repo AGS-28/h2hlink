@@ -245,11 +245,6 @@
 <script src="<?= base_url(); ?>assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="<?= base_url(); ?>assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
 
->>>>>>> 54cd337c6226c2d8c9434ee2ef081a9ad1f947b3
-<<<<<<< HEAD
->>>>>>> main_afif
-=======
->>>>>>> main_ilham
 <!-- App js -->
 <?php if(isset($addjs)) echo $addjs; ?>
 <script src="<?= base_url(); ?>assets/js/app.js"></script>

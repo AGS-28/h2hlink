@@ -8,10 +8,6 @@ File: Form wizard Js File
 
 
 $(document).ready(function() {
-    $('#basic-pills-wizard').bootstrapWizard({
-        'tabClass': 'nav nav-pills nav-justified'
-    });
-
     $('#progrss-wizard').bootstrapWizard({onTabShow: function(tab, navigation, index) {
         var $total = navigation.find('li').length;
         var $current = index+1;
@@ -31,4 +27,4 @@ triggerTabList.forEach(function (triggerEl) {
         event.preventDefault()
         tabTrigger.show()
     })
-})
+});
