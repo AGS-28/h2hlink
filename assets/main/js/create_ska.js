@@ -51,20 +51,7 @@ function confirm_upload_draft() {
     var panjangAkhir = errorString.length;
     panjangAkhir = errorString.length;
     if (panjangAwal == panjangAkhir) {
-        Swal.fire({
-            title: 'Confirmation',
-            html: 'Are you sure submit action ?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonClass: 'btn btn-success',
-            cancelButtonClass: 'btn btn-danger',
-            confirmButtonText: 'Yes, do it!',
-            cancelButtonText: 'No, cancel!'
-            }).then((result) => {
-            if (result.isConfirmed) {
-                upload_draft();
-            }
-        });
+        confirm_kirim(upload_draft);
     } else {
         alert_error(errorString);
     }
@@ -88,7 +75,7 @@ function upload_draft() {
     setTimeout(function(){
         showLoading(false);
         if (respondData == 1)  {
-            alert_sukses(cari_data('form_table',false,'get_data_draft'));
+            alert_sukses('',cari_data('form_table',false,'get_data_draft'));
         } else if(respondData == 2) {
             alert_error('Failed to upload documents, please check your type file');
         } else {
@@ -110,20 +97,7 @@ function confirm_save() {
     var panjangAkhir = errorString.length;
     panjangAkhir = errorString.length;
     if (panjangAwal == panjangAkhir) {
-        Swal.fire({
-            title: 'Confirmation',
-            html: 'Are you sure submit action ?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonClass: 'btn btn-success',
-            cancelButtonClass: 'btn btn-danger',
-            confirmButtonText: 'Yes, do it!',
-            cancelButtonText: 'No, cancel!'
-            }).then((result) => {
-            if (result.isConfirmed) {
-                upload_document(); 
-            }
-        });
+        confirm_kirim(upload_document);
     }else {
         alert_error(errorString);
     }
@@ -142,7 +116,7 @@ function upload_document() {
     setTimeout(function(){
         showLoading(false);
         if (respondData == 1)  {
-            alert_sukses(cari_data('form_table',false,'get_data_document'));
+            alert_sukses('',cari_data('form_table',false,'get_data_document'));
         } else {
             alert_error('Failed to upload documents');
         }
@@ -192,7 +166,7 @@ function show_data_document(id, name_doc, tipe='', func_name) {
     }  
 
     if(func_name == 'get_view_draft') {
-        var target = [0, 2];
+        var target = [0, 3];
     } else {
         var target = [0, 4];
     }
@@ -227,33 +201,24 @@ function show_data_document(id, name_doc, tipe='', func_name) {
 }
 
 function delete_document(id, header_id) {
-    Swal.fire({
-        title: 'Confirmation',
-        html: 'Are you sure delete document ?',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonClass: 'btn btn-success',
-        cancelButtonClass: 'btn btn-danger',
-        confirmButtonText: 'Yes, do it!',
-        cancelButtonText: 'No, cancel!'
-        }).then((result) => {
-        if (result.isConfirmed) {
-            loading('modal_loading', true);
+    confirm_delete('', next_delete_document, id, header_id);
+}
 
-            var formdata  = new FormData();
-            formdata.append('id',id);
-            var url = baseurl + "index.php/createska/delete_document/"+Math.random();
-            var data = post_ajax(url,formdata);
-            var respondData = JSON.parse(data);
-            setTimeout(function(){
-                loading('modal_loading', false);
+function next_delete_document(id, header_id) {
+    loading('modal_loading', true);
 
-                if (respondData == 1)  {
-                    alert_sukses(show_data_document(header_id, 'Views Data','1','get_view_document'));
-                } else {
-                    alert_error('Failed to delete documents');
-                }
-            }, 3000);
+    var formdata  = new FormData();
+    formdata.append('id',id);
+    var url = baseurl + "index.php/createska/delete_document/"+Math.random();
+    var data = post_ajax(url,formdata);
+    var respondData = JSON.parse(data);
+    setTimeout(function(){
+        loading('modal_loading', false);
+
+        if (respondData == 1) {
+            alert_sukses('',show_data_document(header_id, 'Views Data','1','get_view_document'));
+        } else {
+            alert_error('Failed to delete documents');
         }
-    });
+    }, 3000);
 }

@@ -5,6 +5,13 @@ Website: https://themesbrand.com/
 Contact: themesbrand@gmail.com
 File: Dashboard Init Js File
 */
+$(document).ready(function() {
+    loading('div_draft_transaction', true);
+    loading('div_request_transaction', true);
+
+    get_data_dashboard('get_data_draft_transaction','div_draft_transaction');
+    get_data_dashboard('get_data_request_transaction','div_request_transaction');
+});
 
 // get colors array from the string
 function getChartColorsArray(chartId) {
@@ -20,8 +27,6 @@ function getChartColorsArray(chartId) {
         }
     })
 }
-
-//  MINI CHART
 
 // mini-1
 var minichart1Colors = getChartColorsArray("#mini-chart1");
@@ -61,144 +66,24 @@ var options = {
     }
 };
 
-var chart = new ApexCharts(document.querySelector("#mini-chart1"), options);
-chart.render();
+// Box
+for (let index = 1; index <= 4; index++) {
+    new ApexCharts(document.querySelector("#mini-chart"+index), options).render();
+}
 
-// mini-2
-var minichart2Colors = getChartColorsArray("#mini-chart2");
-var options = {
-    series: [{
-        data: [15, 42, 47, 2, 14, 19, 65, 75, 47, 15, 42, 47, 2, 14, 12, ]
-    }],
-    chart: {
-        type: 'line',
-        height: 50,
-        sparkline: {
-            enabled: true
-        }
-    },
-    colors: minichart2Colors,
-    stroke: {
-        curve: 'smooth',
-        width: 2,
-    },
-    tooltip: {
-        fixed: {
-            enabled: false
-        },
-        x: {
-            show: false
-        },
-        y: {
-            title: {
-                formatter: function (seriesName) {
-                    return ''
-                }
-            }
-        },
-        marker: {
-            show: false
-        }
-    }
-};
+// Hit Method
+var jml_end_point = each_arr($('#jml_end_point').val());
+var urai_end_point = each_arr($('#urai_end_point').val());
 
-var chart = new ApexCharts(document.querySelector("#mini-chart2"), options);
-chart.render();
-
-// mini-3
-var minichart3Colors = getChartColorsArray("#mini-chart3");
-var options = {
-    series: [{
-        data: [47, 15, 2, 67, 22, 20, 36, 60, 60, 30, 50, 11, 12, 3, 8, ]
-    }],
-    chart: {
-        type: 'line',
-        height: 50,
-        sparkline: {
-            enabled: true
-        }
-    },
-    colors: minichart3Colors,
-    stroke: {
-        curve: 'smooth',
-        width: 2,
-    },
-    tooltip: {
-        fixed: {
-            enabled: false
-        },
-        x: {
-            show: false
-        },
-        y: {
-            title: {
-                formatter: function (seriesName) {
-                    return ''
-                }
-            }
-        },
-        marker: {
-            show: false
-        }
-    }
-};
-
-var chart = new ApexCharts(document.querySelector("#mini-chart3"), options);
-chart.render();
-
-// mini-4
-var minichart4Colors = getChartColorsArray("#mini-chart4");
-var options = {
-    series: [{
-        data: [12, 14, 2, 47, 42, 15, 47, 75, 65, 19, 14, 2, 47, 42, 15, ]
-    }],
-    chart: {
-        type: 'line',
-        height: 50,
-        sparkline: {
-            enabled: true
-        }
-    },
-    colors: minichart4Colors,
-    stroke: {
-        curve: 'smooth',
-        width: 2,
-    },
-    tooltip: {
-        fixed: {
-            enabled: false
-        },
-        x: {
-            show: false
-        },
-        y: {
-            title: {
-                formatter: function (seriesName) {
-                    return ''
-                }
-            }
-        },
-        marker: {
-            show: false
-        }
-    }
-};
-
-var chart = new ApexCharts(document.querySelector("#mini-chart4"), options);
-chart.render();
-
-// 
-// Wallet Balance
-//
 var piechartColors = getChartColorsArray("#wallet-balance");
 var options = {
-    series: [35, 70, 15],
+    series: jml_end_point,
     chart: {
         width: 227,
         height: 227,
         type: 'pie',
     },
-    labels: ['Ethereum', 'Bitcoin', 'Litecoin'],
+    labels: urai_end_point,
     colors: piechartColors,
     stroke: {
         width: 0,
@@ -215,162 +100,65 @@ var options = {
         }
     }]
 };
-
 var chart = new ApexCharts(document.querySelector("#wallet-balance"), options);
 chart.render();
 
-//
-// Invested Overview
-//
+// Draft Status
+var jml_draft_status = each_arr($('#jml_draft_status').val());
+var urai_draft_status = each_arr($('#urai_draft_status').val());
 
-var radialchartColors = getChartColorsArray("#invested-overview");
+var piechartColors = getChartColorsArray("#wallet-balance1");
 var options = {
+    series: jml_draft_status,
     chart: {
-        height: 270,
-        type: 'radialBar',
-        offsetY: -10
+        width: 227,
+        height: 227,
+        type: 'pie',
     },
-    plotOptions: {
-        radialBar: {
-            startAngle: -130,
-            endAngle: 130,
-            dataLabels: {
-                name: {
-                    show: false
-                },
-                value: {
-                    offsetY: 10,
-                    fontSize: '18px',
-                    color: undefined,
-                    formatter: function (val) {
-                        return val + "%";
-                    }
-                }
-            }
-        }
-    },
-    colors: [radialchartColors[0]],
-    fill: {
-        type: 'gradient',
-        gradient: {
-            shade: 'dark',
-            type: 'horizontal',
-            gradientToColors: [radialchartColors[1]],
-            shadeIntensity: 0.15,
-            inverseColors: false,
-            opacityFrom: 1,
-            opacityTo: 1,
-            stops: [20, 60]
-        },
-    },
+    labels: urai_draft_status,
+    colors: piechartColors,
     stroke: {
-        dashArray: 4,
+        width: 0,
     },
     legend: {
         show: false
     },
-    series: [80],
-    labels: ['Series A'],
-}
-
-var chart = new ApexCharts(
-    document.querySelector("#invested-overview"),
-    options
-);
-
+    responsive: [{
+        breakpoint: 480,
+        options: {
+            chart: {
+                width: 200
+            },
+        }
+    }]
+};
+var chart = new ApexCharts(document.querySelector("#wallet-balance1"), options);
 chart.render();
 
-//
-// Market Overview
-//
-var barchartColors = getChartColorsArray("#market-overview");
-var options = {
-    series: [{
-        name: 'Profit',
-        data: [12.45, 16.2, 8.9, 11.42, 12.6, 18.1, 18.2, 14.16, 11.1, 8.09, 16.34, 12.88]
-    }, {
-        name: 'Loss',
-        data: [-11.45, -15.42, -7.9, -12.42, -12.6, -18.1, -18.2, -14.16, -11.1, -7.09, -15.34, -11.88]
-    }],
-    chart: {
-        type: 'bar',
-        height: 400,
-        stacked: true,
-        toolbar: {
-            show: false
-        },
-    },
-    plotOptions: {
-        bar: {
-            columnWidth: '20%',
-        },
-    },
-    colors: barchartColors,
-    fill: {
-        opacity: 1
-    },
-    dataLabels: {
-        enabled: false,
-    },
-    legend: {
-        show: false,
-    },
-    yaxis: {
-        labels: {
-            formatter: function (y) {
-                return y.toFixed(0) + "%";
+function each_arr(arr) {
+    var arr_value = [];
+    var value = arr.split(',');
+
+    value.forEach(function(value, index) {
+        if(value != '') {
+            if($.isNumeric(value)){
+                arr_value.push(parseInt(value));
+            } else {
+                arr_value.push(value);
             }
         }
-    },
-    xaxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        labels: {
-            rotate: -90
-        }
-    }
-};
+    })
+    
+    return arr_value;
+}
 
-var chart = new ApexCharts(document.querySelector("#market-overview"), options);
-chart.render();
+function show_modal_dashboard(id, tipe) {
+    loading('modal_body', true);
+    $('#exampleModalScrollable').modal('toggle');
 
-MAp
-
-var vectormapColors = getChartColorsArray("#sales-by-locations");
-$('#sales-by-locations').vectorMap({
-    map: 'world_mill_en',
-    normalizeFunction: 'polynomial',
-    hoverOpacity: 0.7,
-    hoverColor: false,
-    regionStyle: {
-        initial: {
-            fill: '#e9e9ef'
-        }
-    },
-    markerStyle: {
-        initial: {
-            r: 9,
-            'fill': vectormapColors,
-            'fill-opacity': 0.9,
-            'stroke': '#fff',
-            'stroke-width': 7,
-            'stroke-opacity': 0.4
-        },
-
-        hover: {
-            'stroke': '#fff',
-            'fill-opacity': 1,
-            'stroke-width': 1.5
-        }
-    },
-    backgroundColor: 'transparent',
-    markers: [{
-        latLng: [41.90, 12.45],
-        name: 'USA'
-    }, {
-        latLng: [12.05, -61.75],
-        name: 'Russia'
-    }, {
-        latLng: [1.3, 103.8],
-        name: 'Australia'
-    }]
-});
+    var url = baseurl + "index.php/home/get_data_modal_dashboard/"+Math.random();
+    $.post( url, { id: id, tipe: tipe }, function( data ) {
+        loading('modal_body', false);
+        $('#modal_body').html( data );
+    });
+}

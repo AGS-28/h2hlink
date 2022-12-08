@@ -291,5 +291,27 @@ if (!function_exists('pretty_print'))
 	}
 }
 
+if (!function_exists('get_month'))
+{
+	function get_month()
+	{
+		return array('January','February','March','April','May','June','July','August','September','October','November','December');
+	}
+}
+
+if (!function_exists('get_years'))
+{
+	function get_years()
+	{
+		$arr_years = array();
+		$start_years = 2022;
+
+		for ($i = 0; $i < 5; $i++) { 
+			$arr_years[] = $start_years + $i;
+		}
+
+		return $arr_years;
+	}
+}
 
 ?>

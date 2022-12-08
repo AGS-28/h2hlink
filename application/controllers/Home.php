@@ -28,6 +28,8 @@ class Home extends CI_Controller {
 		$param['data_partner'] 	= $this->Model_master->get_data_partner();
 		$param['data_draft'] 	= $this->Model_home->get_data_draft();
 		$param['data_doc_draft'] 	= $this->Model_home->get_data_doc_draft();
+		$param['data_end_point'] 	= $this->Model_home->get_data_end_point();
+		$param['data_draft_status'] = $this->Model_home->get_data_draft_status();
 		$param['page_title'] 	= $this->load->view('main/partials/page-title', $tittle,true);
 		
 		$data['content']    	= $this->load->view('main/view/dashboard',$param,true);
@@ -36,6 +38,25 @@ class Home extends CI_Controller {
 
 	public function logout() {
 		$this->session->sess_destroy();
-    	redirect('auth','refresh');
+		redirect('auth','refresh');
+	}
+
+	public function get_data_draft_transaction() {
+		$data['data'] = $this->Model_home->get_data_draft_transaction();
+		$data['tipe'] = 1;
+		echo $this->load->view('main/view/v_table_dashboard',$data,true);
+	}
+
+	public function get_data_request_transaction() {
+		$data['data'] = $this->Model_home->get_data_request_transaction();
+		$data['tipe'] = 2;
+		echo $this->load->view('main/view/v_table_dashboard',$data,true);
+	}
+
+	public function get_data_modal_dashboard() {
+		$data['id'] = $this->input->post('id');
+		$data['tipe'] = $this->input->post('tipe');
+		$data['data'] = $this->Model_home->get_data_modal_dashboard($data['id'], $data['tipe']);
+		echo $this->load->view('main/view/v_table_modal_dashboard',$data,true);
 	}
 }

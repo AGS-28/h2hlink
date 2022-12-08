@@ -120,6 +120,7 @@
                                                 <tr align="center">
                                                     <th>No</th>
                                                     <th>Document Type</th>
+                                                    <th>Document Name</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>

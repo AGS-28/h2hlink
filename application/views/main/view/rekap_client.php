@@ -40,15 +40,23 @@
                                             </div>
                                         </div>
                                         <div class="row mb-4">
-                                            <label for="horizontal-input" class="col-sm-3 col-form-label">End Point</label>
+                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Show Table</label>
                                             <div class="col-sm-9">
-                                                <select class="form-control" name="end_point" id="end_point" title="End Point" multiple>
-                                                    <?php foreach($data_end_point as $end_point) { ?>
-                                                            <option value="<?php echo $end_point['id']; ?>"> <?php echo $end_point['method_name']; ?> </option>
-                                                    <?php } ?>
+                                                <select class="form-control single-choices" name="show_table" id="show_table" title="Show Table" onchange="change_month_years();">
+                                                    <option value="1">Month</option>
+                                                    <option value="2">Years</option>
                                                 </select>
                                             </div>
                                         </div>
+                                        <!-- <div class="row mb-4">
+                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Paid Status</label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control" name="paid_status" id="paid_status" title="Paid Status" multiple>
+                                                    <option value="1">Already</option>
+                                                    <option value="2">Not Yet</option>
+                                                </select>
+                                            </div>
+                                        </div> -->
                                     </div>
                                 </div>
                                 <div class="col-lg-6 ms-lg-auto">
@@ -63,7 +71,6 @@
                                                             <option value="<?php echo $client['npwp']; ?>"> <?php echo $client['npwp']; ?> </option>
                                                         <?php } ?>
                                                 </select>
-                                                <!-- <input type="text" class="form-control" id="npwp" name="npwp" title="NPWP" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> -->
                                             </div>
                                         </div>
                                         <div class="row mb-4">
@@ -77,9 +84,44 @@
                                             </div>
                                         </div>
                                         <div class="row mb-4">
-                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Create Date</label>
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control date-range" id="create_date" name="create_date" title="Create Date">
+                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Years</label>
+                                            <div class="col-sm-9" id="div_years_single">
+                                                <?php $arr_years = get_years(); $years_now = date('Y'); ?>
+                                                <select class="form-control single-choices" name="years_single" id="years_single" title="Years" onchange="dinamis_column();">
+                                                    <?php foreach($arr_years as $years) { ?>
+                                                        <?php $selected = ''; if($years == $years_now) { $selected = 'selected'; } ?>
+                                                        <option value="<?php echo $years; ?>" <?php echo $selected; ?>> <?php echo $years; ?> </option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-9" id="div_years_multiple" style="display: none;">
+                                                <?php $arr_years = get_years(); $years_now = date('Y'); ?>
+                                                <select class="form-control" name="years_multiple" id="years_multiple" title="Years" multiple onchange="dinamis_column();">
+                                                    <?php foreach($arr_years as $years) { ?>
+                                                        <?php $selected = ''; if($years == $years_now) { $selected = 'selected'; } ?>
+                                                        <option value="<?php echo $years; ?>" <?php echo $selected; ?>> <?php echo $years; ?> </option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-4">
+                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Month</label>
+                                            <div class="col-sm-9" id="div_month_enabled">
+                                                <?php $arr_month = get_month(); $month_now = date('m'); ?>
+                                                <select class="form-control" name="month_enabled" id="month_enabled" title="Month" multiple onchange="dinamis_column();">
+                                                    <?php $i = 1; foreach($arr_month as $month) { ?>
+                                                        <?php $selected = ''; if($i == $month_now) { $selected = 'selected'; } ?>
+                                                        <option value="<?php echo $i; ?>" <?php echo $selected; ?>> <?php echo $month; ?> </option>
+                                                    <?php $i++; } ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-9" id="div_month_disabled" style="display: none;">
+                                                <?php $arr_month = get_month(); $month_now = date('m'); ?>
+                                                <select class="form-control" name="month_disabled" id="month_disabled" title="Month" multiple>
+                                                    <?php $i = 1; foreach($arr_month as $month) { ?>
+                                                        <option value="<?php echo $i; ?>"> <?php echo $month; ?> </option>
+                                                    <?php $i++; } ?>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -114,26 +156,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-6 ms-lg-auto">
-                                <div class="mt-6 mt-lg-0">
-                                    <div class="row mb-4">
-                                        <form class="row gx-3 gy-2 align-items-center" method="post" action="javascript:void(0)" name="form_table" id="form_table">
-                                            <div class="col-sm-5">
-                                                <div class="input-group">
-                                                    <!-- <input type="text" class="form-control" title="aju number" id="no_aju" name="no_aju" placeholder="aju number"> -->
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-7">
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control" title="aju number" id="no_aju" name="no_aju" placeholder="Aju number..." onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                                                    <button class="btn btn-primary" type="button" onclick="cari_data('form_table',true);"><i class="bx bx-search-alt align-middle"></i></button>
-                                                    <!-- <div class="input-group-text" onclick="cari_data('form_table');" style="cursor: pointer;"><i class="bx bx-search"></i></div> -->
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div class="card-body">
@@ -152,12 +174,25 @@
                         <div class="table-responsive">
                             <table id="table_data" class="table_data table table-bordered dt-responsive nowrap w-100" width="100%">
                                 <thead style="width:100%">
-                                    <tr align="center">
-                                        <th>No</th>
-                                        <th>Client</th>
-                                        <th>Partner</th>
-                                        <th>Transaction</th>
-                                        <th>Action</th>
+                                    <tr valign="middle">
+                                        <th class="text-center" width="5%" rowspan="2">No</th>
+                                        <th class="text-center" rowspan="2">Client Name</th>
+                                        <?php 
+                                            $years_now = date("Y");
+                                        ?>
+                                        <th class="text-center" colspan="1"><?php echo $years_now; ?></th>
+                                        <th class="text-center" rowspan="2">Total AJu Number</th>
+                                        <th class="text-center" rowspan="2">Total Billing</th>
+                                        <!-- <th class="text-center" rowspan="2" valign="middle">Paid Status</th> -->
+                                        <th class="text-center" rowspan="2">Action</th>
+                                    </tr>
+                                    <tr valign="middle">
+                                        <?php 
+                                            $month_now = date("m");
+                                            $month_now = (int)$month_now - 1;
+                                            $arr_month = get_month();
+                                        ?>
+                                        <th class="text-center"><?php echo $arr_month[$month_now]; ?></th>
                                     </tr>
                                 </thead>
                                 <tbody>
