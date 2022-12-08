@@ -322,6 +322,15 @@ else
 
         var siteurl = "<?php echo site_url() ?>";
 
+        var year_now = new Date().getFullYear();
+        var arr_month = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        var arr_years = [];
+		var start_years = 2022;
+
+		for (let i = 0; i < 5; i++) { 
+			arr_years.push(start_years + i);
+		} 
+
         function show_hide_form(header='', form=''){
             const form_tampil = $('#'+header+' i#'+form);
             

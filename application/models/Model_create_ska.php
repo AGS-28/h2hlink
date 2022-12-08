@@ -21,7 +21,12 @@ class Model_create_ska extends CI_Model {
             $no_draft = uniqid().rand();
             
             $val_sql = "SELECT no_draft FROM trans.draft_ska WHERE no_draft = ".$this->db->escape($no_draft);
-            $val_draft = $this->get_eof($val_sql);
+            $result_val_sql = $this->db->query($val_sql);
+            if ($result_val_sql->num_rows() == 0) {
+                $val_draft = true;
+            } else {
+                $val_draft = false;
+            }
         }
         
         $draft_ska = array(
@@ -68,6 +73,7 @@ class Model_create_ska extends CI_Model {
                         $tipe_file = array_search(strtoupper($extension),$arr_message_type,true);
                         $data = array(
                             'draft_id' => $id,
+                            'file_name' => $file['name'],
                             'path' => $path_file,
                             'tipe_file' => $tipe_file,
                             'created_at' => date("Y-m-d h:i:s"),
@@ -254,7 +260,7 @@ class Model_create_ska extends CI_Model {
         $start 		= $this->input->post('start');
 		$length 	= $this->input->post('length');
 
-        $sql_total 	= ' SELECT a.id, b.message_type, a.path
+        $sql_total 	= ' SELECT a.id, b.message_type, a.path, a.file_name
                         FROM trans.draft_ska_document a
                         LEFT JOIN referensi.message_type b ON b.id = a.tipe_file
                         WHERE a.draft_id = '.$id;
@@ -263,7 +269,7 @@ class Model_create_ska extends CI_Model {
 		$banyak 		= $result_total->num_rows();
 
 		if($banyak > 0){			
-            $sql = 'SELECT a.id, b.message_type, a.path
+            $sql = 'SELECT a.id, b.message_type, a.path, a.file_name
                     FROM trans.draft_ska_document a
                     LEFT JOIN referensi.message_type b ON b.id = a.tipe_file
                     WHERE a.draft_id = '.$id.'

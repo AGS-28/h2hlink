@@ -64,7 +64,7 @@ function alert_sukses(iddata="",_callback = false,tittle = "Success...") {
         });
 }
 
-function confirm_delete(content='Anda yakin melakukan aksi ini ?',_callback,iddata='',title='Konfirmasi',type='orange')
+function confirm_delete(content='Anda yakin melakukan aksi ini ?',_callback,iddata='',param1='',param2='',title='Konfirmasi',type='orange')
 {
    swal.fire({
          title: content,
@@ -76,7 +76,7 @@ function confirm_delete(content='Anda yakin melakukan aksi ini ?',_callback,idda
       }).then(function(result){
         if (result.dismiss !== Swal.DismissReason.cancel) 
         {
-            _callback(iddata)
+            _callback(iddata,param1,param2)
         }
       });
 }
@@ -272,6 +272,14 @@ function showLoading(stat) {
     $.LoadingOverlay(val, {
         image       : "",
         custom      : customElement
+    });
+}
+
+function get_data_dashboard(func_name, div_id) {
+    var url = baseurl + "index.php/home/"+func_name+"/"+Math.random();
+    $.post( url, function( data ) {
+        loading(div_id, false);
+        $('#'+div_id).html( data );
     });
 }
 

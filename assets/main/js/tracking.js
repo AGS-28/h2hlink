@@ -1,9 +1,9 @@
 $(document).ready(function() {
-    var multipleCancelButton = new Choices('#client_partner',{removeItemButton: true,});
-    var multipleCancelButton = new Choices('#client_name',{removeItemButton: true,});
-    var multipleCancelButton = new Choices('#end_point',{removeItemButton: true,});
-    var multipleCancelButton = new Choices('#npwp',{removeItemButton: true,});
-    var multipleCancelButton = new Choices('#nib',{removeItemButton: true,});
+    new Choices('#client_partner',{removeItemButton: true,});
+    new Choices('#client_name',{removeItemButton: true,});
+    new Choices('#end_point',{removeItemButton: true,});
+    new Choices('#npwp',{removeItemButton: true,});
+    new Choices('#nib',{removeItemButton: true,});
 });
 
 function cari_data(form, validate=false) {
