@@ -55,6 +55,14 @@ function dinamis_column() {
         years = [years];
     }
 
+    month.sort(function(a, b){
+        return parseInt(a)- parseInt(b);
+    });
+
+    years.sort(function(a, b){
+        return parseInt(a)- parseInt(b);
+    });
+
     if ($.fn.DataTable.isDataTable("#table_data")) {
         $("#table_data").DataTable().destroy();
     }
@@ -62,8 +70,8 @@ function dinamis_column() {
     $('#table_data thead tr').remove();
     $('#table_data tbody tr').remove();
     
-    html = '<tr valign="top">';
-    html1 = '<tr valign="top">';
+    html = '<tr valign="middle">';
+    html1 = '<tr valign="middle">';
     html += '<th class="text-center" width="5%" rowspan="2">No</th>';
     html += '<th class="text-center" rowspan="2">Client Name</th>';
     $.each(years, function( index, value ) {

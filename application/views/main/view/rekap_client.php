@@ -181,7 +181,7 @@
                                             $years_now = date("Y");
                                         ?>
                                         <th class="text-center" colspan="1"><?php echo $years_now; ?></th>
-                                        <th class="text-center" rowspan="2">Total AJu Number</th>
+                                        <th class="text-center" rowspan="2">Total Aju Number</th>
                                         <th class="text-center" rowspan="2">Total Billing</th>
                                         <!-- <th class="text-center" rowspan="2" valign="middle">Paid Status</th> -->
                                         <th class="text-center" rowspan="2">Action</th>
