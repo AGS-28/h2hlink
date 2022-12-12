@@ -144,6 +144,50 @@ class Model_cms extends CI_Model {
 
 		return $return;
     }
+    function get_data_client()
+    {
+        $start 		= $this->input->post('start');
+		$length 	= $this->input->post('length');
+		$post 		= $this->input->post('formdata');
+		$arrPost 	= postajax_toarray($post);
+        $addSql     = '';
+        
+        if(isset($arrPost['searchkey']) && $arrPost['searchkey'] != '') {
+            $addSql .= ' AND (lower(CAST(a.id AS VARCHAR(3))) LIKE lower('.$this->db->escape('%'.$arrPost['searchkey'].'%').')';
+            $addSql .= ' OR lower(a.client_name) LIKE lower('.$this->db->escape('%'.$arrPost['searchkey'].'%').')';
+            $addSql .= ' OR lower(a.npwp) LIKE lower('.$this->db->escape('%'.$arrPost['searchkey'].'%').')';
+            $addSql .= ' OR lower(a.nib) LIKE lower('.$this->db->escape('%'.$arrPost['searchkey'].'%').')';
+            $addSql .= ' OR lower(b.package_name) LIKE lower('.$this->db->escape('%'.$arrPost['searchkey'].'%').'))';
+            
+        }
+        
+        $sql_total 	= ' select a.*,b.package_name 
+                            from profile.clients a
+                            left join referensi.package b on b.id = a.package_id 
+                        WHERE 1=1 '.$addSql.' AND a.is_deleted = '.$this->db->escape('f').';';
+        
+		$result_total 	= $this->db->query($sql_total);
+		$banyak 		= $result_total->num_rows();
+
+		if($banyak > 0){
+			$sql = 'select a.*,b.package_name 
+                        from profile.clients a
+                        left join referensi.package b on b.id = a.package_id 
+                    WHERE 1=1 '.$addSql.' AND a.is_deleted = '.$this->db->escape('f').' 
+                    order by a.id ASC 
+                    LIMIT '.$length.' OFFSET '.$start.';';
+			$result 		= $this->db->query($sql);
+			$arrayReturn 	= $result->result_array();
+
+			$return['totalRow'] = $banyak;
+			$return['arrData'] 	= $arrayReturn;
+		}else{
+			$return['totalRow'] = 0;
+			$return['arrData'] 	= array();
+		}		
+
+		return $return;
+    }
     
     function get_endpoint($id)
     {
@@ -459,6 +503,94 @@ class Model_cms extends CI_Model {
         $data = array(
                     'thisdata' => $returnData, 
                     'status' => $status, 
+                );
+
+        return $data;
+
+    }
+    public function get_view_client()
+    {
+        $id 		= $this->input->post('id');
+        $data       = array();
+        $status     = 0;
+        $html       = "";
+
+        $sql        = "SELECT a.*,b.package_name 
+                            from profile.clients a
+                            left join referensi.package b on b.id = a.package_id 
+                        WHERE a.id = ".$this->db->escape($id);
+
+        $result     = $this->db->query($sql);
+        $banyak     = $result->num_rows();
+        if ($banyak > 0) 
+        {
+            $returnData = $result->row();
+            $status     = 1;
+
+            $sql_chanel = "SELECT b.name ,c.message_type  
+                                from profile.client_chanel a 
+                                left join referensi.chanel b on a.id_chanel = b.id 
+                                left join referensi.message_type c on a.message_id = c.id 
+                            WHERE a.id_client = ".$this->db->escape($id);
+            $result     = $this->db->query($sql_chanel);
+            $banyak     = $result->num_rows();
+            if ($banyak > 0) {
+                $DataChanel = $result->result();
+               
+                foreach ($DataChanel as $key => $value) {
+                    $html .= "<tr>";
+                    $html .= "<td>".($key + 1)."</td>";
+                    $html .= "<td>".$value->name."</td>";
+                    $html .= "<td>".$value->message_type."</td>";
+                    $html .= "</td>";
+
+                }
+            }
+            else 
+            {
+                $html .= "Data Empty";
+            }
+            $dataRowChanel = $html;
+
+            $sql_endpoint = "select a.client_key ,a.api_key ,b.partner_name, c.method_name ,c.partner_method_type ,d.message_type ,c.partner_endpoint 
+                                from profile.client_partners a 
+                                left join profile.partners b on b.id = a.partner_id 
+                                left join profile.partner_endpoints c on c.id = a.endpoint_id 
+                                left join referensi.message_type d on d.id = c.message_id 
+                            where a.client_id = ".$this->db->escape($id);
+            $result     = $this->db->query($sql_endpoint);
+            $banyak     = $result->num_rows();
+
+            if ($banyak > 0) {
+                $DataEndpoints = $result->result();
+                $html = "";
+                foreach ($DataEndpoints as $key => $value) {
+                    $html .= "<tr>";
+                    $html .= "<td>".($key + 1)."</td>";
+                    $html .= "<td>".$value->partner_name."</td>";
+                    $html .= "<td>".$value->method_name."</td>";
+                    $html .= "<td>".$value->partner_endpoint."</td>";
+                    $html .= "<td>".$value->client_key."</td>";
+                    $html .= "<td>".$value->api_key."</td>";
+                    $html .= "<td>".$value->partner_method_type."</td>";
+                    $html .= "<td>".$value->message_type."</td>";
+                    $html .= "</td>";
+
+                }
+            }
+            else 
+            {
+                $html .= "Data Empty";
+            }
+
+            $dataRowEndpoint = $html;
+
+        }
+        $data = array(
+                    'clientProfile' => $returnData, 
+                    'rowChanel'     => $dataRowChanel, 
+                    'rowEndpoint'   => $dataRowEndpoint, 
+                    'status'        => $status, 
                 );
 
         return $data;
