@@ -135,7 +135,7 @@ function alert_error(tittle = "Warning!", icon = "warning" , button = "Close",er
     });
 }
 
-function get_data(form,url,validate = false,tableid = "table_data",columnDefs = [{}]) {
+function get_data(form,url,validate = false,tableid = "table_data",columnDefs = [{}],buttons = []) {
     // console.log(form, url, tableid);
     var errorString = "Please complete the following data : <br\>";
     var panjangAwal = errorString.length;
@@ -166,7 +166,7 @@ function get_data(form,url,validate = false,tableid = "table_data",columnDefs = 
             searching: false,
             // order: [0],
             dom: 'Bfrtip',
-            buttons: [],
+            buttons: buttons,
             ajax: {
                 url: url,
                 type: "POST",

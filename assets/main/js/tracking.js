@@ -1,27 +1,39 @@
-$(document).ready(function() {
+$(document).ready(function() {    
     new Choices('#client_partner',{removeItemButton: true,});
     new Choices('#client_name',{removeItemButton: true,});
     new Choices('#end_point',{removeItemButton: true,});
     new Choices('#npwp',{removeItemButton: true,});
     new Choices('#nib',{removeItemButton: true,});
+    
+    if($('#tipe').val() == '1') {
+        new Choices('#years_multiple_tipe1',{addItems: false,removeItems: false,}).disable();
+        new Choices('#month_enabled_tipe1',{addItems: false,removeItems: false,}).disable();
+        new Choices('#client_partner_tipe1',{addItems: false,removeItems: false,}).disable();
+        new Choices('#client_name_tipe1',{addItems: false,removeItems: false,}).disable();
+        new Choices('#end_point_tipe1',{addItems: false,removeItems: false,}).disable();
+        new Choices('#npwp_tipe1',{addItems: false,removeItems: false,}).disable();
+        new Choices('#nib_tipe1',{addItems: false,removeItems: false,}).disable();
+        
+        cari_data('form_tracking');
+    }
 });
 
 function cari_data(form, validate=false) {
-var url = siteurl + "/tracking/cari/"+Math.random()
-var columnDefs = [
-                    {  
-                        width: "5%",
-                        targets: [0, 4],
-                        orderable: true,
-                        className: "text-center",
-                    },
-                    {
-                        targets: '_all',
-                        className: "text-left"
-                    },
-                ];
+    var url = siteurl + "/tracking/cari/"+Math.random()
+    var columnDefs = [
+                        {  
+                            width: "5%",
+                            targets: [0, 4],
+                            orderable: true,
+                            className: "text-center",
+                        },
+                        {
+                            targets: '_all',
+                            className: "text-left"
+                        },
+                    ];
 
-get_data(form,url,validate,tableid = "table_data",columnDefs);
+    get_data(form,url,validate,tableid = "table_data",columnDefs);
 
 }
 

@@ -3,12 +3,13 @@
 
         const respons = '<?php echo $data['arrayReturn'][0]['result_responses']; ?>';
         const obj = JSON.parse(respons);
-        // window.open(obj.data.url_draft, '_blank');
+        window.open(obj.data.url_draft, '_blank');
+        $('#exampleModalScrollable').modal('toggle');
         
-        const preview = document.querySelector('iframe');
-        preview.src = obj.data.data_file;
+        // const preview = document.querySelector('iframe');
+        // preview.src = obj.data.data_file;
 
     });
 </script>
 
-<iframe class="responsive-iframe" src="" id="iframe-pdf"></iframe>
+<!-- <iframe class="responsive-iframe" src="" id="iframe-pdf"></iframe> -->

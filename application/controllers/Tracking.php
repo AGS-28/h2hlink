@@ -26,7 +26,19 @@ class Tracking extends CI_Controller {
 		$param['data_client'] 	 = $this->Model_master->get_data_client();
 		$param['data_partner'] 	 = $this->Model_master->get_data_partner();
 		$param['data_end_point'] = $this->Model_master->get_data_end_point();
-		
+		$param['tipe'] 			 = 0;
+
+		if($this->input->post('tipe') != '') {
+			$param['tipe'] = 1;
+			$param['partner_id'] = $this->input->post('partner_id');
+			if($this->input->post('tipe') == '0') {
+				$param['data_client_byid'] = $this->Model_master->get_data_client($this->input->post('client_id'));
+			}
+			
+			$param['years_select'] = explode(',', $this->input->post('years_tracking'));
+			$param['month_select'] = explode(',', $this->input->post('month_tracking'));
+		}
+
 		$data['content']    	= $this->load->view('main/view/tracking',$param,true);
 		$this->load->view('main/template',$data);
 	}
