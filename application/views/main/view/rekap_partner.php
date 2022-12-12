@@ -13,28 +13,18 @@
                         <p class="card-title-desc">Please click the icon at the top right corner to display the search form</p>
                     </div>
                     <div class="card-body p-4 form-horizontal" style="display: none;">
-                        <form class="" method="post" action="javascript:void(0)" name="form_rekap_client" id="form_rekap_client" onsubmit="cari_data('form_rekap_client','cari_data');">
+                        <form class="" method="post" action="javascript:void(0)" name="form_rekap_partner" id="form_rekap_partner" onsubmit="cari_data('form_rekap_partner','cari_data');">
                             <div class="row">
                                 <div class="col-lg-6 ms-lg-auto">
                                     <div class="mt-4 mt-lg-0">
                                         <p class="card-title-desc"><i class="mdi mdi-information-variant"></i> Please enter input and click search to display data</p>
                                         <br/>
                                         <div class="row mb-4">
-                                            <label for="horizontal-input" class="col-sm-3 col-form-label">NIB</label>
+                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Client Partner</label>
                                             <div class="col-sm-9">
-                                                <select class="form-control" name="nib" id="nib" title="NIB" multiple>
-                                                    <?php foreach($data_client as $client) { ?>
-                                                            <option value="<?php echo $client['nib']; ?>"> <?php echo $client['nib']; ?> </option>
-                                                    <?php } ?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-4">
-                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Client Name</label>
-                                            <div class="col-sm-9">
-                                                <select class="form-control" name="client_name" id="client_name" title="Client Name" multiple>
-                                                    <?php foreach($data_client as $client) { ?>
-                                                            <option value="<?php echo $client['id']; ?>"> <?php echo $client['client_name']; ?> </option>
+                                                <select class="form-control" name="client_partner" id="client_partner" multiple>
+                                                    <?php foreach($data_partner as $partner) { ?>
+                                                        <option value="<?php echo $partner['id']; ?>"> <?php echo $partner['partner_name']; ?> </option>
                                                     <?php } ?>
                                                 </select>
                                             </div>
@@ -63,26 +53,6 @@
                                     <div class="mt-4 mt-lg-0">
                                         <p class="card-title-desc" style="color:white;">Please enter input and click search to display data</p>
                                         <br/>
-                                        <div class="row mb-4">
-                                            <label for="horizontal-input" class="col-sm-3 col-form-label">NPWP</label>
-                                            <div class="col-sm-9">
-                                                <select class="form-control" name="npwp" id="npwp" title="NPWP" multiple>
-                                                        <?php foreach($data_client as $client) { ?>
-                                                            <option value="<?php echo $client['npwp']; ?>"> <?php echo $client['npwp']; ?> </option>
-                                                        <?php } ?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-4">
-                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Client Partner</label>
-                                            <div class="col-sm-9">
-                                                <select class="form-control" name="client_partner" id="client_partner" multiple>
-                                                    <?php foreach($data_partner as $partner) { ?>
-                                                        <option value="<?php echo $partner['id']; ?>"> <?php echo $partner['partner_name']; ?> </option>
-                                                    <?php } ?>
-                                                </select>
-                                            </div>
-                                        </div>
                                         <div class="row mb-4">
                                             <label for="horizontal-input" class="col-sm-3 col-form-label">Years</label>
                                             <div class="col-sm-9" id="div_years_single">
@@ -181,7 +151,6 @@
                                 <thead style="width:100%">
                                     <tr valign="middle">
                                         <th class="text-center" width="5%" rowspan="2">No</th>
-                                        <th class="text-center" rowspan="2">Client Name</th>
                                         <th class="text-center" rowspan="2">Partner Name</th>
                                         <?php 
                                             $years_now = date("Y");

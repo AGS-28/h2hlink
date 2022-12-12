@@ -44,7 +44,7 @@
                                 </form>
                             </div>
                         </div>
-                        <div class="text-center mt-4">
+                        <div class="text-end mt-4">
                             <input class="form-control" type="hidden" id="tipe" name="tipe" value="0" readonly>
                             <button type="submit" onclick="confirm_upload_draft();" class="btn btn-primary waves-effect btn-label waves-light"><i class="bx bx-check label-icon"></i> Send Files</button>
                         </div>
