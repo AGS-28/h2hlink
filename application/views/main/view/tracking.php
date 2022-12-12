@@ -1,4 +1,14 @@
-
+<?php 
+    if($tipe == 0) {
+        $style = 'style="display: none;"';
+        $icon = 'fa fa-chevron-left';
+        $tipe_txt = '';
+    } else {
+        $style = 'style="display: block;"';
+        $icon = 'fa fa-chevron-down';
+        $tipe_txt = '_tipe1';
+    } 
+?>
 
 <div class="page-content">
     <div class="container-fluid">
@@ -8,11 +18,11 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header" id="header">
-                        <i id="form_tampil" class="fa fa-chevron-left" aria-hidden="true" title="Show Form Searching" style="cursor:pointer; position:relative; float:right; margin-right:5px;" onclick="show_hide_form('header','form_tampil')"></i>
+                        <i id="form_tampil" class="<?php echo $icon; ?>" aria-hidden="true" title="Show Form Searching" style="cursor:pointer; position:relative; float:right; margin-right:5px;" onclick="show_hide_form('header','form_tampil')"></i>
                         <h4 class="card-title"><i class="bx bx-search"></i> Searching</h4>
                         <p class="card-title-desc">Please click the icon at the top right corner to display the search form</p>
                     </div>
-                    <div class="card-body p-4 form-horizontal" style="display: none;">
+                    <div class="card-body p-4 form-horizontal" <?php echo $style; ?>>
                         <form class="" method="post" action="javascript:void(0)" name="form_tracking" id="form_tracking" onsubmit="cari_data('form_tracking');">
                             <div class="row">
                                 <div class="col-lg-6 ms-lg-auto">
@@ -22,9 +32,17 @@
                                         <div class="row mb-4">
                                             <label for="horizontal-input" class="col-sm-3 col-form-label">NIB</label>
                                             <div class="col-sm-9">
-                                                <select class="form-control" name="nib" id="nib" title="NIB" multiple>
+                                                <select class="form-control" name="nib<?php echo $tipe_txt; ?>" id="nib<?php echo $tipe_txt; ?>" title="NIB" multiple>
                                                     <?php foreach($data_client as $client) { ?>
-                                                            <option value="<?php echo $client['nib']; ?>"> <?php echo $client['nib']; ?> </option>
+                                                        <?php 
+                                                            $selected = '';
+                                                            if($tipe == 1) {
+                                                                if($client['nib'] == $data_client_byid[0]['nib']) {
+                                                                    $selected = 'selected';
+                                                                }
+                                                            }
+                                                        ?>
+                                                        <option value="<?php echo $client['nib']; ?>" <?php echo $selected; ?>> <?php echo $client['nib']; ?> </option>
                                                     <?php } ?>
                                                 </select>
                                             </div>
@@ -32,9 +50,17 @@
                                         <div class="row mb-4">
                                             <label for="horizontal-input" class="col-sm-3 col-form-label">Client Name</label>
                                             <div class="col-sm-9">
-                                                <select class="form-control" name="client_name" id="client_name" title="Client Name" multiple>
+                                                <select class="form-control" name="client_name<?php echo $tipe_txt; ?>" id="client_name<?php echo $tipe_txt; ?>" title="Client Name" multiple>
                                                     <?php foreach($data_client as $client) { ?>
-                                                            <option value="<?php echo $client['id']; ?>"> <?php echo $client['client_name']; ?> </option>
+                                                        <?php 
+                                                            $selected = '';
+                                                            if($tipe == 1) {
+                                                                if($client['id'] == $data_client_byid[0]['id']) {
+                                                                    $selected = 'selected';
+                                                                }
+                                                            }
+                                                        ?>
+                                                        <option value="<?php echo $client['id']; ?>" <?php echo $selected; ?>> <?php echo $client['client_name']; ?> </option>
                                                     <?php } ?>
                                                 </select>
                                             </div>
@@ -42,7 +68,7 @@
                                         <div class="row mb-4">
                                             <label for="horizontal-input" class="col-sm-3 col-form-label">End Point</label>
                                             <div class="col-sm-9">
-                                                <select class="form-control" name="end_point" id="end_point" title="End Point" multiple>
+                                                <select class="form-control" name="end_point<?php echo $tipe_txt; ?>" id="end_point<?php echo $tipe_txt; ?>" title="End Point" multiple>
                                                     <?php foreach($data_end_point as $end_point) { ?>
                                                             <option value="<?php echo $end_point['id']; ?>"> <?php echo $end_point['method_name']; ?> </option>
                                                     <?php } ?>
@@ -58,9 +84,17 @@
                                         <div class="row mb-4">
                                             <label for="horizontal-input" class="col-sm-3 col-form-label">NPWP</label>
                                             <div class="col-sm-9">
-                                                <select class="form-control" name="npwp" id="npwp" title="NPWP" multiple>
+                                                <select class="form-control" name="npwp<?php echo $tipe_txt; ?>" id="npwp<?php echo $tipe_txt; ?>" title="NPWP" multiple>
                                                         <?php foreach($data_client as $client) { ?>
-                                                            <option value="<?php echo $client['npwp']; ?>"> <?php echo $client['npwp']; ?> </option>
+                                                            <?php 
+                                                                $selected = '';
+                                                                if($tipe == 1) {
+                                                                    if($client['npwp'] == $data_client_byid[0]['npwp']) {
+                                                                        $selected = 'selected';
+                                                                    }
+                                                                }
+                                                            ?>
+                                                            <option value="<?php echo $client['npwp']; ?>" <?php echo $selected; ?>> <?php echo $client['npwp']; ?> </option>
                                                         <?php } ?>
                                                 </select>
                                                 <!-- <input type="text" class="form-control" id="npwp" name="npwp" title="NPWP" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> -->
@@ -69,19 +103,60 @@
                                         <div class="row mb-4">
                                             <label for="horizontal-input" class="col-sm-3 col-form-label">Client Partner</label>
                                             <div class="col-sm-9">
-                                                <select class="form-control" name="client_partner" id="client_partner" multiple>
+                                                <select class="form-control" name="client_partner<?php echo $tipe_txt; ?>" id="client_partner<?php echo $tipe_txt; ?>" multiple>
                                                     <?php foreach($data_partner as $partner) { ?>
-                                                        <option value="<?php echo $partner['id']; ?>"> <?php echo $partner['partner_name']; ?> </option>
+                                                        <?php 
+                                                            $selected = '';
+                                                            if($tipe == 1) {
+                                                                if($partner['id'] == $partner_id) {
+                                                                    $selected = 'selected';
+                                                                }
+                                                            }
+                                                        ?>
+                                                        <option value="<?php echo $partner['id']; ?>" <?php echo $selected; ?>> <?php echo $partner['partner_name']; ?> </option>
                                                     <?php } ?>
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="row mb-4">
-                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Create Date</label>
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control date-range" id="create_date" name="create_date" title="Create Date">
+                                        <?php if($tipe == 1) { ?>
+                                            <div class="row mb-4">
+                                                <label for="horizontal-input" class="col-sm-3 col-form-label">Years</label>
+                                                <div class="col-sm-9">
+                                                    <?php $arr_years = get_years(); ?>
+                                                    <select class="form-control" name="years_multiple<?php echo $tipe_txt; ?>" id="years_multiple<?php echo $tipe_txt; ?>" title="Years" multiple>
+                                                        <?php foreach($arr_years as $years) { ?>
+                                                            <?php $selected = ''; if(in_array($years, $years_select)) { $selected = 'selected'; } ?>
+                                                            <option value="<?php echo $years; ?>" <?php echo $selected; ?>> <?php echo $years; ?> </option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
+                                            <div class="row mb-4">
+                                                <label for="horizontal-input" class="col-sm-3 col-form-label">Month</label>
+                                                <div class="col-sm-9">
+                                                    <?php $arr_month = get_month(); ?>
+                                                    <select class="form-control" name="month_enabled<?php echo $tipe_txt; ?>" id="month_enabled<?php echo $tipe_txt; ?>" title="Month" multiple>
+                                                        <?php $i = 1; foreach($arr_month as $month) { ?>
+                                                            <?php $selected = ''; if(in_array($i, $month_select)) { $selected = 'selected'; } ?>
+                                                            <option value="<?php echo $i; ?>" <?php echo $selected; ?>> <?php echo $month; ?> </option>
+                                                        <?php $i++; } ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        <?php } else { ?>
+                                                <div class="row mb-4">
+                                                    <label for="horizontal-input" class="col-sm-3 col-form-label">Create Date</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control date-range" id="create_date" name="create_date" title="Create Date">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-4">
+                                                    <label for="horizontal-input" class="col-sm-3 col-form-label">Aju Date</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control date-range" id="aju_date" name="aju_date" title="Aju Date">
+                                                    </div>
+                                                </div>
+                                        <?php } ?>
                                     </div>
                                 </div>
                                 <hr>
@@ -89,6 +164,7 @@
                                     <div class="mt-12 mt-lg-0">
                                         <div class="row mb-12 text-center">
                                             <div>
+                                                <input class="form-control" type="hidden" name="tipe" id="tipe" value="<?php echo $tipe; ?>" readonly>
                                                 <button type="submit" class="btn btn-primary waves-effect btn-label waves-light"><i class="bx bx-check label-icon"></i> Search</button> &nbsp;
                                                 <button type="reset" class="btn btn-danger waves-effect btn-label waves-light"><i class="bx bx-rotate-left label-icon"></i> Reset</button>
                                             </div>
@@ -96,6 +172,130 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <?php if($tipe == 1) { ?>
+                                    <div class="row" style="display: none;">
+                                        <div class="col-lg-6 ms-lg-auto">
+                                            <div class="mt-4 mt-lg-0">
+                                                <p class="card-title-desc"><i class="mdi mdi-information-variant"></i> Please enter input and click search to display data</p>
+                                                <br/>
+                                                <div class="row mb-4">
+                                                    <label for="horizontal-input" class="col-sm-3 col-form-label">NIB</label>
+                                                    <div class="col-sm-9">
+                                                        <select class="form-control" name="nib" id="nib" title="NIB" multiple>
+                                                            <?php foreach($data_client as $client) { ?>
+                                                                <?php 
+                                                                    $selected = '';
+                                                                    if($tipe == 1) {
+                                                                        if($client['nib'] == $data_client_byid[0]['nib']) {
+                                                                            $selected = 'selected';
+                                                                        }
+                                                                    }
+                                                                ?>
+                                                                <option value="<?php echo $client['nib']; ?>" <?php echo $selected; ?>> <?php echo $client['nib']; ?> </option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-4">
+                                                    <label for="horizontal-input" class="col-sm-3 col-form-label">Client Name</label>
+                                                    <div class="col-sm-9">
+                                                        <select class="form-control" name="client_name" id="client_name" title="Client Name" multiple>
+                                                            <?php foreach($data_client as $client) { ?>
+                                                                <?php 
+                                                                    $selected = '';
+                                                                    if($tipe == 1) {
+                                                                        if($client['id'] == $data_client_byid[0]['id']) {
+                                                                            $selected = 'selected';
+                                                                        }
+                                                                    }
+                                                                ?>
+                                                                <option value="<?php echo $client['id']; ?>" <?php echo $selected; ?>> <?php echo $client['client_name']; ?> </option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-4">
+                                                    <label for="horizontal-input" class="col-sm-3 col-form-label">End Point</label>
+                                                    <div class="col-sm-9">
+                                                        <select class="form-control" name="end_point" id="end_point" title="End Point" multiple>
+                                                            <?php foreach($data_end_point as $end_point) { ?>
+                                                                    <option value="<?php echo $end_point['id']; ?>"> <?php echo $end_point['method_name']; ?> </option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 ms-lg-auto">
+                                            <div class="mt-4 mt-lg-0">
+                                                <p class="card-title-desc" style="color:white;">Please enter input and click search to display data</p>
+                                                <br/>
+                                                <div class="row mb-4">
+                                                    <label for="horizontal-input" class="col-sm-3 col-form-label">NPWP</label>
+                                                    <div class="col-sm-9">
+                                                        <select class="form-control" name="npwp" id="npwp" title="NPWP" multiple>
+                                                                <?php foreach($data_client as $client) { ?>
+                                                                    <?php 
+                                                                        $selected = '';
+                                                                        if($tipe == 1) {
+                                                                            if($client['npwp'] == $data_client_byid[0]['npwp']) {
+                                                                                $selected = 'selected';
+                                                                            }
+                                                                        }
+                                                                    ?>
+                                                                    <option value="<?php echo $client['npwp']; ?>" <?php echo $selected; ?>> <?php echo $client['npwp']; ?> </option>
+                                                                <?php } ?>
+                                                        </select>
+                                                        <!-- <input type="text" class="form-control" id="npwp" name="npwp" title="NPWP" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> -->
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-4">
+                                                    <label for="horizontal-input" class="col-sm-3 col-form-label">Client Partner</label>
+                                                    <div class="col-sm-9">
+                                                        <select class="form-control" name="client_partner" id="client_partner" multiple>
+                                                            <?php foreach($data_partner as $partner) { ?>
+                                                                <?php 
+                                                                    $selected = '';
+                                                                    if($tipe == 1) {
+                                                                        if($partner['id'] == $partner_id) {
+                                                                            $selected = 'selected';
+                                                                        }
+                                                                    }
+                                                                ?>
+                                                                <option value="<?php echo $partner['id']; ?>" <?php echo $selected; ?>> <?php echo $partner['partner_name']; ?> </option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-4">
+                                                    <label for="horizontal-input" class="col-sm-3 col-form-label">Years</label>
+                                                    <div class="col-sm-9">
+                                                        <?php $arr_years = get_years(); ?>
+                                                        <select class="form-control" name="years_multiple" id="years_multiple" title="Years" multiple>
+                                                            <?php foreach($arr_years as $years) { ?>
+                                                                <?php $selected = ''; if(in_array($years, $years_select)) { $selected = 'selected'; } ?>
+                                                                <option value="<?php echo $years; ?>" <?php echo $selected; ?>> <?php echo $years; ?> </option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-4">
+                                                    <label for="horizontal-input" class="col-sm-3 col-form-label">Month</label>
+                                                    <div class="col-sm-9">
+                                                        <?php $arr_month = get_month(); ?>
+                                                        <select class="form-control" name="month_enabled" id="month_enabled" title="Month" multiple>
+                                                            <?php $i = 1; foreach($arr_month as $month) { ?>
+                                                                <?php $selected = ''; if(in_array($i, $month_select)) { $selected = 'selected'; } ?>
+                                                                <option value="<?php echo $i; ?>" <?php echo $selected; ?>> <?php echo $month; ?> </option>
+                                                            <?php $i++; } ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            <?php } ?>
                         </form>
                     </div>
                 </div>

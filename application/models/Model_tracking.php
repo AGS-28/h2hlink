@@ -40,10 +40,20 @@ class Model_tracking extends CI_Model {
             $addSql .= ' AND a.no_aju = '.$this->db->escape($arrPost['no_aju']);
         }
         
-        if($arrPost['create_date'] != '') {
-            $arr_tanggal = explode(' to ', $arrPost['create_date']);
+        if(isset($arrPost['create_date'])) {
+            if($arrPost['create_date'] != '') {
+                $arr_tanggal = explode(' to ', $arrPost['create_date']);
 
-            $addSql .= ' AND a.created_at BETWEEN '.$this->db->escape($arr_tanggal[0]).' AND '.$this->db->escape($arr_tanggal[1]);
+                $addSql .= ' AND a.created_at BETWEEN '.$this->db->escape($arr_tanggal[0]).' AND '.$this->db->escape($arr_tanggal[1]);
+            }
+        }
+
+        if(isset($arrPost['aju_date'])) {
+            if($arrPost['aju_date'] != '') {
+                $arr_aju_date = explode(' to ', $arrPost['aju_date']);
+
+                $addSql .= ' AND a.tgl_aju BETWEEN '.$this->db->escape($arr_aju_date[0]).' AND '.$this->db->escape($arr_aju_date[1]);
+            }
         }
 
         if(isset($arrPost['nib'])) {
@@ -96,6 +106,26 @@ class Model_tracking extends CI_Model {
             $addSql .= " AND d.id IN ('".$end_point."')";
         }
         
+        if(isset($arrPost['years_multiple'])) {
+            if(is_array($arrPost['years_multiple'])) {
+                $years = implode("','", $arrPost['years_multiple']);
+            } else {
+                $years = $arrPost['years_multiple'];
+            }
+
+            $addSql .= " AND EXTRACT(YEAR FROM a.tgl_aju) IN ('".$years."')";
+        }
+
+        if(isset($arrPost['month_enabled'])) {
+            if(is_array($arrPost['month_enabled'])) {
+                $month = implode("','", $arrPost['month_enabled']);
+            } else {
+                $month = $arrPost['month_enabled'];
+            }
+
+            $addSql .= " AND EXTRACT(MONTH FROM a.tgl_aju) IN ('".$month."')";
+        }
+
         $sql_total 	= ' SELECT a.id, a.no_aju, b.client_name, b.npwp, b.nib, c.partner_name, d.method_name as partner_endpoint, a.created_at as created_at_message
                         FROM trans.headers a 
                         LEFT JOIN profile.clients b ON b.id = a.client_id

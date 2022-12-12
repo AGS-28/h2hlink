@@ -44,7 +44,7 @@ class User extends CI_Controller {
                        </br>NIB : <font color="#4549a2">'.$data['nib'].'</font> 
                        </br>NPWP : <font color="#4549a2">'.$data['npwp'].'</font> 
                        </br>Address : <font color="#4549a2">'.$data['address'].'</font>
-                       </br>Telephone : <font color="#4549a2">'.$data['telephone_no'].' / '.$data['handpone_no'].'</font>';
+                       </br>Telephone : <font color="#4549a2">'.$data['telephone_no'].' / '.$data['handphone_no'].'</font>';
 			$html[] = '<b> Partner Name : <font color="#d75350">'.$data['partner_name'].'</font>
                        </br>API-KEY : <font color="#4549a2">'.$data['api_key'].'</font> 
                        </br>Client Key : <font color="#4549a2">'.$data['client_key'].'</font> ';
