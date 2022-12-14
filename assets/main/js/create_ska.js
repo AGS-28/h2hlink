@@ -1,18 +1,26 @@
 var tipe = $('#tipe').val();
+var extention = $('#extention').val();
 if(tipe == 0) {
     var myDropzone = new Dropzone(".dropzone", { 
-        // maxFiles: 2,
-        acceptedFiles: ".csv, .xls, .xlsx, .txt, .rar, .json, .xml",
-        addRemoveLinks: true,
+        // maxFiles: 3,
+        // acceptedFiles: ".csv, .xls, .xlsx, .txt, .rar, .json, .xml",
+        acceptedFiles: extention,
+        // addRemoveLinks: true,
         accept: function(file, done) {
-            done();
+            var cek = cekFile();
+            if(cek) {
+                done();
+            } else {
+                alert_error('Please complete the following data : <br\> - Anda hanya bisa melakukan upload sekali dengan tipe dokumen '+$('#tipe_upload option:selected').text());
+                this.removeFile(file);
+            }
         },
         init: function() {
-            addRemoveLinks: true, 
-            this.on("maxfilesexceeded", function(file) {
-                alert_error('Please complete the following data : <br\> - Maximum file that can be uploaded is only 2');
-                this.removeFile(file);
-            });
+            // addRemoveLinks: true, 
+            // this.on("maxfilesexceeded", function(file) {
+            //     alert_error('Please complete the following data : <br\> - Maximum file that can be uploaded is only 3');
+            //     this.removeFile(file);
+            // });
         }
     });
 }
@@ -21,6 +29,7 @@ $(document).ready(function() {
     if(tipe == 0) {
         cari_data('form_table',false,'get_data_draft');
         new Choices('#client_partner', {shouldSort: true});
+        new Choices('#tipe_upload', {shouldSort: false});
     } else {
         flatpickr('#document_date', {});
         cari_data('form_table',false,'get_data_document');
@@ -33,6 +42,18 @@ $(document).ready(function() {
         });
     }
 });
+
+function cekFile() {
+    var tipe_upload = $('#tipe_upload').val();
+    var tipe_file = $('#tipe_file').val();
+    if(tipe_file.indexOf(tipe_upload) === -1) {
+        var update_fipe_file = tipe_file+','+tipe_upload;
+        $('#tipe_file').val(update_fipe_file);
+        return true;
+    } else {
+        return false;
+    }
+}
 
 function confirm_upload_draft() {
     var errorString = "Please complete the following data : <br\>";
@@ -65,6 +86,8 @@ function upload_draft() {
     formdata.append('length', dropzone.files.length);
     formdata.append('client_partner', $('#client_partner').val());
     formdata.append('invoice_number', $('#invoice_number').val());
+    formdata.append('tipe_file', $('#tipe_file').val());
+
     for (var i = 0; i < dropzone.files.length; i++) {
         formdata.append('file_' + i, dropzone.files[i]);
     }
@@ -75,7 +98,8 @@ function upload_draft() {
     setTimeout(function(){
         showLoading(false);
         if (respondData == 1)  {
-            alert_sukses('',cari_data('form_table',false,'get_data_draft'));
+            // alert_sukses('',cari_data('form_table',false,'get_data_draft'));
+            alert_sukses('',location.reload());
         } else if(respondData == 2) {
             alert_error('Failed to upload documents, please check your type file');
         } else {
@@ -166,7 +190,7 @@ function show_data_document(id, name_doc, tipe='', func_name) {
     }  
 
     if(func_name == 'get_view_draft') {
-        var target = [0, 3];
+        var target = [0, 4];
     } else {
         var target = [0, 4];
     }

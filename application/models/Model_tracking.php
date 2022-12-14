@@ -131,7 +131,8 @@ class Model_tracking extends CI_Model {
                         LEFT JOIN profile.clients b ON b.id = a.client_id
                         LEFT JOIN profile.partners c ON c.id = a.partner_id
                         LEFT JOIN profile.partner_endpoints d ON d.id = a.partner_endpoint_id
-                        WHERE a.client_id = '.$this->session->userdata('client_id').' '.$addSql;
+                        WHERE a.client_id = '.$this->session->userdata('client_id').' '.$addSql.'
+                        ORDER BY a.created_at DESC';
 		$result_total 	= $this->db->query($sql_total);
 		$banyak 		= $result_total->num_rows();
 
@@ -142,6 +143,7 @@ class Model_tracking extends CI_Model {
                     LEFT JOIN profile.partners c ON c.id = a.partner_id
                     LEFT JOIN profile.partner_endpoints d ON d.id = a.partner_endpoint_id
                     WHERE a.client_id = '.$this->session->userdata('client_id').' '.$addSql.'
+                    ORDER BY a.created_at DESC
                     LIMIT '.$length.' OFFSET '.$start;
 			$result 		= $this->db->query($sql);
 			$arrayReturn 	= $result->result_array();

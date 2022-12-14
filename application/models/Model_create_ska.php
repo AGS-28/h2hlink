@@ -13,9 +13,12 @@ class Model_create_ska extends CI_Model {
         $length = $this->input->post('length');
         $client_partner = $this->input->post('client_partner');
         $invoice_number = $this->input->post('invoice_number');
+        $jenis_file     = substr($this->input->post('tipe_file'), 1);
+        $arr_jenis_file = explode(',', $jenis_file);
+
         $draft_ska_doc = array();
         $resp = 0;
-        
+
         $val_draft = false;
         while ($val_draft == false) {
             $no_draft = uniqid().rand();
@@ -38,7 +41,8 @@ class Model_create_ska extends CI_Model {
             'created_by' => $this->session->userdata('username'),
             'status' => '1'
         );
-
+        
+        $this->db->trans_begin();
         $this->db->insert('trans.draft_ska', $draft_ska); 
         $id = $this->db->insert_id();
         // var_dump($length);die();
@@ -46,7 +50,7 @@ class Model_create_ska extends CI_Model {
             if (!empty($_FILES)) {
                 $file = $_FILES['file_'.$i];
                 
-                $nama_file = md5(uniqid().uniqid().rand());
+                $nama_file = $id.'_'.md5(uniqid().uniqid().rand());
                 $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
                 $root = 'upload/';
                 $dir = $root.'draft/'.date("Y-m-d").'/';
@@ -59,7 +63,7 @@ class Model_create_ska extends CI_Model {
 
                     $upload_file = array(
                         'upload_path'       => $dir,
-                        'allowed_types'     => 'csv|xls|xlsx|txt|rar|json|xml',
+                        'allowed_types'     => 'xls|csv|xlsx|txt|rar|json|xml',
                         // 'max_size'          => 2097152,
                         'file_name'         => $nama_file.'.'.$extension,
                         'file_ext_tolower'  => TRUE,
@@ -76,6 +80,7 @@ class Model_create_ska extends CI_Model {
                             'file_name' => $file['name'],
                             'path' => $path_file,
                             'tipe_file' => $tipe_file,
+                            'refdokumen_id' => $arr_jenis_file[$i],
                             'created_at' => date("Y-m-d h:i:s"),
                             'created_by' => $this->session->userdata('username')
                         );
@@ -148,6 +153,7 @@ class Model_create_ska extends CI_Model {
         }
 
         if($status) {
+            $this->db->trans_begin();
             $array_data = array(
                 'transaction_id' => $arrPost['aju_number'],
                 'partner_id' => $data_client[0]['partner_id'],
@@ -193,20 +199,22 @@ class Model_create_ska extends CI_Model {
                         LEFT JOIN profile.partner_endpoints d ON d.id = a.partner_endpoint_id
                         WHERE a.partner_endpoint_id = 1
                         AND a.no_aju IS NOT NULL
-                        AND a.client_id = '.$this->session->userdata('client_id').' '.$addSql;
+                        AND a.client_id = '.$this->session->userdata('client_id').' '.$addSql.'
+                        ORDER BY a.created_at DESC';
     
 		$result_total 	= $this->db->query($sql_total);
 		$banyak 		= $result_total->num_rows();
 
 		if($banyak > 0){
             $sql = 'SELECT a.id, a.no_aju, b.client_name, b.npwp, b.nib, c.partner_name, d.method_name as partner_endpoint, a.created_at as created_at_message
-                        FROM trans.headers a 
-                        LEFT JOIN profile.clients b ON b.id = a.client_id
-                        LEFT JOIN profile.partners c ON c.id = a.partner_id
-                        LEFT JOIN profile.partner_endpoints d ON d.id = a.partner_endpoint_id
-                        WHERE a.partner_endpoint_id = 1
-                        AND a.no_aju IS NOT NULL
-                        AND a.client_id = '.$this->session->userdata('client_id').' '.$addSql.'
+                    FROM trans.headers a 
+                    LEFT JOIN profile.clients b ON b.id = a.client_id
+                    LEFT JOIN profile.partners c ON c.id = a.partner_id
+                    LEFT JOIN profile.partner_endpoints d ON d.id = a.partner_endpoint_id
+                    WHERE a.partner_endpoint_id = 1
+                    AND a.no_aju IS NOT NULL
+                    AND a.client_id = '.$this->session->userdata('client_id').' '.$addSql.'
+                    ORDER BY a.created_at DESC
                     LIMIT '.$length.' OFFSET '.$start;
 			$result 		= $this->db->query($sql);
 			$arrayReturn 	= $result->result_array();
@@ -230,7 +238,8 @@ class Model_create_ska extends CI_Model {
                         LEFT JOIN referensi.refdokumen b ON b.id = a.refdokumen_id
                         WHERE a.is_delete = false 
                         AND a.client_id = '.$this->session->userdata('client_id').' 
-                        AND a.transaction_id = '.$id;
+                        AND a.transaction_id = '.$id.'
+                        ORDER BY a.created_at DESC';
     
 		$result_total 	= $this->db->query($sql_total);
 		$banyak 		= $result_total->num_rows();
@@ -242,6 +251,7 @@ class Model_create_ska extends CI_Model {
                     WHERE a.is_delete = false 
                     AND a.client_id = '.$this->session->userdata('client_id').' 
                     AND a.transaction_id = '.$id.'
+                    ORDER BY a.created_at DESC
                     LIMIT '.$length.' OFFSET '.$start;
 			$result 		= $this->db->query($sql);
 			$arrayReturn 	= $result->result_array();
@@ -260,19 +270,23 @@ class Model_create_ska extends CI_Model {
         $start 		= $this->input->post('start');
 		$length 	= $this->input->post('length');
 
-        $sql_total 	= ' SELECT a.id, b.message_type, a.path, a.file_name
+        $sql_total 	= ' SELECT a.id, b.message_type, a.path, a.file_name, c.name
                         FROM trans.draft_ska_document a
                         LEFT JOIN referensi.message_type b ON b.id = a.tipe_file
-                        WHERE a.draft_id = '.$id;
+                        LEFT JOIN referensi.refdokumen c ON c.id = a.refdokumen_id
+                        WHERE a.draft_id = '.$id.'
+                        ORDER BY a.created_at DESC';
     
 		$result_total 	= $this->db->query($sql_total);
 		$banyak 		= $result_total->num_rows();
 
 		if($banyak > 0){			
-            $sql = 'SELECT a.id, b.message_type, a.path, a.file_name
+            $sql = 'SELECT a.id, b.message_type, a.path, a.file_name, c.name
                     FROM trans.draft_ska_document a
                     LEFT JOIN referensi.message_type b ON b.id = a.tipe_file
+                    LEFT JOIN referensi.refdokumen c ON c.id = a.refdokumen_id
                     WHERE a.draft_id = '.$id.'
+                    ORDER BY a.created_at DESC
                     LIMIT '.$length.' OFFSET '.$start;
 			$result 		= $this->db->query($sql);
 			$arrayReturn 	= $result->result_array();
@@ -330,7 +344,8 @@ class Model_create_ska extends CI_Model {
                         LEFT JOIN profile.clients b ON b.id = a.client_id
                         LEFT JOIN profile.partners c ON c.id = a.partner_id
                         LEFT JOIN referensi.tblrefstatus d ON d.id = a.status
-                        WHERE a.client_id = '.$this->session->userdata('client_id').' '.$addSql;
+                        WHERE a.client_id = '.$this->session->userdata('client_id').' '.$addSql.'
+                        ORDER BY a.created_at DESC';
 		$result_total 	= $this->db->query($sql_total);
 		$banyak 		= $result_total->num_rows();
 
@@ -341,6 +356,7 @@ class Model_create_ska extends CI_Model {
                     LEFT JOIN profile.partners c ON c.id = a.partner_id
                     LEFT JOIN referensi.tblrefstatus d ON d.id = a.status
                     WHERE a.client_id = '.$this->session->userdata('client_id').' '.$addSql.'
+                    ORDER BY a.created_at DESC
                     LIMIT '.$length.' OFFSET '.$start;
 			$result 		= $this->db->query($sql);
 			$arrayReturn 	= $result->result_array();

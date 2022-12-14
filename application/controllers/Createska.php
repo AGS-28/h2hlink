@@ -24,6 +24,8 @@ class Createska extends CI_Controller {
 		
 		//Page Data Content
         $param['data_partner'] 	 = $this->Model_master->get_data_partner();
+        $param['data_extention'] = $this->Model_master->get_data_extention();
+        $param['data_type_doc']  = $this->Model_master->get_data_ref_document(1);
 		$param['page_title'] 	 = $this->load->view('main/partials/page-title', $tittle,true);
 		
 		$data['content']    	= $this->load->view('main/view/upload_draft',$param,true);
@@ -218,6 +220,7 @@ class Createska extends CI_Controller {
 			}
 
 			$html[] = $no;
+			$html[] = $data['name'];
 			$html[] = $data['message_type'];
 			$html[] = $data['file_name'];
 			$html[] = '
