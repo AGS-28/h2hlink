@@ -22,7 +22,7 @@ class Model_user extends CI_Model {
         
         $sql_total 	= 'select a.id_user,a.username ,a.email ,a.name,a.createdate ,a.lastupdate ,a.userupdate ,a.is_active ,a.user_tipe ,a.address,
                             a.phone_number ,a.profile_picture ,b.groupname ,c.client_name ,c.npwp ,c.nib ,c.address ,c.id as id_client,
-                            c.handpone_no ,c.telephone_no,c."validate" ,c.valid_until,a.client_id,a.id_groups
+                            c.handphone_no ,c.telephone_no,c."validate" ,c.valid_until,a.client_id,a.id_groups
                         from users."user" a 
                         left join users."groups" b on a.id_groups = b.id 
                         left join profile.clients c on c.id = a.client_id 
@@ -35,7 +35,7 @@ class Model_user extends CI_Model {
 		if($banyak > 0){
 			$sql = 'select a.id_user,a.username ,a.email ,a.name,a.createdate ,a.lastupdate ,a.userupdate ,a.is_active ,a.user_tipe ,a.address,
                         a.phone_number ,a.profile_picture ,b.groupname ,c.client_name ,c.npwp ,c.nib ,c.address ,c.id as id_client,
-                        c.handpone_no ,c.telephone_no,c."validate" ,c.valid_until,a.client_id,a.id_groups,d.client_key ,d.api_key,e.partner_name ,e.desc_partner 
+                        c.handphone_no ,c.telephone_no,c."validate" ,c.valid_until,a.client_id,a.id_groups,d.client_key ,d.api_key,e.partner_name ,e.desc_partner 
                     from users."user" a 
                     left join users."groups" b on a.id_groups = b.id 
                     left join profile.clients c on c.id = a.client_id
