@@ -27,6 +27,19 @@ class Rekap extends CI_Controller {
 		$param['data_client'] 	 = $this->Model_master->get_data_client();
 		$param['data_partner'] 	 = $this->Model_master->get_data_partner();
 		$param['tipe'] 	 		 = 0;
+
+		$month = date('m');
+		$year = date('Y');
+		$end_date = '';
+
+		for($d = 1; $d <= 31; $d++) {
+			$time = mktime(12, 0, 0, $month, $d, $year);          
+			if (date('m', $time) == $month) {
+				$end_date = $d;
+			}
+		}
+
+		$param['aju_date'] = $year.'-'.$month.'-01 to '.$year.'-'.$month.'-'.$end_date;
 		
 		$data['content']    	= $this->load->view('main/view/rekap_client',$param,true);
 		$this->load->view('main/template',$data);
@@ -236,11 +249,11 @@ class Rekap extends CI_Controller {
 		}
 
 		foreach ($array_column as $key => $value) {
-			$excel->getActiveSheet()->getStyle($key.'1:'.$key.'2')->getFont()->setBold(TRUE);
-			$excel->getActiveSheet()->getStyle($key.'1:'.$key.'2')->getFont()->setSize(10);
-			$excel->getActiveSheet()->getStyle($key.'1:'.$key.'2')->applyFromArray($style_row)->getAlignment();
-			$excel->setActiveSheetIndex(0)->mergeCells($key.'1:'.$key.'2');
-			$excel->setActiveSheetIndex(0)->setCellValue($key.'1', $value);
+			$excel->getActiveSheet()->getStyle($key.'3:'.$key.'4')->getFont()->setBold(TRUE);
+			$excel->getActiveSheet()->getStyle($key.'3:'.$key.'4')->getFont()->setSize(10);
+			$excel->getActiveSheet()->getStyle($key.'3:'.$key.'4')->applyFromArray($style_row)->getAlignment();
+			$excel->setActiveSheetIndex(0)->mergeCells($key.'3:'.$key.'4');
+			$excel->setActiveSheetIndex(0)->setCellValue($key.'3', $value);
 		}
 
 		$jml_month = COUNT($arr_month);
@@ -251,18 +264,18 @@ class Rekap extends CI_Controller {
 			$column_akhir = $column1 + $jml_month - 1;
 			$alfabet_merge = $this->Model_master->getNameFromNumber($column_akhir);
 
-			$excel->getActiveSheet()->getStyle($alfabet.'1:'.$alfabet_merge.'1')->getFont()->setBold(TRUE);
-			$excel->getActiveSheet()->getStyle($alfabet.'1:'.$alfabet_merge.'1')->getFont()->setSize(10);
-			$excel->getActiveSheet()->getStyle($alfabet.'1:'.$alfabet_merge.'1')->applyFromArray($style_row)->getAlignment();
-			$excel->setActiveSheetIndex(0)->mergeCells($alfabet.'1:'.$alfabet_merge.'1');
-			$excel->setActiveSheetIndex(0)->setCellValue($alfabet.'1', $value);
+			$excel->getActiveSheet()->getStyle($alfabet.'3:'.$alfabet_merge.'3')->getFont()->setBold(TRUE);
+			$excel->getActiveSheet()->getStyle($alfabet.'3:'.$alfabet_merge.'3')->getFont()->setSize(10);
+			$excel->getActiveSheet()->getStyle($alfabet.'3:'.$alfabet_merge.'3')->applyFromArray($style_row)->getAlignment();
+			$excel->setActiveSheetIndex(0)->mergeCells($alfabet.'3:'.$alfabet_merge.'3');
+			$excel->setActiveSheetIndex(0)->setCellValue($alfabet.'3', $value);
 
 			foreach ($arr_month as $key1 => $value1) {
 				$alfabet2 = $this->Model_master->getNameFromNumber($column2);
-				$excel->getActiveSheet()->getStyle($alfabet2.'2:'.$alfabet2.'2')->getFont()->setBold(TRUE);
-				$excel->getActiveSheet()->getStyle($alfabet2.'2:'.$alfabet2.'2')->getFont()->setSize(10);
-				$excel->getActiveSheet()->getStyle($alfabet2.'2:'.$alfabet2.'2')->applyFromArray($style_row)->getAlignment();
-				$excel->setActiveSheetIndex(0)->mergeCells($alfabet2.'2:'.$alfabet2.'2');
+				$excel->getActiveSheet()->getStyle($alfabet2.'4:'.$alfabet2.'4')->getFont()->setBold(TRUE);
+				$excel->getActiveSheet()->getStyle($alfabet2.'4:'.$alfabet2.'4')->getFont()->setSize(10);
+				$excel->getActiveSheet()->getStyle($alfabet2.'4:'.$alfabet2.'4')->applyFromArray($style_row)->getAlignment();
+				$excel->setActiveSheetIndex(0)->mergeCells($alfabet2.'4:'.$alfabet2.'4');
 				
 				if(is_numeric($value1)) {
 					$nama_bulan = $get_bulan[$value1 - 1];
@@ -270,18 +283,18 @@ class Rekap extends CI_Controller {
 					$nama_bulan = $value1;
 				}
 
-				$excel->setActiveSheetIndex(0)->setCellValue($alfabet2.'2', $nama_bulan);
+				$excel->setActiveSheetIndex(0)->setCellValue($alfabet2.'4', $nama_bulan);
 				
 				$column2++;
 			}
 
 			if($jml_years > 1) {
 				$alfabet_Sub = $this->Model_master->getNameFromNumber($column2);
-				$excel->getActiveSheet()->getStyle($alfabet_Sub.'1:'.$alfabet_Sub.'2')->getFont()->setBold(TRUE);
-				$excel->getActiveSheet()->getStyle($alfabet_Sub.'1:'.$alfabet_Sub.'2')->getFont()->setSize(10);
-				$excel->getActiveSheet()->getStyle($alfabet_Sub.'1:'.$alfabet_Sub.'2')->applyFromArray($style_row)->getAlignment();
-				$excel->setActiveSheetIndex(0)->mergeCells($alfabet_Sub.'1:'.$alfabet_Sub.'2');
-				$excel->setActiveSheetIndex(0)->setCellValue($alfabet_Sub.'1', 'Sub Total');
+				$excel->getActiveSheet()->getStyle($alfabet_Sub.'3:'.$alfabet_Sub.'4')->getFont()->setBold(TRUE);
+				$excel->getActiveSheet()->getStyle($alfabet_Sub.'3:'.$alfabet_Sub.'4')->getFont()->setSize(10);
+				$excel->getActiveSheet()->getStyle($alfabet_Sub.'3:'.$alfabet_Sub.'4')->applyFromArray($style_row)->getAlignment();
+				$excel->setActiveSheetIndex(0)->mergeCells($alfabet_Sub.'3:'.$alfabet_Sub.'4');
+				$excel->setActiveSheetIndex(0)->setCellValue($alfabet_Sub.'3', 'Sub Total');
 				
 				$column2 = $column2 + 1;
 			}
@@ -290,18 +303,24 @@ class Rekap extends CI_Controller {
 		}
 
 		$alfabet = $this->Model_master->getNameFromNumber($column2);
-		$excel->getActiveSheet()->getStyle($alfabet.'1:'.$alfabet.'2')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle($alfabet.'1:'.$alfabet.'2')->getFont()->setSize(10);
-		$excel->getActiveSheet()->getStyle($alfabet.'1:'.$alfabet.'2')->applyFromArray($style_row)->getAlignment();
-		$excel->setActiveSheetIndex(0)->mergeCells($alfabet.'1:'.$alfabet.'2');
-		$excel->setActiveSheetIndex(0)->setCellValue($alfabet.'1', 'Total');
+		$excel->getActiveSheet()->getStyle($alfabet.'3:'.$alfabet.'4')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle($alfabet.'3:'.$alfabet.'4')->getFont()->setSize(10);
+		$excel->getActiveSheet()->getStyle($alfabet.'3:'.$alfabet.'4')->applyFromArray($style_row)->getAlignment();
+		$excel->setActiveSheetIndex(0)->mergeCells($alfabet.'3:'.$alfabet.'4');
+		$excel->setActiveSheetIndex(0)->setCellValue($alfabet.'3', 'Total');
 
 		$arrRet 	= $this->Model_rekap->cari_data(1);
 		$arrData 	= $arrRet['arrData'];
 		
 		$no = 1;
-		$column = 3;
+		$column = 5;
+		$nama_title = array();
 		foreach ($arrData as $key => $val_data) {
+			if($arrPost['tipe'] == '0') {
+				$nama_title[] = $val_data['client_name'];
+			} else {
+				$nama_title[] = $val_data['partner_name'];
+			}
 			$excel->setActiveSheetIndex(0)->setCellValue('A'.$column, $no);
 			$excel->getActiveSheet()->getStyle('A'.$column)->getFont()->setSize(10);
 			$excel->getActiveSheet()->getStyle('A'.$column)->applyFromArray($style_row)->getAlignment();
@@ -355,6 +374,23 @@ class Rekap extends CI_Controller {
         $excel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
         $excel->getActiveSheet(0)->setTitle("Sheet1");
         $excel->setActiveSheetIndex(0);
+
+		if($arrPost['tipe'] == '0') {
+			$nama = 'Client Name';
+		} else {
+			$nama = 'Partner Name';
+		}
+		
+		$uniq_nama = implode(', ', array_unique($nama_title));
+		$excel->getActiveSheet()->getStyle('A1:A1')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A1:A1')->getFont()->setSize(10);
+		$excel->getActiveSheet()->getStyle('A1:A1')->getAlignment();
+		$excel->setActiveSheetIndex(0)->setCellValue('A1', $nama.' : '.$uniq_nama);
+
+		$excel->getActiveSheet()->getStyle('A1:A2')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A1:A2')->getFont()->setSize(10);
+		$excel->getActiveSheet()->getStyle('A1:A2')->getAlignment();
+		$excel->setActiveSheetIndex(0)->setCellValue('A2', 'Print Date : '.date("d M Y H:i:s"));
 
         ob_start();
         $write = PHPExcel_IOFactory::createWriter($excel, 'Excel2007');

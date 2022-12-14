@@ -22,6 +22,16 @@
                             </div>
                         </div>
                         <div class="row mb-4">
+                            <label for="horizontal-input" class="col-sm-3 col-form-label">Document Type</label>
+                            <div class="col-sm-9">
+                                <select class="form-control single-choices" name="tipe_upload" id="tipe_upload">
+                                    <?php foreach($data_type_doc as $doc) { ?>
+                                        <option value="<?php echo $doc['id']; ?>"> <?php echo $doc['name']; ?> </option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
                             <label for="horizontal-input" class="col-sm-3 col-form-label">Invoice Number</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" title="Invoice Number" id="invoice_number" name="invoice_number">
@@ -45,6 +55,8 @@
                             </div>
                         </div>
                         <div class="text-end mt-4">
+                            <input class="form-control" type="hidden" name="extention" id="extention" value="<?php echo $data_extention[0]['message_type']; ?>" readonly>
+                            <input class="form-control" type="hidden" name="tipe_file" id="tipe_file" value="" readonly>
                             <input class="form-control" type="hidden" id="tipe" name="tipe" value="0" readonly>
                             <button type="submit" onclick="confirm_upload_draft();" class="btn btn-primary waves-effect btn-label waves-light"><i class="bx bx-check label-icon"></i> Send Files</button>
                         </div>
@@ -120,6 +132,7 @@
                                                 <tr align="center">
                                                     <th>No</th>
                                                     <th>Document Type</th>
+                                                    <th>Document Ext</th>
                                                     <th>Document Name</th>
                                                     <th>Action</th>
                                                 </tr>

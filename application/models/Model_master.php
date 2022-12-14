@@ -32,8 +32,25 @@ class Model_master extends CI_Model {
         return $arr_result;
     }
 
-    function get_data_ref_document() {
-        $sql = "SELECT * FROM referensi.refdokumen";
+    function get_data_ref_document($tipe='') {
+        $addSql = 'WHERE id NOT IN (13,14)';
+        if($tipe != '') {
+            $addSql = 'WHERE id IN (11,13,14)';
+        }
+        
+        $sql = "SELECT * FROM referensi.refdokumen ".$addSql;
+        $result = $this->db->query($sql);
+        $arr_result = $result->result_array();
+
+        return $arr_result;
+    }
+
+    function get_data_extention() {
+        $sql = "SELECT CONCAT('.', LOWER(c.message_type)) AS message_type
+                FROM profile.clients a 
+                LEFT JOIN profile.client_chanel b ON b.id_client = a.id
+                LEFT JOIN referensi.message_type c ON c.id = b.message_id
+                WHERE a.id = ".$this->session->userdata('client_id');
         $result = $this->db->query($sql);
         $arr_result = $result->result_array();
 
