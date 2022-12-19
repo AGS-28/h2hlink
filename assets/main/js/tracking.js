@@ -51,6 +51,10 @@ function show_modal(id, tipe) {
         title_header = 'Views Data';
     }
 
+    if(tipe == 4) {
+        title_header = 'Views Document';
+    }
+
     $('#modal_header').html(title_header);
 
     loading('modal_body', true);

@@ -59,6 +59,23 @@ class Tracking extends CI_Controller {
 			$html[] = '<b> Name : <font color="#4549a2">'.$data['partner_name'].'</font><br/> End Point : </b>'.$data['partner_endpoint'];
 			$html[] = '<b> Aju Number : <font color="#4549a2">'.$data['no_aju'].'</font><br/> Created : </b>'.$data['created_at_message'];
 			// $json_pretty = json_decode(json_encode($data['message_content']));
+
+			$views = '';
+			if($data['endpoint_id'] == '1') {
+				$views = '
+						<li><a class="dropdown-item" href="#" onclick="show_modal('.$data['id'].',2);">Views Data</a></li>
+						<li><a class="dropdown-item" href="#" onclick="show_modal('.$data['id'].',3);">Views Draft</a></li>
+						';
+			}
+
+			if($data['endpoint_id'] == '4') {
+				$views = '<li><a class="dropdown-item" href="#" onclick="show_modal('.$data['id'].',3);">Views Draft</a></li>';
+			}
+
+			if($data['endpoint_id'] == '2') {
+				$views = '<li><a class="dropdown-item" href="#" onclick="show_modal('.$data['id'].',4);">Views Document</a></li>';
+			}
+
 			$html[] = '
 						<div class="dropdown">
 							<button class="btn btn-link font-size-16 shadow-none py-0 text-muted dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -66,9 +83,7 @@ class Tracking extends CI_Controller {
 							</button>
 							<ul class="dropdown-menu dropdown-menu-end">
 								<li><a class="dropdown-item" href="#" onclick="show_modal('.$data['id'].',0);">Request</a></li>
-								<li><a class="dropdown-item" href="#" onclick="show_modal('.$data['id'].',1);">Respons</a></li>
-								<li><a class="dropdown-item" href="#" onclick="show_modal('.$data['id'].',2);">Views Data</a></li>
-								<li><a class="dropdown-item" href="#" onclick="show_modal('.$data['id'].',3);">Views Draft</a></li>
+								<li><a class="dropdown-item" href="#" onclick="show_modal('.$data['id'].',1);">Respons</a></li>'.$views.'
 							</ul>
 						</div>
 					';
@@ -90,6 +105,8 @@ class Tracking extends CI_Controller {
 	{
 		$tipe = $this->input->post('tipe');
 		$data['data'] = $this->Model_tracking->get_message_respons();
+		$data['arr_refdokumen'] = $this->Model_master->get_data_ref_document('',1);
+		$data['arr_refkppbc'] = $this->Model_master->get_data_ref_kppbc(1);
 
 		switch ($tipe) {
 			case '0':
@@ -106,6 +123,10 @@ class Tracking extends CI_Controller {
 
 			case '3':
 				echo $this->load->view('main/view/v_draft',$data,true);
+				break;
+			
+			case '4':
+				echo $this->load->view('main/view/v_document_pendukung',$data,true);
 				break;
 			
 			default:

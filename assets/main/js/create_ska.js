@@ -31,10 +31,13 @@ $(document).ready(function() {
         new Choices('#client_partner', {shouldSort: true});
         new Choices('#tipe_upload', {shouldSort: false});
     } else {
+        show_hide_input();
+        get_mask_number('value');
         flatpickr('#document_date', {});
         cari_data('form_table',false,'get_data_document');
         new Choices('#document_type', {shouldSort: true});
         new Choices('#aju_number', {shouldSort: true});
+        new Choices('#kppbc', {shouldSort: true});
 
         var file_upload = document.getElementById('file_upload');
         file_upload.addEventListener('change', function(){
@@ -111,10 +114,17 @@ function upload_draft() {
 function confirm_save() {
     var errorString = "Please complete the following data : <br\>";
     var panjangAwal = errorString.length;
+    var document_type = $('#document_type ').val();
 
     $('#form_upload').find('input[type="text"],select,textarea').each(function() {
         if(this.title != '' && this.value == '') {
-            errorString += "- "+this.title+"  <br\>";
+            if(this.id == 'value') {
+                if(document_type == '1' || document_type == '6') {
+                    errorString += "- "+this.title+"  <br\>";
+                }
+            } else {
+                errorString += "- "+this.title+"  <br\>";
+            } 
         }
     });
 
@@ -192,7 +202,7 @@ function show_data_document(id, name_doc, tipe='', func_name) {
     if(func_name == 'get_view_draft') {
         var target = [0, 4];
     } else {
-        var target = [0, 4];
+        var target = [0, 6];
     }
 
     $("#table_data_v_document").DataTable({
@@ -245,4 +255,42 @@ function next_delete_document(id, header_id) {
             alert_error('Failed to delete documents');
         }
     }, 3000);
+}
+
+function send_document(id) {    
+    showLoading(true);
+    $.post(baseurl + "index.php/createska/send_document/"+Math.random(),{id:id}).done(function( data ) {
+        showLoading(false);
+        const obj = JSON.parse(data);
+        if(obj.kode == '200') {
+            swal.fire({
+                title: 'Succes!',
+                html: obj.data.keterangan,
+                icon: 'success',
+                button: "Close",
+            });
+        } else{
+            swal.fire({
+                title: 'Warning!',
+                html: obj.keterangan,
+                icon: 'warning',
+                button: "Close",
+            });
+        }
+    });
+}
+
+function show_hide_input() {
+    var document_type = $('#document_type').val();
+    $('#div_kppbc').hide();
+    $('#div_value').hide();
+
+    if(document_type == '1') {
+        $('#div_value').show();
+    }
+
+    if(document_type == '6') {
+        $('#div_kppbc').show();
+        $('#div_value').show();
+    }
 }

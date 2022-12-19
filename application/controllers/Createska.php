@@ -55,6 +55,7 @@ class Createska extends CI_Controller {
 		$param['page_title'] 	 = $this->load->view('main/partials/page-title', $tittle,true);
         $param['ref_document'] 	 = $this->Model_master->get_data_ref_document();
         $param['data_aju'] 	     = $this->Model_master->get_data_aju(1);
+        $param['ref_kppbc'] 	 = $this->Model_master->get_data_ref_kppbc();
 		
 		$data['content']    	= $this->load->view('main/view/upload_document',$param,true);
 		$this->load->view('main/template',$data);
@@ -76,6 +77,7 @@ class Createska extends CI_Controller {
 			}
 
             $title = "'Views Document'";
+            $func_send = "send_document";
             $func_name = "'get_view_document'";
 			$html[] = $no;
 			$html[] = '<b> Aju Number : <font color="#4549a2">'.$data['no_aju'].'</font><br/> Created Date : </b>'.$data['created_at_message'];
@@ -88,7 +90,7 @@ class Createska extends CI_Controller {
 							</button>
 							<ul class="dropdown-menu dropdown-menu-end">
 								<li><a class="dropdown-item" href="#" onclick="show_modal_document('.$data['id'].','.$title.',0,'.$func_name.')">Views Document</a></li>
-								<li><a class="dropdown-item" href="#" onclick="">Send Document</a></li>
+								<li><a class="dropdown-item" href="#" onclick="confirm_kirim('.$func_send.','.$data['id'].')">Send Document</a></li>
 							</ul>
 						</div>
 					';
@@ -172,6 +174,17 @@ class Createska extends CI_Controller {
 			if (isset($html)) {
 				unset($html);
 			}
+			
+			$value = $data['value'];
+			if($value != '') {
+				$exp_value = explode('.', $value);
+				if ($exp_value[1]) {
+					$jml = strlen($exp_value[1]);
+					$value = number_format($value, $jml);
+				} else {
+					$value = number_format($value);
+				}
+			}
 
             $title = "'Views Document ".$data['name']."'";
             $func_name = "'get_path_document'";
@@ -179,6 +192,8 @@ class Createska extends CI_Controller {
 			$html[] = $data['name'];
 			$html[] = $data['document_number'];
 			$html[] = $data['document_date'];
+			$html[] = $data['kppbc'];
+			$html[] = $value;
 			$html[] = '
 						<div class="dropdown">
 							<button class="btn btn-link font-size-16 shadow-none py-0 text-muted dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -246,4 +261,78 @@ class Createska extends CI_Controller {
         unset($row);
         echo json_encode($return);
     }
+
+	public function send_document()
+	{
+		$id = $this->input->post('id');
+		$arrRet = $this->Model_create_ska->get_view_document($id, 1);
+		$arrData = $arrRet['arrData'];
+		$jmlData = $arrRet['totalRow'];
+		
+		if($jmlData > 0) {
+			$username = $arrData[0]['user_endpoint'];
+			$npwp = $arrData[0]['npwp'];
+			$nib = $arrData[0]['nib'];
+			$no_aju = $arrData[0]['no_aju'];
+
+			$support_doc = array();
+			foreach ($arrData as $key => $value) {
+				$doc_type = $value['kode'];
+				$kppbc = $value['refkppbc_id'];
+				if($kppbc == '') {
+					$kppbc = '';
+				}
+
+				$val = $value['value'];
+				if($val == '') {
+					$val = '';
+				}
+
+				$doc_no = $value['document_number'];
+				$doc_date = $value['document_date'];
+				$file = base64_encode(file_get_contents($value['path']));
+				
+				$support_doc[] = array(
+					'doc_type' => $doc_type,
+					'kppbc' => $kppbc,
+					'value' => $val,
+					'doc_no' => $doc_no,
+					'doc_date' => $doc_date,
+					'file' => 'data:application/pdf;base64,'.$file
+				);
+			}
+
+			$array_all = array(
+				'username' => $username,
+				'npwp' => $npwp,
+				'nib' => $nib,
+				'no_aju' => $no_aju,
+				'supporting_doc' => $support_doc
+			);
+
+			$json_data = json_encode($array_all);
+			$curl = curl_init();
+				curl_setopt_array($curl, array(
+				CURLOPT_URL => 'http://103.191.92.175:8290/uploadFileCoo',
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_ENCODING => '',
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 0,
+				CURLOPT_FOLLOWLOCATION => true,
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST => 'POST',
+				CURLOPT_POSTFIELDS =>$json_data,
+				CURLOPT_HTTPHEADER => array(
+					'x-api-key: 3D6C8028F4D75001B5EE368DDF199FDC24FDF412',
+					'Content-Type: application/json',
+					'Cookie: BIGipServer~k8s-dev~Shared~ingress_eska_eska_be_pengajuan_by_webservice=2791200778.28278.0000'
+				),
+			));
+
+			$response = curl_exec($curl);
+			curl_close($curl);
+
+			echo $response;
+		}
+	}
 }

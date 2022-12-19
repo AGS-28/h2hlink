@@ -126,7 +126,7 @@ class Model_tracking extends CI_Model {
             $addSql .= " AND EXTRACT(MONTH FROM a.tgl_aju) IN ('".$month."')";
         }
 
-        $sql_total 	= ' SELECT a.id, a.no_aju, b.client_name, b.npwp, b.nib, c.partner_name, d.method_name as partner_endpoint, a.created_at as created_at_message
+        $sql_total 	= ' SELECT a.id, a.no_aju, b.client_name, b.npwp, b.nib, c.partner_name, d.method_name as partner_endpoint, a.created_at as created_at_message, d.id as endpoint_id
                         FROM trans.headers a 
                         LEFT JOIN profile.clients b ON b.id = a.client_id
                         LEFT JOIN profile.partners c ON c.id = a.partner_id
@@ -137,7 +137,7 @@ class Model_tracking extends CI_Model {
 		$banyak 		= $result_total->num_rows();
 
 		if($banyak > 0){
-			$sql = 'SELECT a.id, a.no_aju, b.client_name, b.npwp, b.nib, c.partner_name, d.method_name as partner_endpoint, a.created_at as created_at_message
+			$sql = 'SELECT a.id, a.no_aju, b.client_name, b.npwp, b.nib, c.partner_name, d.method_name as partner_endpoint, a.created_at as created_at_message, d.id as endpoint_id
                     FROM trans.headers a 
                     LEFT JOIN profile.clients b ON b.id = a.client_id
                     LEFT JOIN profile.partners c ON c.id = a.partner_id

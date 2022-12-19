@@ -32,7 +32,7 @@ class Model_master extends CI_Model {
         return $arr_result;
     }
 
-    function get_data_ref_document($tipe='') {
+    function get_data_ref_document($tipe='', $jenis='') {
         $addSql = 'WHERE id NOT IN (13,14)';
         if($tipe != '') {
             $addSql = 'WHERE id IN (11,13,14)';
@@ -41,8 +41,17 @@ class Model_master extends CI_Model {
         $sql = "SELECT * FROM referensi.refdokumen ".$addSql;
         $result = $this->db->query($sql);
         $arr_result = $result->result_array();
+        
+        if($jenis != '') {
+            $arr = array();
+            foreach ($arr_result as $key => $value) {
+                $arr[$value['kode']] = $value['name'];
+            }
 
-        return $arr_result;
+            return $arr;
+        } else {
+            return $arr_result;
+        }
     }
 
     function get_data_extention() {
@@ -133,5 +142,23 @@ class Model_master extends CI_Model {
 
 		return $alpha;
 	}
+
+    function get_data_ref_kppbc($tipe='')
+    {
+        $sql = "SELECT * FROM referensi.refkppbc WHERE is_delete is null";
+        $result = $this->db->query($sql);
+        $arr_result = $result->result_array();
+
+        if($tipe != '') {
+            $arr = array();
+            foreach ($arr_result as $key => $value) {
+                $arr[$value['code']] = $value['name'];
+            }
+
+            return $arr;
+        } else {
+            return $arr_result;
+        }
+    }
 
 }

@@ -153,6 +153,18 @@ class Model_create_ska extends CI_Model {
         }
 
         if($status) {
+            if(isset($arrPost['kppbc'])) {
+                $refkkpbc = $arrPost['kppbc'];
+            } else {
+                $refkkpbc = null;
+            }
+
+            if($arrPost['document_type'] == '1' OR $arrPost['document_type'] == '6') {
+                $value = str_replace(',','',$arrPost['value']);
+            } else {
+                $value = null;
+            }
+            
             $this->db->trans_begin();
             $array_data = array(
                 'transaction_id' => $arrPost['aju_number'],
@@ -163,6 +175,8 @@ class Model_create_ska extends CI_Model {
                 'path' => $path_file,
                 'document_date' => $arrPost['document_date'],
                 'refdokumen_id' => $arrPost['document_type'],
+                'refkppbc_id' => $refkkpbc,
+                'value' => $value,
                 'flag' => 0,
                 'created_by' => $this->session->userdata('username'),
                 'created_at' => date("Y-m-d h:i:s"),
@@ -229,30 +243,55 @@ class Model_create_ska extends CI_Model {
 		return $return;
     }
 
-    function get_view_document($id) {
+    function get_view_document($id,$tipe='') {
         $start 		= $this->input->post('start');
 		$length 	= $this->input->post('length');
 
-        $sql_total 	= ' SELECT a.id, b.name, a.document_number, a.document_date, a.created_at AS created_at_document
-                        FROM trans.document a 
-                        LEFT JOIN referensi.refdokumen b ON b.id = a.refdokumen_id
-                        WHERE a.is_delete = false 
-                        AND a.client_id = '.$this->session->userdata('client_id').' 
-                        AND a.transaction_id = '.$id.'
-                        ORDER BY a.created_at DESC';
-    
+        if($tipe == '') {
+            $sql_total 	= ' SELECT a.id, b.name, a.document_number, a.document_date, a.created_at AS created_at_document, c.name as kppbc, a.value
+                            FROM trans.document a 
+                            LEFT JOIN referensi.refdokumen b ON b.id = a.refdokumen_id
+                            LEFT JOIN referensi.refkppbc c ON c.code = a.refkppbc_id
+                            WHERE a.is_delete = false 
+                            AND a.client_id = '.$this->session->userdata('client_id').' 
+                            AND a.transaction_id = '.$id.'
+                            ORDER BY a.created_at DESC';
+        } else {
+            $sql_total 	= ' SELECT c.user_endpoint, c.npwp, c.nib, a.no_aju, b.document_number, b.document_date, b.path, d.kode, b.value, b.refkppbc_id
+                            FROM trans.headers a 
+                            LEFT JOIN trans.document b ON b.transaction_id = a.id
+                            LEFT JOIN profile.clients c ON c.id = a.client_id
+                            LEFT JOIN referensi.refdokumen d ON d.id = b.refdokumen_id
+                            WHERE b.is_delete = false 
+                            AND c.id = '.$this->session->userdata('client_id').' 
+                            AND a.id = '.$id;
+        }
+        
 		$result_total 	= $this->db->query($sql_total);
 		$banyak 		= $result_total->num_rows();
 
-		if($banyak > 0){			
-            $sql = 'SELECT a.id, b.name, a.document_number, a.document_date, a.created_at AS created_at_document
-                    FROM trans.document a 
-                    LEFT JOIN referensi.refdokumen b ON b.id = a.refdokumen_id
-                    WHERE a.is_delete = false 
-                    AND a.client_id = '.$this->session->userdata('client_id').' 
-                    AND a.transaction_id = '.$id.'
-                    ORDER BY a.created_at DESC
-                    LIMIT '.$length.' OFFSET '.$start;
+		if($banyak > 0){		
+            if($tipe == '') {
+                $sql = 'SELECT a.id, b.name, a.document_number, a.document_date, a.created_at AS created_at_document, c.name as kppbc, a.value
+                        FROM trans.document a 
+                        LEFT JOIN referensi.refdokumen b ON b.id = a.refdokumen_id
+                        LEFT JOIN referensi.refkppbc c ON c.code = a.refkppbc_id
+                        WHERE a.is_delete = false 
+                        AND a.client_id = '.$this->session->userdata('client_id').' 
+                        AND a.transaction_id = '.$id.'
+                        ORDER BY a.created_at DESC
+                        LIMIT '.$length.' OFFSET '.$start;
+            } else {
+                $sql = 'SELECT c.user_endpoint, c.npwp, c.nib, a.no_aju, b.document_number, b.document_date, b.path, d.kode, b.value, b.refkppbc_id
+                        FROM trans.headers a 
+                        LEFT JOIN trans.document b ON b.transaction_id = a.id
+                        LEFT JOIN profile.clients c ON c.id = a.client_id
+                        LEFT JOIN referensi.refdokumen d ON d.id = b.refdokumen_id
+                        WHERE b.is_delete = false 
+                        AND c.id = '.$this->session->userdata('client_id').' 
+                        AND a.id = '.$id;
+            }
+            
 			$result 		= $this->db->query($sql);
 			$arrayReturn 	= $result->result_array();
 
@@ -324,7 +363,6 @@ class Model_create_ska extends CI_Model {
         $path = $arr_result[0]['path'];
         
         $bas64doc = chunk_split(base64_encode(file_get_contents($path)));
-
         return $bas64doc;
     }
 
