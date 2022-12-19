@@ -1,12 +1,14 @@
-const statusChoichesPartner = new Choices('#status', {removeItems: true,removeItemButton: true});
-const methodChoichesPartner = new Choices('#method', {removeItems: true,removeItemButton: true});
-const messageTypePartner = new Choices('#message_type', {removeItems: true,removeItemButton: true});
-var tablerowmethod = 0;
+const packageChoiches = new Choices('#package_type', {removeItems: true,removeItemButton: true});
+const ChoichesPartner = new Choices('#partner-name', {removeItems: true,removeItemButton: true});
+
+var tablerowmethod  = 0;
+var tablerowpartner = 0;
 $(document).ready(function() {
-    statusChoichesPartner.setChoices(
+    packageChoiches.setChoices(
         [
-          { value: 'f', label: 'Not Active'},
-          { value: 't', label: 'Active ' },
+          { value: '1', label: 'Basic'},
+          { value: '2', label: 'Pro' },
+          { value: '3', label: 'Advance' },
         ],
         'value',
         'label',
@@ -23,6 +25,10 @@ $(document).ready(function() {
         var $percent = ($current/$total) * 100;
         $('#view-wizard').find('.progress-bar').css({width:$percent+'%'});
     }});
+
+    $( "#btn-add-partner" ).click(function() {
+        add_partner();
+      });
 
     
 });
@@ -54,33 +60,25 @@ function get_data_all() {
 
 function add_role() {
     $('#form-add-item').trigger("reset");
-    statusChoichesPartner.setChoices(
+    packageChoiches.setChoices(
         [
-          { value: 'f', label: 'Not Active'},
-          { value: 't', label: 'Active ' },
+            { value: '1', label: 'Basic'},
+            { value: '2', label: 'Pro' },
+            { value: '3', label: 'Advance' },
         ],
         'value',
         'label',
         true,
       );
-    methodChoichesPartner.setChoices(
-        [
-          { value: 'post', label: 'POST'},
-          { value: 'get', label: 'GET ' },
-          { value: 'file', label: 'FILES ' },
-        ],
-        'value',
-        'label',
-        true,
-      );
-    var element = getselectmessagetype();
-    messageTypePartner.setChoices(element,'value','label',true,);
+    
+    var element = getselectpartner();
+    ChoichesPartner.setChoices(element,'value','label',true,);
     $('#modal_add').modal('toggle');
 }
 
 function additem(form) 
 {
-    var url = siteurl + '/cms/add_item_partner/'+Math.random();
+    var url = siteurl + '/cms/add_item_client/'+Math.random();
     add(form,url,true);
 }
 
@@ -135,6 +133,7 @@ function view(id)
         $('#view_package_type').val(clientProfile.package_name);
         $('#view_startdate').val(clientProfile.validate);
         $('#view_enddate').val(clientProfile.valid_until);
+        $('#view_email').val(clientProfile.email);
 
         $('#viewTabelChanel').empty();
         $('#viewTabelChanel').append(rowchanel);
@@ -192,8 +191,128 @@ function add_method() {
     tablerowmethod = (tablerowmethod + 1);
     $('#addrowtableMethods').append(addrowtable);
 }
+function add_partner() {
+    var arrID = [];
+    if ($('#arrcekpartner').val() !== '')
+    arrID = $('#arrcekpartner').val().split(",");
+
+    if (arrID.indexOf($('#partner-name').val()) === -1) {
+        var partner_name        = $('#partner-name').text();
+        var partner_id          = $('#partner-name').val();
+        var desc_partner        = $('#desc_partner').val();
+        var xapikey             = $('#xapikey').val();
+        var clientkey           = $('#clientkey').val();
+        var addrowtable         = '';
+
+        arrID.push($('#partner-name').val());
+        $('#arrcekpartner').val(arrID.join());
+
+        addrowtable += '<tr id = "row_'+tablerowpartner+'">';
+        addrowtable += '<td>'+partner_name+'<input type="hidden" name="arrpartnername[]" value="'+partner_name+'"></td>';
+        addrowtable += '<td>'+desc_partner+'<input type="hidden" name="arrdescpartner[]" value="'+desc_partner+'"></td>';
+        addrowtable += '<td>'+xapikey+'<input type="hidden" name="arrxapikey[]" value="'+xapikey+'"><input type="hidden" name="arridpartner[]" value="'+partner_id+'"></td>';
+        addrowtable += '<td>'+clientkey+'<input type="hidden" name="arrclientkey[]" value="'+clientkey+'">';
+        addrowtable += '<td><button type="button" class="btn btn-danger waves-effect btn-label btn-sm waves-light" onclick="deleteRow('+tablerowpartner+')"><i class="bx bxs-trash label-icon"></i> Delete</button></td>';
+        tablerowpartner = (tablerowpartner + 1);
+        $('#addrowtablePartner').append(addrowtable);
+
+        addrowmethod(arrID.join());
+        ChoichesPartner.setChoiceByValue('');
+        $('#desc_partner').val('');
+        $('#xapikey').val('');
+        $('#clientkey').val('');
+
+    }
+    else
+    {
+        alert_error('Partner has been added !!');
+    }
+}
 
 function deleteRow(rowid) {
+    var strhs = $('#arrcekpartner').val();
+    $('#arrcekpartner').val('');
+    var arrhs = strhs.split(",");
+    arrhs.splice(rowid,1);
+    $('#arrcekpartner').val(arrhs.join());
     $('#row_'+rowid).remove();
+    console.log(arrhs.join());
+    addrowmethod(arrhs.join());
+}
+
+function getselectpartner(id='') {
+    var postdata    = new FormData();
+    var url         = siteurl+'/cms/getselectpartner';
+    postdata.append('id',id);
+    
+    var data = post_ajax(url,postdata);
+    var respondData = JSON.parse(data);
+    if (respondData.status == 1) {
+        return respondData.thisdata;
+    }
+    else
+    {
+        return "[{ value: '', label: 'Empty'}]";
+    }
+}
+
+function changepartner(val) {
+    // alert(val);
+    var postdata    = new FormData();
+    var url         = siteurl+'/cms/getallpartner';
+    postdata.append('id',val);
+    
+    var data = post_ajax(url,postdata);
+    var respondData = JSON.parse(data);
+    if (respondData.status == 1) {
+        $('#desc_partner').val(respondData.thisdata.desc_partner);
+    }
+    else
+    {
+        alert_error("General Errors..");
+    }
+}
+
+function addrowmethod(val) {
+    var postdata    = new FormData();
+    var url         = siteurl+'/cms/getaddrowmethod';
+    postdata.append('id',val);
+    
+    var data = post_ajax(url,postdata);
+    var respondData = JSON.parse(data);
+    if (respondData.status == 1) {
+        $('#addrowtableMethods').empty();
+        $('#addrowtableMethods').append(respondData.thisdata);
+    }
+    else
+    {
+        alert_error('General Errors..!');
+    }
+}
+
+function getchanel(params) {
+    if (params == 0) 
+    {
+        $('#addrowtableMethods').empty();
+    }
+    else
+    {
+        var postdata    = new FormData();
+        var url         = siteurl+'/cms/getchanelpackage';
+        postdata.append('id',params);
+        
+        var data = post_ajax(url,postdata);
+        var respondData = JSON.parse(data);
+
+        if (respondData.status == 1) {
+            $('#addrowtableChanel').empty();
+            $('#addrowtableChanel').append(respondData.thisdata);
+            
+        }
+        else
+        {
+            alert_error('General Errors..!');
+        }
+    }
 }
     

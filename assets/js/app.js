@@ -33,6 +33,41 @@ function add(form,url,validate=false)
         alert_error(errorString);
     }
 }
+function addUsers(form,url,validate=false) 
+{
+    var errorString = "Please complete the following data : <br\>";
+    var panjangAwal = errorString.length;
+
+    $('#'+form).find('input[type="text"],select,textarea,input[type="file"]').each(function() {
+        if(validate) {
+            if(this.value == "" && this.title != '') {
+                errorString += "- "+this.title+"  <br\>";
+            }
+        }  
+    });
+
+    var panjangAkhir = errorString.length;
+    if (panjangAwal == panjangAkhir) {
+
+        var formdata = JSON.stringify($("#"+form).serializeArray());
+        var postdata = new FormData();
+        postdata.append('postdata',formdata);
+
+        var data = post_ajax(url,postdata);
+        var respondData = JSON.parse(data);
+        if (respondData.status == 1) 
+        {
+            alert_sukses("modal_add",close_modal);
+            get_data_all();
+        }
+        else
+        {
+            alert_error(respondData.errorText);
+        }
+    } else {
+        alert_error(errorString);
+    }
+}
 
 function alert_sukses(iddata="",_callback = false,tittle = "Success...") {
     var timerInterval;
@@ -230,6 +265,7 @@ function close_modal(id) {
     $("#"+ id).modal('hide');
 }
 
+
 function post_ajax(url, postdata) {
     var result = false;
     $.ajax({
@@ -315,6 +351,8 @@ function getselectmessagetype(id='') {
     flatpickr('.date-range', {
         mode: "range"
     });
+
+    flatpickr('.datepicker', {});
 
     function setLanguage(lang) {
         if (document.getElementById("header-lang-img")) {
