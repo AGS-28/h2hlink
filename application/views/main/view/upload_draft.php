@@ -22,6 +22,26 @@
                             </div>
                         </div>
                         <div class="row mb-4">
+                            <label for="horizontal-input" class="col-sm-3 col-form-label">IPSKA</label>
+                            <div class="col-sm-9">
+                                <select class="form-control single-choices" name="ipska" id="ipska">
+                                    <?php foreach($data_ipska as $ipska) { ?>
+                                        <option value="<?php echo $ipska['id']; ?>"> <?php echo $ipska['name']; ?> </option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <label for="horizontal-input" class="col-sm-3 col-form-label">Type Form</label>
+                            <div class="col-sm-9">
+                                <select class="form-control single-choices" name="tipe_form" id="tipe_form">
+                                    <?php foreach($data_type_form as $form) { ?>
+                                        <option value="<?php echo $form['id']; ?>"> <?php echo $form['name']; ?> </option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
                             <label for="horizontal-input" class="col-sm-3 col-form-label">Document Type</label>
                             <div class="col-sm-9">
                                 <select class="form-control single-choices" name="tipe_upload" id="tipe_upload">

@@ -28,7 +28,9 @@ if(tipe == 0) {
 $(document).ready(function() {
     if(tipe == 0) {
         cari_data('form_table',false,'get_data_draft');
-        new Choices('#client_partner', {shouldSort: true});
+        new Choices('#client_partner', {shouldSort: false});
+        new Choices('#ipska', {shouldSort: false});
+        new Choices('#tipe_form', {shouldSort: false});
         new Choices('#tipe_upload', {shouldSort: false});
     } else {
         show_hide_input();
@@ -89,6 +91,8 @@ function upload_draft() {
     formdata.append('length', dropzone.files.length);
     formdata.append('client_partner', $('#client_partner').val());
     formdata.append('invoice_number', $('#invoice_number').val());
+    formdata.append('ipska', $('#ipska').val());
+    formdata.append('tipe_form', $('#tipe_form').val());
     formdata.append('tipe_file', $('#tipe_file').val());
 
     for (var i = 0; i < dropzone.files.length; i++) {

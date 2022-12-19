@@ -13,7 +13,7 @@ class Tracking extends CI_Controller {
 		//Tittle
 		$tittle['title'] 	= 'Tracking';
 		$tittle['li_1'] 	= 'WS Portal';
-		$tittle['li_2'] 	= 'Tracking';
+		$tittle['li_2'] 	= 'Tracking Log';
 
 		//Teamplate
 		$data['addmenu'] 	= true;
@@ -101,6 +101,52 @@ class Tracking extends CI_Controller {
         echo json_encode($return);
 	}
 
+	public function cari_ska()
+	{
+		$arrRet 	= $this->Model_tracking->get_data_ska();
+		$arrData 	= $arrRet['arrData'];
+		$no 		= $this->input->post('start') + 1;
+		// var_dump($arrData);die();
+		foreach ($arrData as $key => $data) {
+			if (isset($html)) {
+				unset($html);
+			}
+
+			$html[] = $no;
+			$html[] = '<b> Name : <font color="#d75350">'.$data['client_name'].'</font></b><br/><b> NIB : </b>'.$data['nib'].'<br/><b> NPWP : </b>'.$data['npwp'];
+			$html[] = '<b> Name : <font color="#4549a2">'.$data['partner_name'].'</font>';
+			$html[] = '<b> Aju Number : <font color="#4549a2">'.$data['no_aju'].'</font><br/> SKA Number : </b><br/><b> Status : </b>';
+
+			$nib = "'".$data['nib']."'";
+			$npwp = "'".$data['npwp']."'";
+			$user_endpoint = "'".$data['user_endpoint']."'";
+			$no_aju = "'".$data['no_aju']."'";
+			
+			$html[] = '
+						<div class="dropdown">
+							<button class="btn btn-link font-size-16 shadow-none py-0 text-muted dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+								<i class="bx bx-dots-horizontal-rounded"></i>
+							</button>
+							<ul class="dropdown-menu dropdown-menu-end">
+								<li><a class="dropdown-item" href="#" onclick="get_draftcoo('.$no_aju.','.$nib.','.$npwp.','.$user_endpoint.',4);">Get Draft</a></li>
+								<li><a class="dropdown-item" href="#" onclick="get_draftcoo('.$no_aju.','.$nib.','.$npwp.','.$user_endpoint.',5);">Get Coo</a></li>
+							</ul>
+						</div>
+					';
+			$row[]  = $html;
+
+			$no++;
+		}
+
+		$return['data'] 			= isset($row) ? $row : array();
+		$return['recordsTotal'] 	= $arrRet['totalRow'];
+		$return['recordsFiltered'] 	= $arrRet['totalRow'];
+		$return['error'] 			= '';
+
+        unset($row);
+        echo json_encode($return);
+	}
+
 	public function get_message_respons()
 	{
 		$tipe = $this->input->post('tipe');
@@ -161,6 +207,78 @@ class Tracking extends CI_Controller {
 
 		unset($row);
 		echo json_encode($return);
+	}
+
+	public function ska()
+	{
+		//Tittle
+		$tittle['title'] 	= 'Tracking';
+		$tittle['li_1'] 	= 'WS Portal';
+		$tittle['li_2'] 	= 'Tracking SKA';
+
+		//Teamplate
+		$data['addmenu'] 	= true;
+		$data['addcss'] 	= '';
+		$data['addjs'] 		= '<script src="'.base_url().'assets/main/js/tracking.js"></script>';
+		$data['title_meta'] = $this->load->view('main/partials/title-meta', $tittle,true);
+		
+		//Page Data Content
+		$param['page_title'] 	 = $this->load->view('main/partials/page-title', $tittle,true);
+		$param['data_client'] 	 = $this->Model_master->get_data_client();
+		$param['data_partner'] 	 = $this->Model_master->get_data_partner();
+		$param['data_end_point'] = $this->Model_master->get_data_end_point();
+		$param['tipe'] 			 = 2;
+
+		$data['content']    	= $this->load->view('main/view/tracking_ska',$param,true);
+		$this->load->view('main/template',$data);
+	}
+
+	function get_draftcoo() 
+	{
+		$no_aju = $this->input->post('aju');
+		$nib = $this->input->post('nib');
+		$npwp = $this->input->post('npwp');
+		$user_endpoint = $this->input->post('user_endpoint');
+		$tipe = $this->input->post('tipe');
+		
+		if($tipe == 4) {
+			$url = 'http://103.191.92.175:8290/getDraftCoo';
+		}
+
+		if($tipe == 5) {
+			$url = 'http://103.191.92.175:8290/getCoo';
+		}
+		
+		$array_all = array(
+			'username' => $user_endpoint,
+			'npwp' => $npwp,
+			'nib' => $nib,
+			'no_aju' => $no_aju
+		);
+
+		$json_data = json_encode($array_all);
+			$curl = curl_init();
+				curl_setopt_array($curl, array(
+				CURLOPT_URL => $url,
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_ENCODING => '',
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 0,
+				CURLOPT_FOLLOWLOCATION => true,
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST => 'POST',
+				CURLOPT_POSTFIELDS =>$json_data,
+				CURLOPT_HTTPHEADER => array(
+					'x-api-key: 3D6C8028F4D75001B5EE368DDF199FDC24FDF412',
+					'Content-Type: application/json',
+					'Cookie: BIGipServer~k8s-dev~Shared~ingress_eska_eska_be_pengajuan_by_webservice=2791200778.28278.0000'
+				),
+			));
+
+			$response = curl_exec($curl);
+			curl_close($curl);
+
+			echo $response;
 	}
 
 }

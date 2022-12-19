@@ -180,4 +180,90 @@ class Model_tracking extends CI_Model {
         return $data;
     }
 
+    function get_data_ska()
+    {
+        $start 		= $this->input->post('start');
+		$length 	= $this->input->post('length');
+		$post 		= $this->input->post('formdata');
+		$arrPost 	= postajax_toarray($post);
+        $addSql     = '';
+        
+        if(isset($arrPost['no_aju'])) {
+            $addSql .= ' AND a.no_aju = '.$this->db->escape($arrPost['no_aju']);
+        }
+
+        if(isset($arrPost['nib'])) {
+            if(is_array($arrPost['nib'])) {
+                $nib = implode("','", $arrPost['nib']);
+            } else {
+                $nib = $arrPost['nib'];
+            }
+
+            $addSql .= " AND b.nib IN ('".$nib."')";
+        }
+
+        if(isset($arrPost['npwp'])) {
+            if(is_array($arrPost['npwp'])) {
+                $npwp = implode("','", $arrPost['npwp']);
+            } else {
+                $npwp = $arrPost['npwp'];
+            }
+
+            $addSql .= " AND b.npwp IN ('".$npwp."')";
+        }
+
+        if(isset($arrPost['client_name'])) {
+            if(is_array($arrPost['client_name'])) {
+                $client_name = implode("','", $arrPost['client_name']);
+            } else {
+                $client_name = $arrPost['client_name'];
+            }
+
+            $addSql .= " AND b.id IN ('".$client_name."')";
+        }
+
+        if(isset($arrPost['client_partner'])) {
+            if(is_array($arrPost['client_partner'])) {
+                $client_partner = implode("','", $arrPost['client_partner']);
+            } else {
+                $client_partner = $arrPost['client_partner'];
+            }
+
+            $addSql .= " AND c.id IN ('".$client_partner."')";
+        }
+
+        $sql_total 	= ' SELECT a.no_aju, b.client_name, b.npwp, b.nib, c.partner_name, b.user_endpoint
+                        FROM trans.headers a
+                        LEFT JOIN profile.clients b ON b.id = a.client_id
+                        LEFT JOIN profile.partners c ON c.id = a.partner_id
+                        WHERE a.no_aju IS NOT NULL 
+                        AND a.client_id = '.$this->session->userdata('client_id').' '.$addSql.'
+                        GROUP BY a.no_aju, b.client_name, b.npwp, b.nib, c.partner_name, b.user_endpoint
+                        ORDER BY a.no_aju DESC';
+		$result_total 	= $this->db->query($sql_total);
+		$banyak 		= $result_total->num_rows();
+
+		if($banyak > 0){
+			$sql = 'SELECT a.no_aju, b.client_name, b.npwp, b.nib, c.partner_name, b.user_endpoint
+                    FROM trans.headers a
+                    LEFT JOIN profile.clients b ON b.id = a.client_id
+                    LEFT JOIN profile.partners c ON c.id = a.partner_id
+                    WHERE a.no_aju IS NOT NULL 
+                    AND a.client_id = '.$this->session->userdata('client_id').' '.$addSql.'
+                    GROUP BY a.no_aju, b.client_name, b.npwp, b.nib, c.partner_name, b.user_endpoint
+                    ORDER BY a.no_aju DESC
+                    LIMIT '.$length.' OFFSET '.$start;
+			$result 		= $this->db->query($sql);
+			$arrayReturn 	= $result->result_array();
+
+			$return['totalRow'] = $banyak;
+			$return['arrData'] 	= $arrayReturn;
+		}else{
+			$return['totalRow'] = 0;
+			$return['arrData'] 	= array();
+		}		
+
+		return $return;
+    }
+
 }

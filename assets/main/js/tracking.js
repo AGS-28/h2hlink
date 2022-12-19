@@ -1,11 +1,19 @@
 $(document).ready(function() {    
-    new Choices('#client_partner',{removeItemButton: true,});
-    new Choices('#client_name',{removeItemButton: true,});
-    new Choices('#end_point',{removeItemButton: true,});
-    new Choices('#npwp',{removeItemButton: true,});
-    new Choices('#nib',{removeItemButton: true,});
+    if($('#tipe').val() == '0') {
+        new Choices('#client_partner',{removeItemButton: true,});
+        new Choices('#client_name',{removeItemButton: true,});
+        new Choices('#npwp',{removeItemButton: true,});
+        new Choices('#nib',{removeItemButton: true,});
+        new Choices('#end_point',{removeItemButton: true,});
+    }
     
     if($('#tipe').val() == '1') {
+        new Choices('#client_partner',{removeItemButton: true,});
+        new Choices('#client_name',{removeItemButton: true,});
+        new Choices('#npwp',{removeItemButton: true,});
+        new Choices('#nib',{removeItemButton: true,});
+        new Choices('#end_point',{removeItemButton: true,});
+        
         new Choices('#years_multiple_tipe1',{addItems: false,removeItems: false,}).disable();
         new Choices('#month_enabled_tipe1',{addItems: false,removeItems: false,}).disable();
         new Choices('#client_partner_tipe1',{addItems: false,removeItems: false,}).disable();
@@ -16,10 +24,21 @@ $(document).ready(function() {
         
         cari_data('form_tracking');
     }
+
+    if($('#tipe').val() == '2') {
+        new Choices('#client_partner',{removeItemButton: true,});
+        new Choices('#client_name',{removeItemButton: true,});
+        new Choices('#npwp',{removeItemButton: true,});
+        new Choices('#nib',{removeItemButton: true,});
+    }
 });
 
 function cari_data(form, validate=false) {
-    var url = siteurl + "/tracking/cari/"+Math.random()
+    if($('#tipe').val() == '2') {
+        var url = siteurl + "/tracking/cari_ska/"+Math.random()
+    } else {
+        var url = siteurl + "/tracking/cari/"+Math.random()
+    }
     var columnDefs = [
                         {  
                             width: "5%",
@@ -85,4 +104,25 @@ function progress_bar(tipe) {
     });
 }
 
-    
+function get_draftcoo(aju, nib, npwp, user_endpoint, tipe) {
+    showLoading(true);
+    $.post(baseurl + "index.php/tracking/get_draftcoo/"+Math.random(),{aju:aju, nib:nib, npwp:npwp, user_endpoint:user_endpoint, tipe:tipe}).done(function( data ) {
+        showLoading(false);
+        const obj = JSON.parse(data);
+        if(obj.kode == '200') {
+            swal.fire({
+                title: 'Succes!',
+                html: obj.data.keterangan,
+                icon: 'success',
+                button: "Close",
+            });
+        } else{
+            swal.fire({
+                title: 'Warning!',
+                html: obj.keterangan,
+                icon: 'warning',
+                button: "Close",
+            });
+        }
+    });
+}

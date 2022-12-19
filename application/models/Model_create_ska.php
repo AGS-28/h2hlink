@@ -13,6 +13,8 @@ class Model_create_ska extends CI_Model {
         $length = $this->input->post('length');
         $client_partner = $this->input->post('client_partner');
         $invoice_number = $this->input->post('invoice_number');
+        $ipska = $this->input->post('ipska');
+        $tipe_form = $this->input->post('tipe_form');
         $jenis_file     = substr($this->input->post('tipe_file'), 1);
         $arr_jenis_file = explode(',', $jenis_file);
 
@@ -37,6 +39,8 @@ class Model_create_ska extends CI_Model {
             'partner_id' => $client_partner,
             'no_draft' => $no_draft,
             'invoice_number' => $invoice_number,
+            'co_type_id' => $tipe_form,
+            'ipska_office_id' => $ipska,
             'created_at' => date("Y-m-d h:i:s"),
             'created_by' => $this->session->userdata('username'),
             'status' => '1'
@@ -377,22 +381,26 @@ class Model_create_ska extends CI_Model {
             $addSql .= ' AND a.no_draft = '.$this->db->escape($arrPost['no_draft']);
         }
         
-        $sql_total 	= ' SELECT a.id, a.no_draft, a.invoice_number, a.created_at, d.status_desc, b.client_name, b.npwp, b.nib, c.partner_name, a.status
+        $sql_total 	= ' SELECT a.id, a.no_draft, a.invoice_number, a.created_at, d.status_desc, b.client_name, b.npwp, b.nib, c.partner_name, a.status, e.name as cotype, f.name as ipska
                         FROM trans.draft_ska a
                         LEFT JOIN profile.clients b ON b.id = a.client_id
                         LEFT JOIN profile.partners c ON c.id = a.partner_id
                         LEFT JOIN referensi.tblrefstatus d ON d.id = a.status
+                        LEFT JOIN referensi.refcotype e ON e.id = a.co_type_id
+                        LEFT JOIN referensi.refipska f ON f.id = a.ipska_office_id
                         WHERE a.client_id = '.$this->session->userdata('client_id').' '.$addSql.'
                         ORDER BY a.created_at DESC';
 		$result_total 	= $this->db->query($sql_total);
 		$banyak 		= $result_total->num_rows();
 
 		if($banyak > 0){
-			$sql = 'SELECT a.id, a.no_draft, a.invoice_number, a.created_at, d.status_desc, b.client_name, b.npwp, b.nib, c.partner_name, a.status
+			$sql = 'SELECT a.id, a.no_draft, a.invoice_number, a.created_at, d.status_desc, b.client_name, b.npwp, b.nib, c.partner_name, a.status, e.name as cotype, f.name as ipska
                     FROM trans.draft_ska a
                     LEFT JOIN profile.clients b ON b.id = a.client_id
                     LEFT JOIN profile.partners c ON c.id = a.partner_id
                     LEFT JOIN referensi.tblrefstatus d ON d.id = a.status
+                    LEFT JOIN referensi.refcotype e ON e.id = a.co_type_id
+                    LEFT JOIN referensi.refipska f ON f.id = a.ipska_office_id
                     WHERE a.client_id = '.$this->session->userdata('client_id').' '.$addSql.'
                     ORDER BY a.created_at DESC
                     LIMIT '.$length.' OFFSET '.$start;

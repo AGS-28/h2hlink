@@ -26,8 +26,10 @@ class Createska extends CI_Controller {
         $param['data_partner'] 	 = $this->Model_master->get_data_partner();
         $param['data_extention'] = $this->Model_master->get_data_extention();
         $param['data_type_doc']  = $this->Model_master->get_data_ref_document(1);
+        $param['data_ipska']  = $this->Model_master->get_data_ref_ipska();
+        $param['data_type_form']  = $this->Model_master->get_data_ref_form();
 		$param['page_title'] 	 = $this->load->view('main/partials/page-title', $tittle,true);
-		
+
 		$data['content']    	= $this->load->view('main/view/upload_draft',$param,true);
 		$this->load->view('main/template',$data);
 	}
@@ -134,7 +136,7 @@ class Createska extends CI_Controller {
 			$func_name = "'get_view_draft'";
 
 			$html[] = $no;
-			$html[] = '<b> Draft Number : <font color="#4549a2">'.$data['no_draft'].'</font><br/> Invoice Number : <font color="#4549a2">'.$data['invoice_number'].'</font></b><br/><b> Status : <font color="#d75350">'.$data['status_desc'].'</font></b><br/><b> Created Date : </b>'.$data['created_at'];
+			$html[] = '<b> Draft Number : <font color="#d75350">'.$data['no_draft'].'</font><br/><b> IPSKA : <font color="#4549a2">'.$data['ipska'].'</font><br/><b> Type Form : <font color="#4549a2">'.$data['cotype'].'</font><br/> Invoice Number : <font color="#4549a2">'.$data['invoice_number'].'</font></b><br/><b> Status : <font color="#d75350">'.$data['status_desc'].'</font></b><br/><b> Created Date : </b>'.$data['created_at'];
 			$html[] = '<b> Name : <font color="#d75350">'.$data['client_name'].'</font></b><br/><b> NIB : </b>'.$data['nib'].'<br/><b> NPWP : </b>'.$data['npwp'];
 			$html[] = '<b> Name : <font color="#4549a2">'.$data['partner_name'].'</font>';
 			$html[] = '

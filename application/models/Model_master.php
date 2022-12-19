@@ -55,7 +55,7 @@ class Model_master extends CI_Model {
     }
 
     function get_data_extention() {
-        $sql = "SELECT CONCAT('.', LOWER(c.message_type)) AS message_type
+        $sql = "SELECT string_agg(CONCAT('.', LOWER(c.message_type)), ',') AS message_type
                 FROM profile.clients a 
                 LEFT JOIN profile.client_chanel b ON b.id_client = a.id
                 LEFT JOIN referensi.message_type c ON c.id = b.message_id
@@ -159,6 +159,24 @@ class Model_master extends CI_Model {
         } else {
             return $arr_result;
         }
+    }
+
+    function get_data_ref_ipska()
+    {
+        $sql = "SELECT * FROM referensi.refipska WHERE is_delete is null";
+        $result = $this->db->query($sql);
+        $arr_result = $result->result_array();
+
+        return $arr_result;
+    }
+    
+    function get_data_ref_form()
+    {
+        $sql = "SELECT * FROM referensi.refcotype WHERE is_delete is null";
+        $result = $this->db->query($sql);
+        $arr_result = $result->result_array();
+
+        return $arr_result;
     }
 
 }
