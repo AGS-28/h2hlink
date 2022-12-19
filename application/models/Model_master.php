@@ -32,7 +32,7 @@ class Model_master extends CI_Model {
         return $arr_result;
     }
 
-    function get_data_ref_document($tipe='') {
+    function get_data_ref_document($tipe='', $jenis='') {
         $addSql = 'WHERE id NOT IN (13,14)';
         if($tipe != '') {
             $addSql = 'WHERE id IN (11,13,14)';
@@ -41,12 +41,21 @@ class Model_master extends CI_Model {
         $sql = "SELECT * FROM referensi.refdokumen ".$addSql;
         $result = $this->db->query($sql);
         $arr_result = $result->result_array();
+        
+        if($jenis != '') {
+            $arr = array();
+            foreach ($arr_result as $key => $value) {
+                $arr[$value['kode']] = $value['name'];
+            }
 
-        return $arr_result;
+            return $arr;
+        } else {
+            return $arr_result;
+        }
     }
 
     function get_data_extention() {
-        $sql = "SELECT CONCAT('.', LOWER(c.message_type)) AS message_type
+        $sql = "SELECT string_agg(CONCAT('.', LOWER(c.message_type)), ',') AS message_type
                 FROM profile.clients a 
                 LEFT JOIN profile.client_chanel b ON b.id_client = a.id
                 LEFT JOIN referensi.message_type c ON c.id = b.message_id
@@ -133,5 +142,41 @@ class Model_master extends CI_Model {
 
 		return $alpha;
 	}
+
+    function get_data_ref_kppbc($tipe='')
+    {
+        $sql = "SELECT * FROM referensi.refkppbc WHERE is_delete is null";
+        $result = $this->db->query($sql);
+        $arr_result = $result->result_array();
+
+        if($tipe != '') {
+            $arr = array();
+            foreach ($arr_result as $key => $value) {
+                $arr[$value['code']] = $value['name'];
+            }
+
+            return $arr;
+        } else {
+            return $arr_result;
+        }
+    }
+
+    function get_data_ref_ipska()
+    {
+        $sql = "SELECT * FROM referensi.refipska WHERE is_delete is null";
+        $result = $this->db->query($sql);
+        $arr_result = $result->result_array();
+
+        return $arr_result;
+    }
+    
+    function get_data_ref_form()
+    {
+        $sql = "SELECT * FROM referensi.refcotype WHERE is_delete is null";
+        $result = $this->db->query($sql);
+        $arr_result = $result->result_array();
+
+        return $arr_result;
+    }
 
 }

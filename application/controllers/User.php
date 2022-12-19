@@ -55,7 +55,6 @@ class User extends CI_Controller {
 							</button>
 							<ul class="dropdown-menu dropdown-menu-end">
 								<li><a class="dropdown-item" href="#" onclick="edit('.$data['id_user'].',0);">Edit</a></li>
-								<li><a class="dropdown-item" href="#" onclick="confirm_delete('.$this->db->escape("Are you sure ?").',hapus,'.$this->db->escape($data['id_user']).');">Delete</a></li>
 							</ul>
 						</div>
 					';
@@ -72,5 +71,21 @@ class User extends CI_Controller {
         unset($row);
         echo json_encode($return);
     }
-    
+
+	public function getselectgroup()
+	{
+		echo json_encode($this->Model_user->getselectgroup());
+	}
+	public function getselectclient()
+	{
+		echo json_encode($this->Model_user->getselectclient());
+	}
+    public function add_user()
+    {
+        echo json_encode($this->Model_user->add_user());
+    }
+	public function get_edit_user()
+    {
+        echo json_encode($this->Model_user->get_edit_user());
+    }
 }

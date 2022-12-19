@@ -265,7 +265,7 @@ class Cms extends CI_Controller {
 			}
 
             $html[] = $no;
-			$html[] = '<b> Name : <font color="#d75350">'.$data['client_name'].'</font></br> NIB : <font color="#4549a2">'.$data['nib'].'</font></br> NPWP : <font color="#4549a2">'.$data['npwp'].'</font></br>User Endpoint : <span class="badge rounded-pill bg-success">'.$data['user_endpoint'].'</span>';
+			$html[] = '<b> Name : <font color="#d75350">'.$data['client_name'].'</font></br> NIB : <font color="#4549a2">'.$data['nib'].'</font></br> NPWP : <font color="#4549a2">'.$data['npwp'].'</font></br> Email : <font color="#4549a2">'.$data['email'].'</font></br>User Endpoint : <span class="badge rounded-pill bg-success">'.$data['user_endpoint'].'</span>';
 			$html[] = '<b> Address : <font color="#d75350">'.$data['address'].'</font></br> Handphone : <font color="#4549a2">'.$data['handphone_no'].'</font></br> Telephone : <font color="#4549a2">'.$data['telephone_no'].'</font></br>Author : <span class="badge rounded-pill bg-success">'.$data['authority_name'].'</span>';
 			$html[] = '<b> Start Date : <font color="#d75350">'.$data['validate'].'</font> </br>End Date : <font color="#4549a2">'.$data['valid_until'].'</font> </br> Status : '.(isset($data['is_active']) && $data['is_active'] == 't' ? '<font color="#4549a2"> Active</font>' : '<font color="#d75350"> Non Active</font>').'</font></br>Package Type : <span class="badge rounded-pill bg-success">'.$data['package_name'].'</span>';
 			$html[] = '
@@ -382,5 +382,26 @@ class Cms extends CI_Controller {
 	{
 		echo json_encode($this->Model_cms->getmessagetype());
 	}
+	public function getselectpartner()
+	{
+		echo json_encode($this->Model_cms->getselectpartner());
+	}
+	public function getallpartner()
+	{
+		echo json_encode($this->Model_cms->getallpartner());
+	}
+	public function getaddrowmethod()
+	{
+		echo json_encode($this->Model_cms->getaddrowmethod());
+	}
+	public function getchanelpackage()
+	{
+		echo json_encode($this->Model_cms->getchanelpackage());
+	}
+
+	public function add_item_client()
+    {
+		echo json_encode($this->Model_cms->add_item_client());
+    }
 
 }

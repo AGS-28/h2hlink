@@ -13,6 +13,8 @@ class Model_create_ska extends CI_Model {
         $length = $this->input->post('length');
         $client_partner = $this->input->post('client_partner');
         $invoice_number = $this->input->post('invoice_number');
+        $ipska = $this->input->post('ipska');
+        $tipe_form = $this->input->post('tipe_form');
         $jenis_file     = substr($this->input->post('tipe_file'), 1);
         $arr_jenis_file = explode(',', $jenis_file);
 
@@ -37,6 +39,8 @@ class Model_create_ska extends CI_Model {
             'partner_id' => $client_partner,
             'no_draft' => $no_draft,
             'invoice_number' => $invoice_number,
+            'co_type_id' => $tipe_form,
+            'ipska_office_id' => $ipska,
             'created_at' => date("Y-m-d h:i:s"),
             'created_by' => $this->session->userdata('username'),
             'status' => '1'
@@ -153,6 +157,18 @@ class Model_create_ska extends CI_Model {
         }
 
         if($status) {
+            if(isset($arrPost['kppbc'])) {
+                $refkkpbc = $arrPost['kppbc'];
+            } else {
+                $refkkpbc = null;
+            }
+
+            if($arrPost['document_type'] == '1' OR $arrPost['document_type'] == '6') {
+                $value = str_replace(',','',$arrPost['value']);
+            } else {
+                $value = null;
+            }
+            
             $this->db->trans_begin();
             $array_data = array(
                 'transaction_id' => $arrPost['aju_number'],
@@ -163,6 +179,8 @@ class Model_create_ska extends CI_Model {
                 'path' => $path_file,
                 'document_date' => $arrPost['document_date'],
                 'refdokumen_id' => $arrPost['document_type'],
+                'refkppbc_id' => $refkkpbc,
+                'value' => $value,
                 'flag' => 0,
                 'created_by' => $this->session->userdata('username'),
                 'created_at' => date("Y-m-d h:i:s"),
@@ -229,30 +247,55 @@ class Model_create_ska extends CI_Model {
 		return $return;
     }
 
-    function get_view_document($id) {
+    function get_view_document($id,$tipe='') {
         $start 		= $this->input->post('start');
 		$length 	= $this->input->post('length');
 
-        $sql_total 	= ' SELECT a.id, b.name, a.document_number, a.document_date, a.created_at AS created_at_document
-                        FROM trans.document a 
-                        LEFT JOIN referensi.refdokumen b ON b.id = a.refdokumen_id
-                        WHERE a.is_delete = false 
-                        AND a.client_id = '.$this->session->userdata('client_id').' 
-                        AND a.transaction_id = '.$id.'
-                        ORDER BY a.created_at DESC';
-    
+        if($tipe == '') {
+            $sql_total 	= ' SELECT a.id, b.name, a.document_number, a.document_date, a.created_at AS created_at_document, c.name as kppbc, a.value
+                            FROM trans.document a 
+                            LEFT JOIN referensi.refdokumen b ON b.id = a.refdokumen_id
+                            LEFT JOIN referensi.refkppbc c ON c.code = a.refkppbc_id
+                            WHERE a.is_delete = false 
+                            AND a.client_id = '.$this->session->userdata('client_id').' 
+                            AND a.transaction_id = '.$id.'
+                            ORDER BY a.created_at DESC';
+        } else {
+            $sql_total 	= ' SELECT c.user_endpoint, c.npwp, c.nib, a.no_aju, b.document_number, b.document_date, b.path, d.kode, b.value, b.refkppbc_id
+                            FROM trans.headers a 
+                            LEFT JOIN trans.document b ON b.transaction_id = a.id
+                            LEFT JOIN profile.clients c ON c.id = a.client_id
+                            LEFT JOIN referensi.refdokumen d ON d.id = b.refdokumen_id
+                            WHERE b.is_delete = false 
+                            AND c.id = '.$this->session->userdata('client_id').' 
+                            AND a.id = '.$id;
+        }
+        
 		$result_total 	= $this->db->query($sql_total);
 		$banyak 		= $result_total->num_rows();
 
-		if($banyak > 0){			
-            $sql = 'SELECT a.id, b.name, a.document_number, a.document_date, a.created_at AS created_at_document
-                    FROM trans.document a 
-                    LEFT JOIN referensi.refdokumen b ON b.id = a.refdokumen_id
-                    WHERE a.is_delete = false 
-                    AND a.client_id = '.$this->session->userdata('client_id').' 
-                    AND a.transaction_id = '.$id.'
-                    ORDER BY a.created_at DESC
-                    LIMIT '.$length.' OFFSET '.$start;
+		if($banyak > 0){		
+            if($tipe == '') {
+                $sql = 'SELECT a.id, b.name, a.document_number, a.document_date, a.created_at AS created_at_document, c.name as kppbc, a.value
+                        FROM trans.document a 
+                        LEFT JOIN referensi.refdokumen b ON b.id = a.refdokumen_id
+                        LEFT JOIN referensi.refkppbc c ON c.code = a.refkppbc_id
+                        WHERE a.is_delete = false 
+                        AND a.client_id = '.$this->session->userdata('client_id').' 
+                        AND a.transaction_id = '.$id.'
+                        ORDER BY a.created_at DESC
+                        LIMIT '.$length.' OFFSET '.$start;
+            } else {
+                $sql = 'SELECT c.user_endpoint, c.npwp, c.nib, a.no_aju, b.document_number, b.document_date, b.path, d.kode, b.value, b.refkppbc_id
+                        FROM trans.headers a 
+                        LEFT JOIN trans.document b ON b.transaction_id = a.id
+                        LEFT JOIN profile.clients c ON c.id = a.client_id
+                        LEFT JOIN referensi.refdokumen d ON d.id = b.refdokumen_id
+                        WHERE b.is_delete = false 
+                        AND c.id = '.$this->session->userdata('client_id').' 
+                        AND a.id = '.$id;
+            }
+            
 			$result 		= $this->db->query($sql);
 			$arrayReturn 	= $result->result_array();
 
@@ -324,7 +367,6 @@ class Model_create_ska extends CI_Model {
         $path = $arr_result[0]['path'];
         
         $bas64doc = chunk_split(base64_encode(file_get_contents($path)));
-
         return $bas64doc;
     }
 
@@ -339,22 +381,26 @@ class Model_create_ska extends CI_Model {
             $addSql .= ' AND a.no_draft = '.$this->db->escape($arrPost['no_draft']);
         }
         
-        $sql_total 	= ' SELECT a.id, a.no_draft, a.invoice_number, a.created_at, d.status_desc, b.client_name, b.npwp, b.nib, c.partner_name, a.status
+        $sql_total 	= ' SELECT a.id, a.no_draft, a.invoice_number, a.created_at, d.status_desc, b.client_name, b.npwp, b.nib, c.partner_name, a.status, e.name as cotype, f.name as ipska
                         FROM trans.draft_ska a
                         LEFT JOIN profile.clients b ON b.id = a.client_id
                         LEFT JOIN profile.partners c ON c.id = a.partner_id
                         LEFT JOIN referensi.tblrefstatus d ON d.id = a.status
+                        LEFT JOIN referensi.refcotype e ON e.id = a.co_type_id
+                        LEFT JOIN referensi.refipska f ON f.id = a.ipska_office_id
                         WHERE a.client_id = '.$this->session->userdata('client_id').' '.$addSql.'
                         ORDER BY a.created_at DESC';
 		$result_total 	= $this->db->query($sql_total);
 		$banyak 		= $result_total->num_rows();
 
 		if($banyak > 0){
-			$sql = 'SELECT a.id, a.no_draft, a.invoice_number, a.created_at, d.status_desc, b.client_name, b.npwp, b.nib, c.partner_name, a.status
+			$sql = 'SELECT a.id, a.no_draft, a.invoice_number, a.created_at, d.status_desc, b.client_name, b.npwp, b.nib, c.partner_name, a.status, e.name as cotype, f.name as ipska
                     FROM trans.draft_ska a
                     LEFT JOIN profile.clients b ON b.id = a.client_id
                     LEFT JOIN profile.partners c ON c.id = a.partner_id
                     LEFT JOIN referensi.tblrefstatus d ON d.id = a.status
+                    LEFT JOIN referensi.refcotype e ON e.id = a.co_type_id
+                    LEFT JOIN referensi.refipska f ON f.id = a.ipska_office_id
                     WHERE a.client_id = '.$this->session->userdata('client_id').' '.$addSql.'
                     ORDER BY a.created_at DESC
                     LIMIT '.$length.' OFFSET '.$start;

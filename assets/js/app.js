@@ -33,6 +33,41 @@ function add(form,url,validate=false)
         alert_error(errorString);
     }
 }
+function addUsers(form,url,validate=false) 
+{
+    var errorString = "Please complete the following data : <br\>";
+    var panjangAwal = errorString.length;
+
+    $('#'+form).find('input[type="text"],select,textarea,input[type="file"]').each(function() {
+        if(validate) {
+            if(this.value == "" && this.title != '') {
+                errorString += "- "+this.title+"  <br\>";
+            }
+        }  
+    });
+
+    var panjangAkhir = errorString.length;
+    if (panjangAwal == panjangAkhir) {
+
+        var formdata = JSON.stringify($("#"+form).serializeArray());
+        var postdata = new FormData();
+        postdata.append('postdata',formdata);
+
+        var data = post_ajax(url,postdata);
+        var respondData = JSON.parse(data);
+        if (respondData.status == 1) 
+        {
+            alert_sukses("modal_add",close_modal);
+            get_data_all();
+        }
+        else
+        {
+            alert_error(respondData.errorText);
+        }
+    } else {
+        alert_error(errorString);
+    }
+}
 
 function alert_sukses(iddata="",_callback = false,tittle = "Success...") {
     var timerInterval;
@@ -230,6 +265,7 @@ function close_modal(id) {
     $("#"+ id).modal('hide');
 }
 
+
 function post_ajax(url, postdata) {
     var result = false;
     $.ajax({
@@ -299,6 +335,41 @@ function getselectmessagetype(id='') {
     }
 }
 
+function get_mask_number(idInput) {
+	$('#'+idInput).blur(function() {
+			$(this).formatCurrency({ colorize: true, negativeFormat: '-%s%n', roundToDecimalPlace: -1 });
+		})
+		.keyup(function(e) {
+			var e = window.event || e;
+			var keyUnicode = e.charCode || e.keyCode;
+			if (e !== undefined) {
+				switch (keyUnicode) {
+					case 16: break; // Shift
+					case 17: break; // Ctrl
+					case 18: break; // Alt
+					case 27: this.value = ''; break; // Esc: clear entry
+					case 35: break; // End
+					case 36: break; // Home
+					case 37: break; // cursor left
+					case 38: break; // cursor up
+					case 39: break; // cursor right
+					case 40: break; // cursor down
+					case 78: break; // N (Opera 9.63+ maps the "." from the number key section to the "N" key too!) (See: http://unixpapa.com/js/key.html search for ". Del")
+					case 110: break; // . number block (Opera 9.63+ maps the "." from the number block to the "N" key (78) !!!)
+					case 190: break; // .
+					default: $(this).formatCurrency({ colorize: true, negativeFormat: '-%s%n', roundToDecimalPlace: -1, eventOnDecimalsEntered: true });
+				}
+			}
+		})
+		.bind('decimalsEntered', function(e, cents) {
+			/*if (String(cents).length > 2) {
+				var errorMsg = 'Please do not enter any cents (0.' + cents + ')';
+				$('#formatWhileTypingAndWarnOnDecimalsEnteredNotification2').html(errorMsg);
+				log('Event on decimals entered: ' + errorMsg);
+			}*/
+		});
+}
+
 (function ($) {
     'use strict';
 
@@ -315,6 +386,8 @@ function getselectmessagetype(id='') {
     flatpickr('.date-range', {
         mode: "range"
     });
+
+    flatpickr('.datepicker', {});
 
     function setLanguage(lang) {
         if (document.getElementById("header-lang-img")) {

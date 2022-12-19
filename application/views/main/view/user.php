@@ -38,8 +38,8 @@
                         <div class="row">
                             <div class="col-lg-4">
                             <!-- <button type="button" class="btn btn-primary waves-effect btn-label waves-light"><i class="bx bx-add label-icon"></i> </button> -->
-                            <button class="btn font-16 btn-primary" id="add-item" ><i class="mdi mdi-plus-circle-outline"></i> Add User</button>
-                        </div>
+                                <button class="btn font-16 btn-primary" id="add-item" ><i class="mdi mdi-plus-circle-outline"></i> Add User</button>
+                            </div>
                         </div>
                     </div>
                     <div class="card-body">
@@ -55,12 +55,73 @@
                                             <div class="row">
                                                 <div class="col-lg-6 ms-lg-auto">
                                                     <div class="mt-4 mt-lg-0">
-                                                        <p class="card-title-desc"><i class="mdi mdi-information-variant"></i> Please enter your input.. </p>
-                                                        <br/>
+                                                        
                                                         <div class="row mb-4">
-                                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Role Name</label>
+                                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Username</label>
                                                             <div class="col-sm-9">
-                                                                <input type="text" class="form-control" id="rolename" name="rolename" title="Role Name">
+                                                                <input type="text" class="form-control" id="username" name="username" title="Role Name">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-4">
+                                                            <label for="horizontal-input" class="col-sm-3 col-form-label">User Email</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" class="form-control" id="email" name="email" title="Role Name">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-4">
+                                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Name</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" class="form-control" id="name" name="name" title="Role Name">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-4">
+                                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Password</label>
+                                                            <div class="col-sm-9">
+                                                                <div class="input-group auth-pass-inputgroup">
+                                                                    <input type="password" name ="password" id="password" class="form-control" placeholder="Insert Password" aria-label="Password" aria-describedby="password-addon">
+                                                                    <button class="btn btn-light ms-0" type="button" id="password-addon"><i class="mdi mdi-eye-outline"></i></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-4">
+                                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Retype Password</label>
+                                                            <div class="col-sm-9">
+                                                                <div class="input-group auth-pass-inputgroup">
+                                                                    <input type="password" name ="retpassword" id="retpassword" class="form-control" placeholder="Retype Password" aria-label="Retype Password" aria-describedby="password-addon2">
+                                                                    <button class="btn btn-light ms-0" type="button" id="password-addon2"><i class="mdi mdi-eye-outline"></i></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 ms-lg-auto">
+                                                    <div class="mt-4 mt-lg-0">
+                                                        <!-- right input -->
+                                                        <div class="row mb-4">
+                                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Address</label>
+                                                            <div class="col-sm-9">
+                                                                <textarea name="address" id="address" class="form-control"></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-4">
+                                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Phone Number</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" name="hp" id="hp" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-4">
+                                                            <label for="horizontal-input" class="col-sm-3 col-form-label">User Type</label>
+                                                            <div class="col-sm-9">
+                                                                <select class="form-control" name="groupid" id="groupid" onchange="chekrole(this.value)">
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-4">
+                                                            <label for="horizontal-input" class="col-sm-3 col-form-label inputclient">Client</label>
+                                                            <div class="col-sm-9 inputclient">
+                                                                <select class="form-control " name="clientid" id="clientid" >
+                                                                </select>
                                                             </div>
                                                         </div>
                                                         <div class="row mb-4">
@@ -70,11 +131,6 @@
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6 ms-lg-auto">
-                                                    <div class="mt-4 mt-lg-0">
-                                                        <!-- right input -->
                                                         <input type="hidden" name="updated" id ="updated" value="0">
                                                         <input type="hidden" name="idnya" id ="idnya" value="0">
                                                     </div>
@@ -98,8 +154,8 @@
                         </div>
                         <div class="table-responsive">
                             <table id="table_data" class="table_data table table-bordered dt-responsive nowrap w-100" width="100%">
-                                <thead style="width:100%">
-                                    <tr align="center">
+                                <thead>
+                                    <tr>
                                         <th>No</th>
                                         <th>User</th>
                                         <th>Client</th>
