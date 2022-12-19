@@ -1,18 +1,26 @@
 var tipe = $('#tipe').val();
+var extention = $('#extention').val();
 if(tipe == 0) {
     var myDropzone = new Dropzone(".dropzone", { 
-        // maxFiles: 2,
-        acceptedFiles: ".csv, .xls, .xlsx, .txt, .rar, .json, .xml",
-        addRemoveLinks: true,
+        // maxFiles: 3,
+        // acceptedFiles: ".csv, .xls, .xlsx, .txt, .rar, .json, .xml",
+        acceptedFiles: extention,
+        // addRemoveLinks: true,
         accept: function(file, done) {
-            done();
+            var cek = cekFile();
+            if(cek) {
+                done();
+            } else {
+                alert_error('Please complete the following data : <br\> - Anda hanya bisa melakukan upload sekali dengan tipe dokumen '+$('#tipe_upload option:selected').text());
+                this.removeFile(file);
+            }
         },
         init: function() {
-            addRemoveLinks: true, 
-            this.on("maxfilesexceeded", function(file) {
-                alert_error('Please complete the following data : <br\> - Maximum file that can be uploaded is only 2');
-                this.removeFile(file);
-            });
+            // addRemoveLinks: true, 
+            // this.on("maxfilesexceeded", function(file) {
+            //     alert_error('Please complete the following data : <br\> - Maximum file that can be uploaded is only 3');
+            //     this.removeFile(file);
+            // });
         }
     });
 }
@@ -20,12 +28,18 @@ if(tipe == 0) {
 $(document).ready(function() {
     if(tipe == 0) {
         cari_data('form_table',false,'get_data_draft');
-        new Choices('#client_partner', {shouldSort: true});
+        new Choices('#client_partner', {shouldSort: false});
+        new Choices('#ipska', {shouldSort: false});
+        new Choices('#tipe_form', {shouldSort: false});
+        new Choices('#tipe_upload', {shouldSort: false});
     } else {
+        show_hide_input();
+        get_mask_number('value');
         flatpickr('#document_date', {});
         cari_data('form_table',false,'get_data_document');
         new Choices('#document_type', {shouldSort: true});
         new Choices('#aju_number', {shouldSort: true});
+        new Choices('#kppbc', {shouldSort: true});
 
         var file_upload = document.getElementById('file_upload');
         file_upload.addEventListener('change', function(){
@@ -33,6 +47,18 @@ $(document).ready(function() {
         });
     }
 });
+
+function cekFile() {
+    var tipe_upload = $('#tipe_upload').val();
+    var tipe_file = $('#tipe_file').val();
+    if(tipe_file.indexOf(tipe_upload) === -1) {
+        var update_fipe_file = tipe_file+','+tipe_upload;
+        $('#tipe_file').val(update_fipe_file);
+        return true;
+    } else {
+        return false;
+    }
+}
 
 function confirm_upload_draft() {
     var errorString = "Please complete the following data : <br\>";
@@ -65,6 +91,10 @@ function upload_draft() {
     formdata.append('length', dropzone.files.length);
     formdata.append('client_partner', $('#client_partner').val());
     formdata.append('invoice_number', $('#invoice_number').val());
+    formdata.append('ipska', $('#ipska').val());
+    formdata.append('tipe_form', $('#tipe_form').val());
+    formdata.append('tipe_file', $('#tipe_file').val());
+
     for (var i = 0; i < dropzone.files.length; i++) {
         formdata.append('file_' + i, dropzone.files[i]);
     }
@@ -75,7 +105,8 @@ function upload_draft() {
     setTimeout(function(){
         showLoading(false);
         if (respondData == 1)  {
-            alert_sukses('',cari_data('form_table',false,'get_data_draft'));
+            // alert_sukses('',cari_data('form_table',false,'get_data_draft'));
+            alert_sukses('',location.reload());
         } else if(respondData == 2) {
             alert_error('Failed to upload documents, please check your type file');
         } else {
@@ -87,10 +118,17 @@ function upload_draft() {
 function confirm_save() {
     var errorString = "Please complete the following data : <br\>";
     var panjangAwal = errorString.length;
+    var document_type = $('#document_type ').val();
 
     $('#form_upload').find('input[type="text"],select,textarea').each(function() {
         if(this.title != '' && this.value == '') {
-            errorString += "- "+this.title+"  <br\>";
+            if(this.id == 'value') {
+                if(document_type == '1' || document_type == '6') {
+                    errorString += "- "+this.title+"  <br\>";
+                }
+            } else {
+                errorString += "- "+this.title+"  <br\>";
+            } 
         }
     });
 
@@ -166,9 +204,9 @@ function show_data_document(id, name_doc, tipe='', func_name) {
     }  
 
     if(func_name == 'get_view_draft') {
-        var target = [0, 3];
-    } else {
         var target = [0, 4];
+    } else {
+        var target = [0, 6];
     }
 
     $("#table_data_v_document").DataTable({
@@ -221,4 +259,42 @@ function next_delete_document(id, header_id) {
             alert_error('Failed to delete documents');
         }
     }, 3000);
+}
+
+function send_document(id) {    
+    showLoading(true);
+    $.post(baseurl + "index.php/createska/send_document/"+Math.random(),{id:id}).done(function( data ) {
+        showLoading(false);
+        const obj = JSON.parse(data);
+        if(obj.kode == '200') {
+            swal.fire({
+                title: 'Succes!',
+                html: obj.data.keterangan,
+                icon: 'success',
+                button: "Close",
+            });
+        } else{
+            swal.fire({
+                title: 'Warning!',
+                html: obj.keterangan,
+                icon: 'warning',
+                button: "Close",
+            });
+        }
+    });
+}
+
+function show_hide_input() {
+    var document_type = $('#document_type').val();
+    $('#div_kppbc').hide();
+    $('#div_value').hide();
+
+    if(document_type == '1') {
+        $('#div_value').show();
+    }
+
+    if(document_type == '6') {
+        $('#div_kppbc').show();
+        $('#div_value').show();
+    }
 }

@@ -315,6 +315,7 @@ else
 
 <script src="<?= base_url(); ?>assets/libs/dropzone/min/dropzone.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+<script src="<?= base_url(); ?>assets/libs/format-currency/jquery.formatCurrency-1.4.0.min.js"></script>
 
 <?php if(isset($addjs)) echo $addjs; ?>
 <?php if($addmenu) { ?>

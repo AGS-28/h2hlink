@@ -31,6 +31,16 @@
                                                 <input class="form-control" type="text" id="document_number" name="document_number" title="Document Number">
                                             </div>
                                         </div>
+                                        <div class="row mb-4" id="div_kppbc" style="display: none;">
+                                            <label for="horizontal-input" class="col-sm-3 col-form-label">KPPBC</label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control single-choices" name="kppbc" id="kppbc" title="KPPBC">
+                                                    <?php foreach($ref_kppbc as $kppbc) { ?>
+                                                        <option value="<?php echo $kppbc['code']; ?>"> <?php echo $kppbc['name']; ?> </option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 ms-lg-auto">
@@ -38,7 +48,7 @@
                                         <div class="row mb-4">
                                             <label for="horizontal-input" class="col-sm-3 col-form-label">Document Type</label>
                                             <div class="col-sm-9">
-                                                <select class="form-control single-choices" name="document_type" id="document_type" title="Document Type" onchange="set_id_file();">
+                                                <select class="form-control single-choices" name="document_type" id="document_type" title="Document Type" onchange="show_hide_input();">
                                                     <?php foreach($ref_document as $document) { ?>
                                                         <option value="<?php echo $document['id']; ?>"> <?php echo $document['name']; ?> </option>
                                                     <?php } ?>
@@ -49,6 +59,13 @@
                                             <label for="horizontal-input" class="col-sm-3 col-form-label">Document Date</label>
                                             <div class="col-sm-9">
                                                 <input class="form-control" type="text" id="document_date" name="document_date" title="Document Date">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-4" id="div_value" style="display: none;">
+                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Value</label>
+                                            <div class="col-sm-9">
+                                                <input class="form-control" type="text" id="value" name="value" title="Value">
+                                                <p style="color: red; font-style: italic;">Gunakan titik (.) untuk bilangan decimal</p>
                                             </div>
                                         </div>
                                     </div>
@@ -98,7 +115,7 @@
                                             </div>
                                             <div class="col-sm-7">
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" title="aju number" id="no_aju" name="no_aju" placeholder="Aju number..." onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                                    <input type="text" class="form-control" title="aju number" id="no_aju" name="no_aju" placeholder="Aju number...">
                                                     <button class="btn btn-primary" type="button" onclick="cari_data('form_table',true,'get_data_document');"><i class="bx bx-search-alt align-middle"></i></button>
                                                 </div>
                                             </div>
@@ -145,6 +162,8 @@
                                                     <th>Document Type</th>
                                                     <th>Document Number</th>
                                                     <th>Document Date</th>
+                                                    <th>KPPBC</th>
+                                                    <th>Value</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>

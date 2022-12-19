@@ -45,7 +45,14 @@
                                                 <select class="form-control single-choices" name="show_table" id="show_table" title="Show Table" onchange="change_month_years();">
                                                     <option value="1">Month</option>
                                                     <option value="2">Years</option>
+                                                    <option value="3">Date</option>
                                                 </select>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-4" id="div_aju_date" style="display: none;">
+                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Aju Date</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control date-range" id="aju_date" name="aju_date" title="Aju Date" value="<?php echo $aju_date; ?>" onchange="dinamis_column();">
                                             </div>
                                         </div>
                                         <!-- <div class="row mb-4">
@@ -100,6 +107,14 @@
                                                     <?php foreach($arr_years as $years) { ?>
                                                         <?php $selected = ''; if($years == $years_now) { $selected = 'selected'; } ?>
                                                         <option value="<?php echo $years; ?>" <?php echo $selected; ?>> <?php echo $years; ?> </option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-9" id="div_years_disabled" style="display: none;">
+                                                <?php $arr_years = get_years(); $years_now = date('Y'); ?>
+                                                <select class="form-control" name="years_disabled" id="years_disabled" title="Years" multiple onchange="dinamis_column();">
+                                                    <?php foreach($arr_years as $years) { ?>
+                                                        <option value="<?php echo $years; ?>"> <?php echo $years; ?> </option>
                                                     <?php } ?>
                                                 </select>
                                             </div>

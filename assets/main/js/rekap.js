@@ -10,8 +10,9 @@ $(document).ready(function() {
     // new Choices('#paid_status',{removeItemButton: true,});
     new Choices('#years_multiple',{removeItemButton: true,});
     new Choices('#years_single',{shouldSort: true,});
-    new Choices('#show_table', {shouldSort: true});
+    new Choices('#show_table', {shouldSort: false});
     new Choices('#month_disabled', {addItems: false,removeItems: false,}).disable();
+    new Choices('#years_disabled', {addItems: false,removeItems: false,}).disable();
 });
 
 function change_month_years() {
@@ -21,12 +22,27 @@ function change_month_years() {
         
         $('#div_month_disabled').hide();
         $('#div_month_enabled').show();
-    } else {
+
+        $('#div_aju_date').hide();
+        $('#div_years_disabled').hide();
+    } else if($('#show_table').val() == 2) {
         $('#div_years_single').hide();
         $('#div_years_multiple').show();
 
         $('#div_month_enabled').hide();
         $('#div_month_disabled').show();
+
+        $('#div_aju_date').hide();
+        $('#div_years_disabled').hide();
+    } else {
+        $('#div_aju_date').show();
+        $('#div_years_disabled').show();
+
+        $('#div_years_multiple').hide();
+        $('#div_years_single').hide();
+        
+        $('#div_month_disabled').show();
+        $('#div_month_enabled').hide();
     }
 
     dinamis_column();
@@ -39,9 +55,46 @@ function dinamis_column() {
     if($('#show_table').val() == 1) {
         month = $('#month_enabled').val();
         years = $('#years_single').val();
-    } else {
+    } else if($('#show_table').val() == 2) {
         month = $('#month_disabled').val();
         years = $('#years_multiple').val();
+    } else {
+        var date = $('#aju_date').val();
+        if(date == '') {
+            month = $('#month_enabled').val();
+            years = $('#years_single').val();
+        } else {
+            var split_date = date.split(' to ');
+            var start_date = split_date[0];
+            var end_date = split_date[1];
+            if (typeof end_date !== "undefined") {
+                var split_start_date = start_date.split('-');
+                var split_end_date = end_date.split('-');
+
+                var date_start_date = split_start_date[2];
+                var month_start_date = split_start_date[1];
+                var years_start_date = split_start_date[0];
+
+                var date_end_date = split_end_date[2];
+                var month_end_date = split_end_date[1];
+                var years_end_date = split_end_date[0];
+
+                var years = [];
+                for (let index = parseInt(years_start_date); index <= parseInt(years_end_date); index++) {
+                    years.push(index);
+                }
+
+                if(years.length == 1) {
+                    var month = [];
+                    for (let index = parseInt(month_start_date); index <= parseInt(month_end_date); index++) {
+                        month.push(index);
+                    }
+                } else {
+                    
+                }
+            }
+        }
+
     }
 
     if($.isArray(month)) {
@@ -58,13 +111,15 @@ function dinamis_column() {
         years = [years];
     }
 
-    month.sort(function(a, b){
-        return parseInt(a)- parseInt(b);
-    });
+    if($('#show_table').val() != 3) {
+        month.sort(function(a, b){
+            return parseInt(a)- parseInt(b);
+        });
 
-    years.sort(function(a, b){
-        return parseInt(a)- parseInt(b);
-    });
+        years.sort(function(a, b){
+            return parseInt(a)- parseInt(b);
+        });
+    }
 
     if ($.fn.DataTable.isDataTable("#table_data")) {
         $("#table_data").DataTable().destroy();
