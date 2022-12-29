@@ -390,9 +390,9 @@ class Createska extends CI_Controller {
 		$data = $this->Model_master->get_data_client_channel($id);
 
 		$array_all = array(
-			'id_draft' => $id,
-			'id_client' => $data[0]['id_client'],
-			'id_channel' => $data[0]['id_channel']
+			'idDraft' => $id,
+			'idClient' => $data[0]['id_client'],
+			'idChannel' => $data[0]['id_channel']
 		);
 
 		$json_data = json_encode($array_all);
