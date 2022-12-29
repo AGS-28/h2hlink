@@ -382,6 +382,143 @@ class Model_cms extends CI_Model {
         return $data;
 
     }
+
+    public function add_item_client()
+    {
+        $post 		= $this->input->post('postdata');
+		$arrPost 	= postajax_toarray($post);
+        $data       = 0;
+        // var_dump($arrPost);exit;
+        //profile client
+        $npwp          = $arrPost['npwp'];
+        $nib           = $arrPost['nib'];
+        $client_name   = $arrPost['client_name'];
+        $address       = $arrPost['address'];
+        $email         = $arrPost['email'];
+        $tlp           = $arrPost['tlp'];
+        $hp            = $arrPost['hp'];
+        $authors       = $arrPost['authors'];
+        $user_endpoint = $arrPost['user_endpoint'];
+        $package_type  = $arrPost['package_type'];
+        $startdate     = $arrPost['startdate'];
+        $enddate       = $arrPost['enddate'];
+
+        // client partner
+        $arrpartnername = $arrPost['arrpartnername[]'];
+        $arrdescpartner = $arrPost['arrdescpartner[]'];
+        $arrxapikey     = $arrPost['arrxapikey[]'];
+        $arridpartner   = $arrPost['arridpartner[]'];
+        $arrclientkey   = $arrPost['arrclientkey[]'];
+
+        //client chanel
+        $arridchanel    = $arrPost['arridchanel[]'];
+        $messtypechanel = $arrPost['messtype-chanel[]'];
+
+        $this->db->trans_begin();
+        $arrayInsertProfile = array(
+                                    'client_name'       => $client_name,
+                                    'nib'               => $nib,
+                                    'npwp'              => $npwp,
+                                    'user_endpoint'     => $user_endpoint,
+                                    'created_at'        => date('Y-m-d H:i:s'),
+                                    'created_by'        => $this->session->userdata('username'),
+                                    'address'           => $address,
+                                    'handphone_no'      => $hp,
+                                    'telephone_no'      => $tlp,
+                                    'is_active'         => 't',
+                                    'is_deleted'        => 'f',
+                                    'validate'          => $startdate,
+                                    'valid_until'       => $enddate,
+                                    'package_id'        => $package_type,
+                                    'authority_name'    => $authors,
+                                    'email'             => $email,
+                                    );
+        // var_dump($arrayInsertProfile);exit;
+        $this->db->insert('profile.clients',$arrayInsertProfile);
+        $id_client = $this->db->insert_id();
+        
+        if (is_array($arridpartner)) 
+        {
+            foreach ($arridpartner as $key => $value) {
+                $sqlgetmethod = "SELECT * FROM profile.partner_endpoints a where a.partner_id = ".$value;
+                $res = $this->db->query($sqlgetmethod);
+                $datamethod = $res->result();
+
+                foreach ($datamethod as $key2 => $value2) {
+                    $arrayInsertPartner = array(
+                        'client_id'     => $id_client,
+                        'partner_id'    => $value2->partner_id,
+                        'client_key'    => $arrclientkey[$key],
+                        'created_at'    => date('Y-m-d H:i:s'),
+                        'created_by'    => $this->session->userdata('username'),
+                        'api_key'       => $arrxapikey[$key],
+                        'endpoint_id'   => $value2->id,
+                    );
+                    $this->db->insert('profile.client_partners',$arrayInsertPartner);
+                }
+                
+            }
+        }
+        else 
+        {
+            $sqlgetmethod = "SELECT * FROM profile.partner_endpoints a where a.partner_id = ".$arridpartner;
+            $res = $this->db->query($sqlgetmethod);
+            $datamethod = $res->result();
+
+            foreach ($datamethod as $key => $value) {
+                $arrayInsertPartner = array(
+                    'client_id'     => $id_client,
+                    'partner_id'    => $value->partner_id,
+                    'client_key'    => $arrclientkey,
+                    'created_at'    => date('Y-m-d H:i:s'),
+                    'created_by'    => $this->session->userdata('username'),
+                    'api_key'       => $arrxapikey,
+                    'endpoint_id'   => $value->id,
+                );
+                $this->db->insert('profile.client_partners',$arrayInsertPartner);
+            }
+        }
+
+        if (is_array($arridchanel)) 
+        {
+            foreach ($arridchanel as $key => $value) 
+            {
+                $arrayInsertChanel = array(
+                                            'id_client'  => $id_client,
+                                            'id_chanel'  => $value,
+                                            'created_at' => date('Y-m-d H:i:s'),
+                                            'created_by' => $this->session->userdata('username'),
+                                            'message_id' => $messtypechanel[$key],
+                                        );
+                $this->db->insert('profile.client_chanel',$arrayInsertChanel);
+            }
+        }
+        else 
+        {
+            $arrayInsertChanel = array(
+                'id_client'  => $id_client,
+                'id_chanel'  => $arridchanel,
+                'created_at' => date('Y-m-d H:i:s'),
+                'created_by' => $this->session->userdata('username'),
+                'message_id' => $messtypechanel,
+            );
+            $this->db->insert('profile.client_chanel',$arrayInsertChanel);
+        }
+        
+        if ($this->db->trans_status() === FALSE)
+        {
+                $this->db->trans_rollback();
+        }
+        else
+        {
+                $this->db->trans_commit();
+                $data = 1;
+        }
+
+        return $data;
+    
+    }
+
     public function add_item_partner()
     {
         $post 		= $this->input->post('postdata');
@@ -624,12 +761,44 @@ class Model_cms extends CI_Model {
         $data       = array();
         $status     = 0;
         $addSql     ="";
+        $html       ="";
 
         if ($id != '') {
-            $addSql = " WHERE a.id = ".$this->db->escape($id);
+            // $addSql = " WHERE a.id = ".$this->db->escape($id);
         }
 
         $sql        = "SELECT a.id as value,a.message_type as label FROM referensi.message_type a ".$addSql;
+        $result     = $this->db->query($sql);
+        $banyak     = $result->num_rows();
+        if ($banyak > 0) 
+        {
+            $returnData = $result->result_array();
+            foreach ($returnData as $key => $value) {
+                $html .='<option value="'.$value['value'].'">'.$value['label'].'</option>'; 
+            }
+            $status     = 1;
+        }
+        $data = array(
+                    'thisdata' => $returnData, 
+                    'status' => $status, 
+                    'htmldata' => $html, 
+                );
+
+        return $data;
+
+    }
+    public function getselectpartner()
+    {
+        $id 		= $this->input->post('id');
+        $data       = array();
+        $status     = 0;
+        $addSql     ="";
+
+        if ($id != '') {
+            $addSql = " AND a.id = ".$this->db->escape($id);
+        }
+
+        $sql        = "SELECT a.id as value,a.partner_name as label FROM profile.partners a WHERE 1=1 AND a.is_active = 't' ".$addSql;
         $result     = $this->db->query($sql);
         $banyak     = $result->num_rows();
         if ($banyak > 0) 
@@ -639,6 +808,145 @@ class Model_cms extends CI_Model {
         }
         $data = array(
                     'thisdata' => $returnData, 
+                    'status' => $status, 
+                );
+
+        return $data;
+
+    }
+    public function getallpartner()
+    {
+        $id 		= $this->input->post('id');
+        $data       = array();
+        $status     = 0;
+        $addSql     ="";
+
+        if ($id != '') {
+            $addSql = " AND a.id = ".$this->db->escape($id);
+        }
+
+        $sql        = "SELECT * FROM profile.partners a WHERE 1=1 AND a.is_active = 't' ".$addSql;
+        $result     = $this->db->query($sql);
+        $banyak     = $result->num_rows();
+        if ($banyak > 0) 
+        {
+            $returnData = $result->row();
+            $status     = 1;
+        }
+        $data = array(
+                    'thisdata' => $returnData, 
+                    'status' => $status, 
+                );
+
+        return $data;
+
+    }
+    public function getaddrowmethod()
+    {
+        $id 		= $this->input->post('id');
+        $data       = array();
+        $status     = 0;
+        $addSql     ="";
+        $html       ="";
+
+        if ($id != '') {
+            $addSql = " AND a.partner_id IN (".$id.") ";
+        }
+        else 
+        {
+            $addSql = " AND a.partner_id = 0";
+        }
+
+        $sql        = "SELECT a.*,b.message_type,c.partner_name
+                            FROM profile.partner_endpoints a
+                            LEFT JOIN referensi.message_type b on b.id = a.message_id
+                            LEFT JOIN  profile.partners c on c.id = a.partner_id
+                        WHERE 1=1 AND a.is_active = 't' ".$addSql;
+        $result     = $this->db->query($sql);
+        $banyak     = $result->num_rows();
+        if ($banyak > 0) 
+        {
+            $returnData = $result->result();
+            
+            foreach ($returnData as $key => $value) {
+                $html .= '<tr id="trmethod_"'.$key.'>';
+                $html .= '<td>'.$value->partner_name.'</td>';
+                $html .= '<td>'.$value->method_name.'</td>';
+                $html .= '<td>'.$value->partner_endpoint.'</td>';
+                $html .= '<td>'.$value->message_type.'</td>';
+                // $html .= '<td><button type="button" class="btn btn-danger waves-effect btn-label btn-sm waves-light" onclick="deleteRowMethod('.$key.')"><i class="bx bxs-trash label-icon"></i> Delete</button></td>';
+                $html .= '</tr>';
+            }
+            $status     = 1;
+        }
+        else 
+        {
+            $status     = 1;
+            $html       = '<tr>Empty data...</tr>';
+        }
+        $data = array(
+                    'thisdata' => $html, 
+                    'status' => $status, 
+                );
+
+        return $data;
+
+    }
+    public function getchanelpackage()
+    {
+        $id 		= $this->input->post('id');
+        $data       = array();
+        $status     = 0;
+        $addSql     ="";
+        $html       ="";
+        $packname   ="";
+        $select     = $this->getmessagetype();
+        // var_dump($select['thisdata']);exit;
+
+        switch ($id) {
+            case '1':
+                $addSql = " AND a.is_basic = 't'";
+                $packname = "Basic" ;
+                break;
+            case '2':
+                $addSql = " AND a.is_pro = 't'";
+                $packname = "Pro" ;
+                break;
+            case '3':
+                $addSql = " AND a.is_advance = 't'";
+                $packname = "Advance" ;
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+
+        $sql        = "SELECT * 
+                            FROM referensi.chanel a
+                        WHERE 1=1 AND a.is_active = 't' ".$addSql;
+        $result     = $this->db->query($sql);
+        $banyak     = $result->num_rows();
+        if ($banyak > 0) 
+        {
+            $returnData = $result->result();
+            
+            foreach ($returnData as $key => $value) {
+                $html .= '<tr id="trmethod_"'.$key.'>';
+                $html .= '<td>'.$packname.'</td>';
+                $html .= '<td>'.$value->name.'<input type="hidden" name="arridchanel[]" value="'.$value->id.'"></td>';
+                $html .= '<td><select class="form-control getmesstype" name="messtype-chanel[]" >'.$select['htmldata'].'</select></td>';
+                $html .= '</tr>';
+            }
+            $status     = 1;
+        }
+        else 
+        {
+            $status     = 1;
+            $html       = '<tr>Empty data...</tr>';
+        }
+        $data = array(
+                    'thisdata' => $html, 
                     'status' => $status, 
                 );
 
