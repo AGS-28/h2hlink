@@ -51,12 +51,12 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="row mb-4">
+                        <!-- <div class="row mb-4">
                             <label for="horizontal-input" class="col-sm-3 col-form-label">Invoice Number</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" title="Invoice Number" id="invoice_number" name="invoice_number">
                             </div>
-                        </div>
+                        </div> -->
                         <div class="row mb-4">
                             <label for="horizontal-input" class="col-sm-3 col-form-label">File</label>
                             <div class="col-sm-9">
@@ -64,11 +64,12 @@
                                     <div class="fallback">
                                         <input name="file" type="file" multiple="multiple">
                                     </div>
+                                    <div id="table_text"></div>
                                     <div class="dz-message needsclick">
                                         <div class="mb-3">
                                             <i class="display-4 text-muted bx bx-cloud-upload"></i>
                                         </div>
-
+                                        
                                         <h5>Drop files here or click to upload.</h5>
                                     </div>
                                 </form>
@@ -77,6 +78,7 @@
                         <div class="text-end mt-4">
                             <input class="form-control" type="hidden" name="extention" id="extention" value="<?php echo $data_extention[0]['message_type']; ?>" readonly>
                             <input class="form-control" type="hidden" name="tipe_file" id="tipe_file" value="" readonly>
+                            <input class="form-control" type="hidden" name="text_file" id="text_file" value="" readonly>
                             <input class="form-control" type="hidden" id="tipe" name="tipe" value="0" readonly>
                             <button type="submit" onclick="confirm_upload_draft();" class="btn btn-primary waves-effect btn-label waves-light"><i class="bx bx-check label-icon"></i> Send Files</button>
                         </div>
@@ -118,6 +120,19 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        <div class="modal fade" id="exampleModalScrollable1" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <b><div id="modal_header1"></div></b>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body" id="modal_body1" style="text-align: center;">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table id="table_data" class="table_data table table-bordered dt-responsive nowrap w-100" width="100%">
                                 <thead style="width:100%">

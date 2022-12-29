@@ -7365,6 +7365,8 @@ var defaultOptions = {
     b: "b"
   },
 
+  dictTypeDocument: "",
+
   /**
    * Called when dropzone initialized
    * You can add event listeners here
@@ -7597,7 +7599,7 @@ var defaultOptions = {
   // Receives `file`
   addedfile: function addedfile(file) {
     var _this = this;
-
+    
     if (this.element === this.previewsContainer) {
       this.element.classList.add("dz-started");
     }
@@ -7639,6 +7641,11 @@ var defaultOptions = {
       if (this.options.addRemoveLinks) {
         file._removeLink = Dropzone.createElement("<a class=\"dz-remove\" href=\"javascript:undefined;\" data-dz-remove>".concat(this.options.dictRemoveFile, "</a>"));
         file.previewElement.appendChild(file._removeLink);
+      }
+
+      if (this.options.addTypeDocument) {
+        file.addTypeDocument = Dropzone.createElement("<a class=\"dz-remove\" href=\"javascript:undefined;\" style=\"cursor: default;\">".concat(this.options.dictTypeDocument, "</a>"));
+        file.previewElement.appendChild(file.addTypeDocument);
       }
 
       var removeFileEvent = function removeFileEvent(e) {
@@ -7745,6 +7752,10 @@ var defaultOptions = {
       if (file._removeLink) {
         return file._removeLink.innerHTML = this.options.dictCancelUpload;
       }
+
+      if (file._addTypeDocument) {
+        return file._addTypeDocument.innerHTML = this.options.dictTypeDocument;
+      }
     }
   },
   processingmultiple: function processingmultiple() {},
@@ -7794,6 +7805,10 @@ var defaultOptions = {
   complete: function complete(file) {
     if (file._removeLink) {
       file._removeLink.innerHTML = this.options.dictRemoveFile;
+    }
+
+    if (file._addTypeDocument) {
+      file._addTypeDocument.innerHTML = this.options.dictTypeDocument;
     }
 
     if (file.previewElement) {

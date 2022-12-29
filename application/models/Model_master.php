@@ -35,7 +35,7 @@ class Model_master extends CI_Model {
     function get_data_ref_document($tipe='', $jenis='') {
         $addSql = 'WHERE id NOT IN (13,14)';
         if($tipe != '') {
-            $addSql = 'WHERE id IN (11,13,14)';
+            $addSql = 'WHERE id IN (11,13,14) ORDER BY is_order';
         }
         
         $sql = "SELECT * FROM referensi.refdokumen ".$addSql;
@@ -170,13 +170,58 @@ class Model_master extends CI_Model {
         return $arr_result;
     }
     
-    function get_data_ref_form()
+    function get_data_ref_form($tipe='')
     {
         $sql = "SELECT * FROM referensi.refcotype WHERE is_delete is null";
         $result = $this->db->query($sql);
         $arr_result = $result->result_array();
 
+        if($tipe != '') {
+            $arr = array();
+            foreach ($arr_result as $key => $value) {
+                $arr[$value['id']] = $value['name'];
+            }
+
+            $arr_result = $arr;
+        }
+
         return $arr_result;
+    }
+
+    function get_path_document() {
+        $id = $this->input->post('id');
+        $sql = "SELECT path FROM trans.document WHERE id = ".$id;
+        $result = $this->db->query($sql);
+        $arr_result = $result->result_array();
+        $path = $arr_result[0]['path'];
+        
+        $bas64doc = chunk_split(base64_encode(file_get_contents($path)));
+        return $bas64doc;
+    }
+
+    function get_data_client_channel($id) {
+        $sql = "SELECT string_agg(CONCAT('', c.id_chanel), ',') AS id_channel, b.id AS id_client
+                FROM trans.draft_ska a
+                LEFT JOIN profile.clients b ON b.id = a.client_id
+                LEFT JOIN profile.client_chanel c ON c.id_client = b.id
+                LEFT JOIN referensi.message_type d ON d.id = c.message_id
+                WHERE a.id = ".$id."
+                GROUP BY b.id";
+                
+        $result = $this->db->query($sql);
+        $arr_result = $result->result_array();
+
+        return $arr_result;
+    }
+
+    function get_url_wso2($id) {
+        $sql = "SELECT a.url_wso2 FROM profile.partner_endpoints a WHERE a.id = ".$id;
+
+        $result = $this->db->query($sql);
+        $arr_result = $result->result_array();
+        $url = $arr_result[0]['url_wso2'];
+
+        return $url;
     }
 
 }

@@ -12,9 +12,14 @@ class Model_create_ska extends CI_Model {
     function upload_draft($arr_message_type) {
         $length = $this->input->post('length');
         $client_partner = $this->input->post('client_partner');
-        $invoice_number = $this->input->post('invoice_number');
+        // $invoice_number = $this->input->post('invoice_number');
         $ipska = $this->input->post('ipska');
         $tipe_form = $this->input->post('tipe_form');
+        $pengajuan = $this->input->post('pengajuan');
+        $no_serial = $this->input->post('no_serial');
+        if($no_serial == '') {
+            $no_serial = null;
+        }
         $jenis_file     = substr($this->input->post('tipe_file'), 1);
         $arr_jenis_file = explode(',', $jenis_file);
 
@@ -38,9 +43,11 @@ class Model_create_ska extends CI_Model {
             'client_id' => $this->session->userdata('client_id'),
             'partner_id' => $client_partner,
             'no_draft' => $no_draft,
-            'invoice_number' => $invoice_number,
+            // 'invoice_number' => $invoice_number,
             'co_type_id' => $tipe_form,
             'ipska_office_id' => $ipska,
+            'jenis_form' => $pengajuan,
+            'no_serial_blanko' => $no_serial,
             'created_at' => date("Y-m-d h:i:s"),
             'created_by' => $this->session->userdata('username'),
             'status' => '1'
@@ -261,7 +268,7 @@ class Model_create_ska extends CI_Model {
                             AND a.transaction_id = '.$id.'
                             ORDER BY a.created_at DESC';
         } else {
-            $sql_total 	= ' SELECT c.user_endpoint, c.npwp, c.nib, a.no_aju, b.document_number, b.document_date, b.path, d.kode, b.value, b.refkppbc_id
+            $sql_total 	= ' SELECT c.user_endpoint, c.npwp, c.nib, a.no_aju, b.document_number, b.document_date, b.path, d.kode, b.value, b.refkppbc_id, d.id as dok_id
                             FROM trans.headers a 
                             LEFT JOIN trans.document b ON b.transaction_id = a.id
                             LEFT JOIN profile.clients c ON c.id = a.client_id
@@ -286,7 +293,7 @@ class Model_create_ska extends CI_Model {
                         ORDER BY a.created_at DESC
                         LIMIT '.$length.' OFFSET '.$start;
             } else {
-                $sql = 'SELECT c.user_endpoint, c.npwp, c.nib, a.no_aju, b.document_number, b.document_date, b.path, d.kode, b.value, b.refkppbc_id
+                $sql = 'SELECT c.user_endpoint, c.npwp, c.nib, a.no_aju, b.document_number, b.document_date, b.path, d.kode, b.value, b.refkppbc_id, d.id as dok_id
                         FROM trans.headers a 
                         LEFT JOIN trans.document b ON b.transaction_id = a.id
                         LEFT JOIN profile.clients c ON c.id = a.client_id
@@ -359,17 +366,6 @@ class Model_create_ska extends CI_Model {
         return $data;
     }
 
-    function get_path_document() {
-        $id = $this->input->post('id');
-        $sql = "SELECT path FROM trans.document WHERE id = ".$id;
-        $result = $this->db->query($sql);
-        $arr_result = $result->result_array();
-        $path = $arr_result[0]['path'];
-        
-        $bas64doc = chunk_split(base64_encode(file_get_contents($path)));
-        return $bas64doc;
-    }
-
     function get_data_draft() {
         $start 		= $this->input->post('start');
 		$length 	= $this->input->post('length');
@@ -381,7 +377,7 @@ class Model_create_ska extends CI_Model {
             $addSql .= ' AND a.no_draft = '.$this->db->escape($arrPost['no_draft']);
         }
         
-        $sql_total 	= ' SELECT a.id, a.no_draft, a.invoice_number, a.created_at, d.status_desc, b.client_name, b.npwp, b.nib, c.partner_name, a.status, e.name as cotype, f.name as ipska
+        $sql_total 	= ' SELECT a.id, a.no_draft, a.created_at, d.status_desc, b.client_name, b.npwp, b.nib, c.partner_name, a.status, e.name as cotype, f.name as ipska, a.jenis_form, a.no_serial_blanko
                         FROM trans.draft_ska a
                         LEFT JOIN profile.clients b ON b.id = a.client_id
                         LEFT JOIN profile.partners c ON c.id = a.partner_id
@@ -394,7 +390,7 @@ class Model_create_ska extends CI_Model {
 		$banyak 		= $result_total->num_rows();
 
 		if($banyak > 0){
-			$sql = 'SELECT a.id, a.no_draft, a.invoice_number, a.created_at, d.status_desc, b.client_name, b.npwp, b.nib, c.partner_name, a.status, e.name as cotype, f.name as ipska
+			$sql = 'SELECT a.id, a.no_draft, a.created_at, d.status_desc, b.client_name, b.npwp, b.nib, c.partner_name, a.status, e.name as cotype, f.name as ipska, a.jenis_form, a.no_serial_blanko
                     FROM trans.draft_ska a
                     LEFT JOIN profile.clients b ON b.id = a.client_id
                     LEFT JOIN profile.partners c ON c.id = a.partner_id
@@ -415,6 +411,24 @@ class Model_create_ska extends CI_Model {
 		}		
 
 		return $return;
+    }
+
+    function update_draft($id)
+    {
+        $arr = array(
+            'status' => 3
+        );
+
+        $this->db->where('id', $id);
+        $this->db->update('trans.draft_ska',$arr);
+
+        if ($this->db->affected_rows() > 0) {
+            $data = 1;
+        } else {
+            $data = 0;
+        }
+
+        return $data;
     }
 
 }

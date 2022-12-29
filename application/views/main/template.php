@@ -24,7 +24,41 @@
             width: 100%;
             height: 100%;
         }
-    </style>
+        
+        a.relative {
+            position: relative;
+            left: 50px;
+        }
+
+        a.relative1 {
+            position: relative;
+            left: 30px;
+        }
+
+        a.relative2 {
+            position: relative;
+            left: 115px;
+        }
+
+        a.relative3 {
+            position: relative;
+            left: 224px;
+        }
+
+        a.relative4 {
+            position: relative;
+            left: 137px;
+        }
+
+        a.relative5 {
+            position: relative;
+            left: 160px;
+        }
+
+        a.relative6 {
+            position: relative;
+            left: 248px;
+        }
     </style>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">

@@ -60,10 +60,14 @@
                             <?php 
                                 $val = $value['value'];
                                 if($val != '') {
-                                    $exp_value = explode('.', $val);
-                                    if ($exp_value[1]) {
-                                        $jml = strlen($exp_value[1]);
-                                        $val = number_format($val, $jml);
+                                    if(strpos($val, '.') !== false) {
+                                        $exp_value = explode('.', $val);
+                                        if ($exp_value[1]) {
+                                            $jml = strlen($exp_value[1]);
+                                            $val = number_format($val, $jml);
+                                        } else {
+                                            $val = number_format($val);
+                                        }
                                     } else {
                                         $val = number_format($val);
                                     }

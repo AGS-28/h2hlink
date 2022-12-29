@@ -117,7 +117,7 @@ class Createska extends CI_Controller {
 
     public function get_path_document()
     {
-        $data['data'] = json_encode($this->Model_create_ska->get_path_document());
+        $data['data'] = json_encode($this->Model_master->get_path_document());
         echo $this->load->view('main/view/v_document',$data,true);
     }
 
@@ -135,8 +135,20 @@ class Createska extends CI_Controller {
             $title = "'Views Document'";
 			$func_name = "'get_view_draft'";
 
+			$jenis_form = '-';
+			if($data['jenis_form'] == '0') {
+				$jenis_form = 'e-form';
+			} else if($data['jenis_form'] == '1') {
+				$jenis_form = 'Konvensional';
+			}
+
+			$no_serial = $data['no_serial_blanko'];
+			if($no_serial == '') {
+				$no_serial = '-';
+			}
+
 			$html[] = $no;
-			$html[] = '<b> Draft Number : <font color="#d75350">'.$data['no_draft'].'</font><br/><b> IPSKA : <font color="#4549a2">'.$data['ipska'].'</font><br/><b> Type Form : <font color="#4549a2">'.$data['cotype'].'</font><br/> Invoice Number : <font color="#4549a2">'.$data['invoice_number'].'</font></b><br/><b> Status : <font color="#d75350">'.$data['status_desc'].'</font></b><br/><b> Created Date : </b>'.$data['created_at'];
+			$html[] = '<b> Draft Number : <font color="#d75350">'.$data['no_draft'].'</font><br/><b> IPSKA : <font color="#4549a2">'.$data['ipska'].'</font><br/><b> Type Form : <font color="#4549a2">'.$data['cotype'].'</font><br/></b><b> Jenis Pengajuan : <font color="#4549a2">'.$jenis_form.'</font></b><br/><b> Nomor Serial Blanko : <font color="#4549a2">'.$no_serial.'</font><br/></b><b> Status : <font color="#d75350">'.$data['status_desc'].'</font></b><br/><b> Created Date : </b>'.$data['created_at'];
 			$html[] = '<b> Name : <font color="#d75350">'.$data['client_name'].'</font></b><br/><b> NIB : </b>'.$data['nib'].'<br/><b> NPWP : </b>'.$data['npwp'];
 			$html[] = '<b> Name : <font color="#4549a2">'.$data['partner_name'].'</font>';
 			$html[] = '
@@ -146,6 +158,7 @@ class Createska extends CI_Controller {
 							</button>
 							<ul class="dropdown-menu dropdown-menu-end">
 								<li><a class="dropdown-item" href="#" onclick="show_modal_document('.$data['id'].','.$title.',0,'.$func_name.')">Views Document</a></li>
+								<li><a class="dropdown-item" href="#" onclick="confirm_kirim(send_draft,'.$data['id'].');">Send Document</a></li>
 							</ul>
 						</div>
 					';
@@ -179,10 +192,14 @@ class Createska extends CI_Controller {
 			
 			$value = $data['value'];
 			if($value != '') {
-				$exp_value = explode('.', $value);
-				if ($exp_value[1]) {
-					$jml = strlen($exp_value[1]);
-					$value = number_format($value, $jml);
+				if(strpos($value, '.') !== false) {
+					$exp_value = explode('.', $value);
+					if ($exp_value[1]) {
+						$jml = strlen($exp_value[1]);
+						$value = number_format($value, $jml);
+					} else {
+						$value = number_format($value);
+					}
 				} else {
 					$value = number_format($value);
 				}
@@ -279,13 +296,13 @@ class Createska extends CI_Controller {
 
 			$support_doc = array();
 			foreach ($arrData as $key => $value) {
-				$doc_type = $value['kode'];
+				$doc_type = (int)$value['kode'];
 				$kppbc = $value['refkppbc_id'];
 				if($kppbc == '') {
 					$kppbc = '';
 				}
 
-				$val = $value['value'];
+				$val = (float)$value['value'];
 				if($val == '') {
 					$val = '';
 				}
@@ -312,10 +329,12 @@ class Createska extends CI_Controller {
 				'supporting_doc' => $support_doc
 			);
 
+			$url = $this->Model_master->get_url_wso2(2);
+
 			$json_data = json_encode($array_all);
 			$curl = curl_init();
 				curl_setopt_array($curl, array(
-				CURLOPT_URL => 'http://103.191.92.175:8290/uploadFileCoo',
+				CURLOPT_URL => $url,
 				CURLOPT_RETURNTRANSFER => true,
 				CURLOPT_ENCODING => '',
 				CURLOPT_MAXREDIRS => 10,
@@ -325,7 +344,7 @@ class Createska extends CI_Controller {
 				CURLOPT_CUSTOMREQUEST => 'POST',
 				CURLOPT_POSTFIELDS =>$json_data,
 				CURLOPT_HTTPHEADER => array(
-					'x-api-key: 3D6C8028F4D75001B5EE368DDF199FDC24FDF412',
+					'x-Gateway-APIKey: ae5653c9-1ba9-4bbb-8955-7da25cd4fd5b',
 					'Content-Type: application/json',
 					'Cookie: BIGipServer~k8s-dev~Shared~ingress_eska_eska_be_pengajuan_by_webservice=2791200778.28278.0000'
 				),
@@ -336,5 +355,89 @@ class Createska extends CI_Controller {
 
 			echo $response;
 		}
+	}
+
+	public function cek_document()
+	{
+		$id = $this->input->post('id');
+		$arrRet = $this->Model_create_ska->get_view_document($id, 1);
+		$arrData = $arrRet['arrData'];
+		$jmlData = $arrRet['totalRow'];
+		$arr_dok = array();
+
+		if($jmlData > 0) {
+			foreach ($arrData as $key => $value) {
+				if($value['dok_id'] == '1' or $value['dok_id'] == '6') {
+					$arr_dok[] = 1;
+				}
+			}
+
+			if(COUNT($arr_dok) < 2) {
+				echo 0;
+			} else {
+				echo 1;
+			}
+		} else {
+			echo 0;
+		}
+	}
+
+	public function send_draft()
+	{
+		$id = $this->input->post('id');
+		// $url = 'http://103.191.92.175:8290/getDraftCoo';
+		$url = $this->Model_master->get_url_wso2(1);
+		$data = $this->Model_master->get_data_client_channel($id);
+
+		$array_all = array(
+			'idDraft' => $id,
+			'idClient' => $data[0]['id_client'],
+			'idChannel' => $data[0]['id_channel']
+		);
+
+		$json_data = json_encode($array_all);
+		$curl = curl_init();
+			curl_setopt_array($curl, array(
+			CURLOPT_URL => $url,
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => '',
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 0,
+			CURLOPT_FOLLOWLOCATION => true,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => 'POST',
+			CURLOPT_POSTFIELDS =>$json_data,
+			CURLOPT_HTTPHEADER => array(
+				'x-Gateway-APIKey: ae5653c9-1ba9-4bbb-8955-7da25cd4fd5b',
+				'Content-Type: application/json',
+				'Cookie: BIGipServer~k8s-dev~Shared~ingress_eska_eska_be_pengajuan_by_webservice=2791200778.28278.0000'
+			),
+		));
+
+		$response = curl_exec($curl);
+		curl_close($curl);
+
+		$json_decode = json_decode($response);
+		$kode = $json_decode->kode;
+		if($kode == '200') {
+			$data_update = $this->Model_create_ska->update_draft($id);
+			if($data_update == 1) {
+				echo $response;
+			} else {
+				$arr_err = array(
+					'kode' => 400,
+					'keterangan' => 'Gagal Update Status'
+				);
+
+				echo json_encode($arr_err);
+			}
+		} else {
+			echo $response;
+		}
+	}
+
+	public function v_serial_blanko()
+	{
+		echo $this->load->view('main/view/v_serial_blanko','',true);
 	}
 }

@@ -87,8 +87,12 @@ function show_modal(id, tipe) {
     });
 }
 
-function progress_bar(tipe) {        
-    var id_btn = [1,2];
+function progress_bar(tipe,cek='') {
+    if(cek == '') {
+        var id_btn = [1,2];
+    } else {
+        var id_btn = [1,2,3];
+    }
     $.each(id_btn, function( index, value ) {
         if(parseInt(value) == parseInt(tipe)) {
             $('#btn_'+value).addClass('btn-light');
@@ -105,8 +109,151 @@ function progress_bar(tipe) {
 }
 
 function get_draftcoo(aju, nib, npwp, user_endpoint, tipe) {
+    var stat = true;
+    if(tipe == '3') {
+        stat = false;
+        
+        loading('modal_body', true);
+        $('#modal_header').html('Submit Coo');
+        $('#exampleModalScrollable').modal('toggle');
+
+        var url = baseurl + "index.php/tracking/get_data_coo/"+Math.random();
+        $.post( url, { aju: aju, nib:nib, npwp:npwp, user_endpoint:user_endpoint, tipe:tipe })
+        .done(function( data ) {
+            loading('modal_body', false);
+            $('#modal_body').html(data);
+        });
+    }
+
+    if(stat) {
+        Swal.fire({
+            title: 'Confirmation',
+            text: 'Are you sure submit action ?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, do it!',
+            cancelButtonText: 'No, cancel!',
+            confirmButtonClass: 'btn btn-success mt-2',
+            cancelButtonClass: 'btn btn-danger ms-2 mt-2',
+            buttonsStyling: false
+        }).then(function (result) {
+            if (result.dismiss !== Swal.DismissReason.cancel)  {
+                submit(aju, nib, npwp, user_endpoint, tipe);
+            } else if (result.dismiss === Swal.DismissReason.cancel)  {
+                var timerInterval;
+                Swal.fire({
+                    title: "Cancelled",
+                    html: 'I will close in <b></b> seconds.',
+                    timer: 1000,
+                    icon: 'error',
+                    timerProgressBar: true,
+                    didOpen:function () {
+                        Swal.showLoading()
+                        timerInterval = setInterval(function() {
+                        var content = Swal.getHtmlContainer()
+                        if (content) {
+                            var b = content.querySelector('b')
+                            if (b) {
+                            b.textContent = Swal.getTimerLeft()
+                            }
+                        }
+                        }, 100)
+                    },
+                    onClose: function () {
+                        clearInterval(timerInterval)
+                    }
+                });
+            }
+        });
+    }
+}
+
+function show_v_document(id, name_doc) {
+    $('#exampleModalScrollable1').modal('toggle');
+    $('#modal_header1').html(name_doc);
+    loading('modal_body1', true);
+    
+    var url = baseurl + "index.php/tracking/get_path_document/"+Math.random();
+    $.post( url, { id: id })
+    .done(function( data ) {
+        loading('modal_body1', false);
+        $('#modal_body1').html(data);
+    });
+}
+
+function changeradiobtn(data) {
+    $('#pengajuan').val(data.value);
+    if(data.value == '1') {
+        $('#input_serial').show();
+    } else {
+        $('#input_serial').hide();
+    }
+}
+
+function submit_coo(aju, nib, npwp, user_endpoint, tipe) {
+    // var pengajuan = $('#pengajuan').val();
+    // var no_serial = $('#no_serial').val();
+    var stat = true;
+
+    // if(pengajuan == '') {
+    //     alert_error('Please select pengajuan.');
+    // } else if(pengajuan == '1') {
+    //     if(no_serial == '') {
+    //         alert_error('Please input nomor serial.');
+    //     } else {
+    //         stat = true;
+    //     }
+    // } else {
+    //     $('#no_serial').val('');
+    //     stat = true;
+    // }
+
+    if(stat) {
+        Swal.fire({
+            title: 'Confirmation',
+            text: 'Are you sure submit action ?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, do it!',
+            cancelButtonText: 'No, cancel!',
+            confirmButtonClass: 'btn btn-success mt-2',
+            cancelButtonClass: 'btn btn-danger ms-2 mt-2',
+            buttonsStyling: false
+        }).then(function (result) {
+            if (result.dismiss !== Swal.DismissReason.cancel)  {
+                submit(aju, nib, npwp, user_endpoint, tipe, $('#no_serial').val());
+            } else if (result.dismiss === Swal.DismissReason.cancel)  {
+                var timerInterval;
+                Swal.fire({
+                    title: "Cancelled",
+                    html: 'I will close in <b></b> seconds.',
+                    timer: 1000,
+                    icon: 'error',
+                    timerProgressBar: true,
+                    didOpen:function () {
+                        Swal.showLoading()
+                        timerInterval = setInterval(function() {
+                        var content = Swal.getHtmlContainer()
+                        if (content) {
+                            var b = content.querySelector('b')
+                            if (b) {
+                            b.textContent = Swal.getTimerLeft()
+                            }
+                        }
+                        }, 100)
+                    },
+                    onClose: function () {
+                        clearInterval(timerInterval)
+                    }
+                });
+            }
+        });
+    }
+}
+
+function submit(aju, nib, npwp, user_endpoint, tipe, no_serial='') {
     showLoading(true);
-    $.post(baseurl + "index.php/tracking/get_draftcoo/"+Math.random(),{aju:aju, nib:nib, npwp:npwp, user_endpoint:user_endpoint, tipe:tipe}).done(function( data ) {
+    $.post(baseurl + "index.php/tracking/get_draftcoo/"+Math.random(),{aju:aju, nib:nib, npwp:npwp, user_endpoint:user_endpoint, tipe:tipe, no_serial:no_serial}).done(function( data ) {
         showLoading(false);
         const obj = JSON.parse(data);
         if(obj.kode == '200') {
@@ -115,8 +262,10 @@ function get_draftcoo(aju, nib, npwp, user_endpoint, tipe) {
                 html: obj.data.keterangan,
                 icon: 'success',
                 button: "Close",
+            }).then((result) => {
+                location.reload(true);
             });
-        } else{
+        } else {
             swal.fire({
                 title: 'Warning!',
                 html: obj.keterangan,

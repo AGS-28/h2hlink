@@ -6,6 +6,7 @@ if(tipe == 0) {
         // acceptedFiles: ".csv, .xls, .xlsx, .txt, .rar, .json, .xml",
         acceptedFiles: extention,
         // addRemoveLinks: true,
+        // addTypeDocument: true,
         accept: function(file, done) {
             var cek = cekFile();
             if(cek) {
@@ -16,11 +17,9 @@ if(tipe == 0) {
             }
         },
         init: function() {
-            // addRemoveLinks: true, 
-            // this.on("maxfilesexceeded", function(file) {
-            //     alert_error('Please complete the following data : <br\> - Maximum file that can be uploaded is only 3');
-            //     this.removeFile(file);
-            // });
+            this.on("completemultiple", function(file) {
+                
+            });
         }
     });
 }
@@ -51,9 +50,81 @@ $(document).ready(function() {
 function cekFile() {
     var tipe_upload = $('#tipe_upload').val();
     var tipe_file = $('#tipe_file').val();
+    var text_file = $('#text_file').val();
     if(tipe_file.indexOf(tipe_upload) === -1) {
+        var text = $('#tipe_upload option:selected').text();
         var update_fipe_file = tipe_file+','+tipe_upload;
+        var update_text_file = text_file+','+text;
         $('#tipe_file').val(update_fipe_file);
+        $('#text_file').val(update_text_file);
+
+        var substring = $('#text_file').val();
+        var split = substring.substring(1).split(',');
+
+        var substring1 = $('#tipe_file').val();
+        var split1 = substring1.substring(1).split(',');
+        
+        $('#table_text').html('');
+        var satu = '';
+        var dua = '';
+        var tiga = '';
+
+        var satu1 = '';
+        var dua1 = '';
+        var tiga1 = '';
+
+        if (typeof split[0] !== 'undefined') {
+            satu = split[0].replace(/^\s+|\s+$/gm,"");
+        }
+
+        if (typeof split[1] !== 'undefined') {
+            dua = split[1].replace(/^\s+|\s+$/gm,"");
+        }
+
+        if (typeof split[2] !== 'undefined') {
+            tiga = split[2].replace(/^\s+|\s+$/gm,"");
+        }
+
+        if (typeof split1[0] !== 'undefined') {
+            satu1 = split1[0].replace(/^\s+|\s+$/gm,"");
+        }
+
+        if (typeof split1[1] !== 'undefined') {
+            dua1 = split1[1].replace(/^\s+|\s+$/gm,"");
+        }
+
+        if (typeof split1[2] !== 'undefined') {
+            tiga1 = split1[2].replace(/^\s+|\s+$/gm,"");
+        }
+
+        var cek = '';
+        if(satu1 == '11') {
+            cek = '1';
+            html = '<a class="relative1" style="cursor: default;">'+satu+'</a>';
+            html += '<a class="relative2" style="cursor: default;">'+dua+'</a>';
+            html += '<a class="relative3" style="cursor: default;">'+tiga+'</a>';
+        } else {
+            html = '<a class="relative" style="cursor: default;">'+satu+'</a>';
+        }
+
+        if(dua1 == '11') {
+            html = '<a class="relative" style="cursor: default;">'+satu+'</a>';
+            html += '<a class="relative4" style="cursor: default;">'+dua+'</a>';
+            html += '<a class="relative3" style="cursor: default;">'+tiga+'</a>';
+        } else {
+            if(cek == '') {
+                html = '<a class="relative" style="cursor: default;">'+satu+'</a>';
+                html += '<a class="relative5" style="cursor: default;">'+dua+'</a>';
+            }
+        }
+
+        if(tiga1 == '11') {
+            html = '<a class="relative" style="cursor: default;">'+satu+'</a>';
+            html += '<a class="relative5" style="cursor: default;">'+dua+'</a>';
+            html += '<a class="relative6" style="cursor: default;">'+tiga+'</a>';
+        }
+
+        $('#table_text').html(html);
         return true;
     } else {
         return false;
@@ -64,9 +135,9 @@ function confirm_upload_draft() {
     var errorString = "Please complete the following data : <br\>";
     var panjangAwal = errorString.length;
 
-    if ($('#invoice_number').val() == '') {
-        errorString += "- Invoice Number  <br\>";
-    }
+    // if ($('#invoice_number').val() == '') {
+        // errorString += "- Invoice Number  <br\>";
+    // }
     
     var dropzone = Dropzone.forElement("#myDropzone");
     if (dropzone.files.length < 1) {
@@ -77,7 +148,17 @@ function confirm_upload_draft() {
     var panjangAkhir = errorString.length;
     panjangAkhir = errorString.length;
     if (panjangAwal == panjangAkhir) {
-        confirm_kirim(upload_draft);
+        $('#modal_header1').html('Serial Blanko');
+
+        loading('modal_body1', true);
+        $('#exampleModalScrollable1').modal('toggle');
+        
+        var url = baseurl + "index.php/createska/v_serial_blanko/"+Math.random();
+        $.post( url, { })
+        .done(function( data ) {
+            loading('modal_body1', false);
+            $('#modal_body1').html(data);
+        });
     } else {
         alert_error(errorString);
     }
@@ -90,10 +171,12 @@ function upload_draft() {
     var formdata  = new FormData();
     formdata.append('length', dropzone.files.length);
     formdata.append('client_partner', $('#client_partner').val());
-    formdata.append('invoice_number', $('#invoice_number').val());
+    // formdata.append('invoice_number', $('#invoice_number').val());
     formdata.append('ipska', $('#ipska').val());
     formdata.append('tipe_form', $('#tipe_form').val());
     formdata.append('tipe_file', $('#tipe_file').val());
+    formdata.append('pengajuan', $('#pengajuan').val());
+    formdata.append('no_serial', $('#no_serial').val());
 
     for (var i = 0; i < dropzone.files.length; i++) {
         formdata.append('file_' + i, dropzone.files[i]);
@@ -205,8 +288,10 @@ function show_data_document(id, name_doc, tipe='', func_name) {
 
     if(func_name == 'get_view_draft') {
         var target = [0, 4];
+        var target_end = [0, 4];
     } else {
         var target = [0, 6];
+        var target_end = [5];
     }
 
     $("#table_data_v_document").DataTable({
@@ -228,6 +313,10 @@ function show_data_document(id, name_doc, tipe='', func_name) {
             targets: target,
             orderable: true,
             className: "text-center",
+        },
+        {
+            targets: target_end,
+            className: "text-end"
         },
         {
             targets: '_all',
@@ -263,20 +352,32 @@ function next_delete_document(id, header_id) {
 
 function send_document(id) {    
     showLoading(true);
-    $.post(baseurl + "index.php/createska/send_document/"+Math.random(),{id:id}).done(function( data ) {
-        showLoading(false);
-        const obj = JSON.parse(data);
-        if(obj.kode == '200') {
-            swal.fire({
-                title: 'Succes!',
-                html: obj.data.keterangan,
-                icon: 'success',
-                button: "Close",
+    $.post(baseurl + "index.php/createska/cek_document/"+Math.random(),{id:id}).done(function( data ) {
+        if(data == 1) {
+            $.post(baseurl + "index.php/createska/send_document/"+Math.random(),{id:id}).done(function( data ) {
+                showLoading(false);
+                const obj = JSON.parse(data);
+                if(obj.kode == '200') {
+                    swal.fire({
+                        title: 'Succes!',
+                        html: obj.data.keterangan,
+                        icon: 'success',
+                        button: "Close",
+                    });
+                } else{
+                    swal.fire({
+                        title: 'Warning!',
+                        html: obj.keterangan,
+                        icon: 'warning',
+                        button: "Close",
+                    });
+                }
             });
-        } else{
+        } else {
+            showLoading(false);
             swal.fire({
                 title: 'Warning!',
-                html: obj.keterangan,
+                html: 'Silahkan upload dokumen wajib (PEB/PE & Comersial Invoice)',
                 icon: 'warning',
                 button: "Close",
             });
@@ -296,5 +397,62 @@ function show_hide_input() {
     if(document_type == '6') {
         $('#div_kppbc').show();
         $('#div_value').show();
+    }
+}
+
+function send_draft(id) {
+    showLoading(true);
+    $.post(baseurl + "index.php/createska/send_draft/"+Math.random(),{id:id}).done(function( data ) {
+        showLoading(false);
+        const obj = JSON.parse(data);
+        if(obj.kode == '200') {
+            swal.fire({
+                title: 'Succes!',
+                html: obj.data.keterangan,
+                icon: 'success',
+                button: "Close",
+            }).then((result) => {
+                location.reload(true);
+            });
+        } else {
+            swal.fire({
+                title: 'Warning!',
+                html: obj.keterangan,
+                icon: 'warning',
+                button: "Close",
+            });
+        }
+    });
+}
+
+function changeradiobtn(data) {
+    $('#pengajuan').val(data.value);
+    if(data.value == '1') {
+        $('#input_serial').show();
+    } else {
+        $('#input_serial').hide();
+    }
+}
+
+function submit_file() {
+    var pengajuan = $('#pengajuan').val();
+    var no_serial = $('#no_serial').val();
+    var stat = false;
+
+    if(pengajuan == '') {
+        alert_error('Please select pengajuan.');
+    } else if(pengajuan == '1') {
+        if(no_serial == '') {
+            alert_error('Please input nomor serial.');
+        } else {
+            stat = true;
+        }
+    } else {
+        $('#no_serial').val('');
+        stat = true;
+    }
+
+    if(stat) {
+        confirm_kirim(upload_draft);
     }
 }

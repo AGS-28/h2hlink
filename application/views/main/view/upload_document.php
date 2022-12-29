@@ -62,7 +62,7 @@
                                             </div>
                                         </div>
                                         <div class="row mb-4" id="div_value" style="display: none;">
-                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Value</label>
+                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Value FOB (USD)</label>
                                             <div class="col-sm-9">
                                                 <input class="form-control" type="text" id="value" name="value" title="Value">
                                                 <p style="color: red; font-style: italic;">Gunakan titik (.) untuk bilangan decimal</p>
@@ -163,7 +163,7 @@
                                                     <th>Document Number</th>
                                                     <th>Document Date</th>
                                                     <th>KPPBC</th>
-                                                    <th>Value</th>
+                                                    <th>Value FOB (USD)</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
