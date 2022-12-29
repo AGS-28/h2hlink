@@ -291,7 +291,7 @@ class Tracking extends CI_Controller {
 				CURLOPT_CUSTOMREQUEST => 'POST',
 				CURLOPT_POSTFIELDS =>$json_data,
 				CURLOPT_HTTPHEADER => array(
-					'x-Gateway-APIKey: 3D6C8028F4D75001B5EE368DDF199FDC24FDF412',
+					'x-Gateway-APIKey: ae5653c9-1ba9-4bbb-8955-7da25cd4fd5b',
 					'Content-Type: application/json',
 					'Cookie: BIGipServer~k8s-dev~Shared~ingress_eska_eska_be_pengajuan_by_webservice=2791200778.28278.0000'
 				),
