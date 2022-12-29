@@ -111,16 +111,18 @@ class Tracking extends CI_Controller {
 			if (isset($html)) {
 				unset($html);
 			}
-
-			$html[] = $no;
-			$html[] = '<b> Name : <font color="#d75350">'.$data['client_name'].'</font></b><br/><b> NIB : </b>'.$data['nib'].'<br/><b> NPWP : </b>'.$data['npwp'];
-			$html[] = '<b> Name : <font color="#4549a2">'.$data['partner_name'].'</font>';
-			$html[] = '<b> Aju Number : <font color="#4549a2">'.$data['no_aju'].'</font><br/> SKA Number : </b><br/><b> Status : </b>';
-
+			
 			$nib = "'".$data['nib']."'";
 			$npwp = "'".$data['npwp']."'";
 			$user_endpoint = "'".$data['user_endpoint']."'";
 			$no_aju = "'".$data['no_aju']."'";
+
+			$coo = $this->Model_tracking->get_coo($no_aju);
+
+			$html[] = $no;
+			$html[] = '<b> Name : <font color="#d75350">'.$data['client_name'].'</font></b><br/><b> NIB : </b>'.$data['nib'].'<br/><b> NPWP : </b>'.$data['npwp'];
+			$html[] = '<b> Name : <font color="#4549a2">'.$data['partner_name'].'</font>';
+			$html[] = '<b> Aju Number : <font color="#4549a2">'.$data['no_aju'].'</font><br/> SKA Number : </b>'.$coo['no_ska'].'<br/><b>SKA Date : </b>'.$coo['tgl_ska'].'<br/><b> Status : </b>'.$coo['status_ska'];
 			
 			$html[] = '
 						<div class="dropdown">
@@ -130,6 +132,7 @@ class Tracking extends CI_Controller {
 							<ul class="dropdown-menu dropdown-menu-end">
 								<li><a class="dropdown-item" href="#" onclick="get_draftcoo('.$no_aju.','.$nib.','.$npwp.','.$user_endpoint.',4);">Get Draft</a></li>
 								<li><a class="dropdown-item" href="#" onclick="get_draftcoo('.$no_aju.','.$nib.','.$npwp.','.$user_endpoint.',5);">Get Coo</a></li>
+								<li><a class="dropdown-item" href="#" onclick="get_draftcoo('.$no_aju.','.$nib.','.$npwp.','.$user_endpoint.',3);">Submit Coo</a></li>
 							</ul>
 						</div>
 					';
@@ -153,6 +156,7 @@ class Tracking extends CI_Controller {
 		$data['data'] = $this->Model_tracking->get_message_respons();
 		$data['arr_refdokumen'] = $this->Model_master->get_data_ref_document('',1);
 		$data['arr_refkppbc'] = $this->Model_master->get_data_ref_kppbc(1);
+		$data['refform'] = $this->Model_master->get_data_ref_form(1);
 
 		switch ($tipe) {
 			case '0':
@@ -240,23 +244,41 @@ class Tracking extends CI_Controller {
 		$npwp = $this->input->post('npwp');
 		$user_endpoint = $this->input->post('user_endpoint');
 		$tipe = $this->input->post('tipe');
+		$no_serial = $this->input->post('no_serial');
 		
-		if($tipe == 4) {
-			$url = 'http://103.191.92.175:8290/getDraftCoo';
-		}
+		if($tipe != '') {
+			$url = $this->Model_master->get_url_wso2($tipe);
 
-		if($tipe == 5) {
-			$url = 'http://103.191.92.175:8290/getCoo';
-		}
-		
-		$array_all = array(
-			'username' => $user_endpoint,
-			'npwp' => $npwp,
-			'nib' => $nib,
-			'no_aju' => $no_aju
-		);
+			// if($tipe == 4) {
+			// 	$url = 'http://103.191.92.175:8290/getDraftCoo';
+			// }
 
-		$json_data = json_encode($array_all);
+			// if($tipe == 5) {
+			// 	$url = 'http://103.191.92.175:8290/getCoo';
+			// }
+
+			// if($tipe == 3) {
+			// 	$url = 'http://103.191.92.175:8290/submitRequestCoo';
+			// }
+			
+			if($tipe == 3) {
+				$array_all = array(
+					'username' => $user_endpoint,
+					'npwp' => $npwp,
+					'nib' => $nib,
+					'no_aju' => $no_aju,
+					'no_serial' => $no_serial
+				);
+			} else {
+				$array_all = array(
+					'username' => $user_endpoint,
+					'npwp' => $npwp,
+					'nib' => $nib,
+					'no_aju' => $no_aju
+				);
+			}
+
+			$json_data = json_encode($array_all);
 			$curl = curl_init();
 				curl_setopt_array($curl, array(
 				CURLOPT_URL => $url,
@@ -278,7 +300,45 @@ class Tracking extends CI_Controller {
 			$response = curl_exec($curl);
 			curl_close($curl);
 
-			echo $response;
+			if($tipe == 5) {
+				$json_decode = json_decode($response);
+				$kode = $json_decode->kode;
+				if($kode == '200') {
+					$co_number = $json_decode->data->co_number;
+					$co_date = $json_decode->data->co_date;
+					$status = $json_decode->data->status;
+
+					$data_update = $this->Model_tracking->update_coo($no_aju, $co_number, $co_date, $status);
+					if($data_update == 1) {
+						echo $response;
+					} else {
+						$arr_err = array(
+							'kode' => 400,
+							'keterangan' => 'Gagal Update Coo'
+						);
+
+						echo json_encode($arr_err);
+					}
+				} else {
+					echo $response;
+				}
+			} else {
+				echo $response;
+			}
+		}
 	}
+
+	function get_data_coo()
+	{
+		$data['data'] = $this->Model_tracking->get_data_coo();
+		$data['refform'] = $this->Model_master->get_data_ref_form(1);
+		echo $this->load->view('main/view/v_submit_coo',$data,true);
+	}
+
+	public function get_path_document()
+    {
+        $data['data'] = json_encode($this->Model_master->get_path_document());
+        echo $this->load->view('main/view/v_document',$data,true);
+    }
 
 }

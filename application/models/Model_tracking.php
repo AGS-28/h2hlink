@@ -266,4 +266,122 @@ class Model_tracking extends CI_Model {
 		return $return;
     }
 
+    function update_coo($no_aju, $co_number, $co_date, $status)
+    {
+        if($co_number == 'NULL') {
+            $co_number = null;
+        }
+
+        if($co_date == 'NULL') {
+            $co_date = null;
+        }
+
+        if($status == 'NULL') {
+            $status = null;
+        }
+        
+        $sql = "SELECT a.id FROM trans.headers a WHERE a.no_aju = '".$no_aju."' AND a.partner_endpoint_id = 5 ORDER BY a.created_at DESC LIMIT 1";
+        $result = $this->db->query($sql);
+        $num_row = $result->num_rows();
+        if($num_row > 0) {
+            $arr_result = $result->result_array();
+            $id = $arr_result[0]['id'];
+
+            $arr = array(
+                'no_ska' => $co_number,
+                'status_ska' => $status,
+                'tgl_ska' => $co_date
+            );
+
+            $this->db->where('id', $id);
+            $this->db->update('trans.headers',$arr);
+
+            if ($this->db->affected_rows() > 0) {
+                $data = 1;
+            } else {
+                $data = 0;
+            }
+
+            return $data;
+        }
+    }
+
+    function get_coo($no_aju) {
+        $sql = "SELECT a.no_ska, a.tgl_ska, a.status_ska FROM trans.headers a WHERE a.no_aju = ".$no_aju." AND a.partner_endpoint_id = 5 ORDER BY a.created_at DESC LIMIT 1";
+        $result = $this->db->query($sql);
+        $num_row = $result->num_rows();
+        if($num_row > 0) {
+            $arr_result = $result->result_array();
+            $arr = array(
+                'no_ska' => $arr_result[0]['no_ska'],
+                'tgl_ska' => $arr_result[0]['tgl_ska'],
+                'status_ska' => $arr_result[0]['status_ska']
+            );
+        } else {
+            $arr = array(
+                'no_ska' => '',
+                'tgl_ska' => '',
+                'status_ska' => ''
+            );
+        }
+
+        return $arr;
+    }
+
+    function get_data_coo()
+    {
+        $no_aju = $this->input->post('aju');
+        $nib = $this->input->post('nib');
+        $npwp = $this->input->post('npwp');
+        $user_endpoint = $this->input->post('user_endpoint');
+        $tipe = $this->input->post('tipe');
+
+        $sql = "SELECT a.message_type, a.message_id, a.message_content, a.created_at as created_at_message, c.message_type as urai_message_type, b.result_code, b.result_responses, b.created_at as created_at_responses, a.partner_endpoint_id
+                FROM trans.headers a 
+                LEFT JOIN trans.responses b ON b.transaction_id = a.id
+                LEFT JOIN referensi.message_type c ON c.id = a.message_type
+                LEFT JOIN profile.partner_endpoints d ON d.id = a.partner_endpoint_id
+                WHERE a.no_aju = '".$no_aju."'
+                AND a.partner_endpoint_id = 1";
+
+        $result = $this->db->query($sql);
+        $arrayReturn = $result->result_array();
+        
+        $sql1 = "SELECT c.user_endpoint, c.npwp, c.nib, a.no_aju, b.document_number, b.document_date, b.path, d.kode, b.value, b.refkppbc_id, d.id as dok_id, e.name AS urai_kppbc, d.name AS urai_dok, b.id as id
+                FROM trans.headers a 
+                LEFT JOIN trans.document b ON b.transaction_id = a.id
+                LEFT JOIN profile.clients c ON c.id = a.client_id
+                LEFT JOIN referensi.refdokumen d ON d.id = b.refdokumen_id
+                LEFT JOIN referensi.refkppbc e ON e.code = b.refkppbc_id
+                WHERE b.is_delete = false 
+                AND a.no_aju = '".$no_aju."'
+                AND a.partner_endpoint_id = 1";
+
+        $result1 = $this->db->query($sql1);
+        $arrayReturn1 = $result1->result_array();
+        
+        $data['arrayHeaderDetail'] = $arrayReturn;
+        $data['arrayHeaderDoc'] = $arrayReturn1;
+        $data['arrayPost'] = array(
+            'no_aju' => $no_aju,
+            'nib' => $nib,
+            'npwp' => $npwp,
+            'user_endpoint' => $user_endpoint,
+            'tipe' => $tipe
+        );
+
+        return $data;
+    }
+
+    function get_document() {
+        $id = $this->input->post('id');
+        $sql = "SELECT path FROM trans.document WHERE id = ".$id;
+        $result = $this->db->query($sql);
+        $arr_result = $result->result_array();
+        $path = $arr_result[0]['path'];
+        
+        $bas64doc = chunk_split(base64_encode(file_get_contents($path)));
+        return $bas64doc;
+    }
+
 }
