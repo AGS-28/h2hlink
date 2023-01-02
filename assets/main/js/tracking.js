@@ -5,6 +5,8 @@ $(document).ready(function() {
         new Choices('#npwp',{removeItemButton: true,});
         new Choices('#nib',{removeItemButton: true,});
         new Choices('#end_point',{removeItemButton: true,});
+
+        cari_data('form_tracking');
     }
     
     if($('#tipe').val() == '1') {

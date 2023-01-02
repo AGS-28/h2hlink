@@ -133,9 +133,9 @@
                     if($key1 == 'co_type') {
                         $header .= '<td><input class="form-control form-control-sm" type="text" id="form-sm-input" value="'.$refform[$value1].'" readonly style="cursor: not-allowed;"></td>';
                     } else if($key1 == 'jenis_form') {
-                        if($value1 == '0') {
+                        if($value1 == '1') {
                             $jenis_form = 'e-Form';
-                        } else if($value1 == '1') {
+                        } else if($value1 == '0') {
                             $jenis_form = 'Konvensional';
                         } else {
                             $jenis_form = '-';
@@ -155,7 +155,7 @@
                     $header .= '<tr bgcolor="'.$warna.'" style="vertical-align: top;">';
                     $header .= '<td width="2%" align="center">'.$i.'.</td>';
                     $header .= '<td>Nomor Serial Blanko</td>';
-                    $header .= '<td><textarea class="form-control form-control-sm" id="no_serial" name="no_serial" readonly style="cursor: not-allowed; height: 150px;">A-XYZ-0001|0020;A-ABC-0025;A-ABC-0100;A-XXX-0020</textarea></td>';
+                    $header .= '<td><textarea class="form-control form-control-sm" id="no_serial" name="no_serial" readonly style="cursor: not-allowed; height: 150px;">'.$data['arrayHeaderDetail'][0]['no_serial_blanko'].'</textarea></td>';
                     $header .= '</tr>';
                 }
 
