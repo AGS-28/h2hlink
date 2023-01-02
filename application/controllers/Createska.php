@@ -403,7 +403,7 @@ class Createska extends CI_Controller {
 		);
 
 		$json_data = json_encode($array_all);
-		echo $json_data;die();
+		// echo $json_data;die();
 		$curl = curl_init();
 			curl_setopt_array($curl, array(
 			CURLOPT_URL => $url,
