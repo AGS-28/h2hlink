@@ -16,7 +16,7 @@ $(document).ready(function() {
       );
     get_data_all();
     $( "#add-item" ).click(function() {
-        add_role();
+        add_client();
     });
 
     $('#view-wizard').bootstrapWizard({onTabShow: function(tab, navigation, index) {
@@ -58,8 +58,12 @@ function get_data_all() {
     get_data(form_search,url,validate = false,tableid = "table_data",columnDefs);
 }
 
-function add_role() {
+function add_client() {
     $('#form-add-item').trigger("reset");
+    $('#updated').val('0');
+    $('#addrowtablePartner').html('');
+    $('#addrowtableMethods').html('');
+    $('#addrowtableChanel').html('');
     packageChoiches.setChoices(
         [
             { value: '1', label: 'Basic'},
@@ -84,7 +88,7 @@ function additem(form)
 
 function edit(id) 
 {
-    var url = siteurl + '/cms/get_edit_chanel/'+Math.random();
+    var url = siteurl + '/cms/get_edit_client/'+Math.random();
     var postdata = new FormData();
     postdata.append('id',id);
     var data = post_ajax(url,postdata);
@@ -93,11 +97,26 @@ function edit(id)
     // alert(thisdata.is_active);
 
     if (respondData.status == 1) {
-        $('#name').val(thisdata.name);
-        $('#idnya').val(thisdata.id);
-        $('#updated').val(1);
-        statusChoichesChanel.setChoiceByValue(thisdata.is_active);
-        $('#modal_add').modal('toggle');
+        add_client();
+        $('#updated').val('1');
+        $('#id_client').val(id);
+        $('#nib').val(thisdata.nib);
+        $('#npwp').val(thisdata.npwp);
+        $('#client_name').val(thisdata.client_name);
+        $('#user_endpoint').val(thisdata.user_endpoint);
+        $('#address').val(thisdata.address);
+        $('#email').val(thisdata.email);
+        $('#tlp').val(thisdata.telephone_no);
+        $('#startdate').val(thisdata.validate);
+        $('#enddate').val(thisdata.valid_until);
+        $('#hp').val(thisdata.handphone_no);
+        $('#authors').val(thisdata.authority_name);
+
+        packageChoiches.setChoiceByValue(thisdata.package_id);
+
+        getchanel(thisdata.package_id);
+
+        get_edit_partner(id);
     }
     else
     {
@@ -314,5 +333,62 @@ function getchanel(params) {
             alert_error('General Errors..!');
         }
     }
+}
+
+function get_edit_partner(id) 
+{
+    var url = siteurl + '/cms/get_edit_clientpartner/'+Math.random();
+    var postdata = new FormData();
+    postdata.append('id',id);
+    var data = post_ajax(url,postdata);
+    var respondData = JSON.parse(data);
+    var thisdata = respondData.thisdata;
+    // alert(thisdata.is_active);
+
+    if (respondData.status == 1) {
+        for (let index = 0; index < thisdata.length; index++) {
+            var arrID = [];
+            if ($('#arrcekpartner').val() !== '')
+            arrID = $('#arrcekpartner').val().split(",");
+
+            if (arrID.indexOf($('#partner-name').val()) === -1) {
+                var partner_name        = thisdata[index].partner_name;
+                var partner_id          = thisdata[index].partner_id;
+                var desc_partner        = thisdata[index].desc_partner;
+                var xapikey             = thisdata[index].api_key;
+                var clientkey           = thisdata[index].client_key;
+                var addrowtable         = '';
+
+                arrID.push(partner_id);
+                $('#arrcekpartner').val(arrID.join());
+
+                addrowtable += '<tr id = "row_'+tablerowpartner+'">';
+                addrowtable += '<td>'+partner_name+'<input type="hidden" name="arrpartnername[]" value="'+partner_name+'"></td>';
+                addrowtable += '<td>'+desc_partner+'<input type="hidden" name="arrdescpartner[]" value="'+desc_partner+'"></td>';
+                addrowtable += '<td>'+xapikey+'<input type="hidden" name="arrxapikey[]" value="'+xapikey+'"><input type="hidden" name="arridpartner[]" value="'+partner_id+'"></td>';
+                addrowtable += '<td>'+clientkey+'<input type="hidden" name="arrclientkey[]" value="'+clientkey+'">';
+                addrowtable += '<td><button type="button" class="btn btn-danger waves-effect btn-label btn-sm waves-light" onclick="deleteRow('+tablerowpartner+')"><i class="bx bxs-trash label-icon"></i> Delete</button></td>';
+                tablerowpartner = (tablerowpartner + 1);
+                $('#addrowtablePartner').append(addrowtable);
+
+                addrowmethod(arrID.join());
+                ChoichesPartner.setChoiceByValue('');
+                $('#desc_partner').val('');
+                $('#xapikey').val('');
+                $('#clientkey').val('');
+
+            }
+            else
+            {
+                alert_error('Partner has been added !!');
+            }
+            
+        }
+    }
+    else
+    {
+        alert_error("General Erors...!");
+    }
+
 }
     
