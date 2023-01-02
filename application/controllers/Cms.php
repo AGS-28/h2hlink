@@ -403,5 +403,13 @@ class Cms extends CI_Controller {
     {
 		echo json_encode($this->Model_cms->add_item_client());
     }
+	public function get_edit_client()
+    {
+		echo json_encode($this->Model_cms->get_edit_client());
+    }
+	public function get_edit_clientpartner()
+    {
+		echo json_encode($this->Model_cms->get_edit_clientpartner());
+    }
 
 }

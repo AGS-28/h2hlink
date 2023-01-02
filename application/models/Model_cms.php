@@ -388,8 +388,9 @@ class Model_cms extends CI_Model {
         $post 		= $this->input->post('postdata');
 		$arrPost 	= postajax_toarray($post);
         $data       = 0;
-        // var_dump($arrPost);exit;
+
         //profile client
+        $updated       = $arrPost['updated'];
         $npwp          = $arrPost['npwp'];
         $nib           = $arrPost['nib'];
         $client_name   = $arrPost['client_name'];
@@ -415,95 +416,200 @@ class Model_cms extends CI_Model {
         $messtypechanel = $arrPost['messtype-chanel[]'];
 
         $this->db->trans_begin();
-        $arrayInsertProfile = array(
-                                    'client_name'       => $client_name,
-                                    'nib'               => $nib,
-                                    'npwp'              => $npwp,
-                                    'user_endpoint'     => $user_endpoint,
-                                    'created_at'        => date('Y-m-d H:i:s'),
-                                    'created_by'        => $this->session->userdata('username'),
-                                    'address'           => $address,
-                                    'handphone_no'      => $hp,
-                                    'telephone_no'      => $tlp,
-                                    'is_active'         => 't',
-                                    'is_deleted'        => 'f',
-                                    'validate'          => $startdate,
-                                    'valid_until'       => $enddate,
-                                    'package_id'        => $package_type,
-                                    'authority_name'    => $authors,
-                                    'email'             => $email,
-                                    );
-        // var_dump($arrayInsertProfile);exit;
-        $this->db->insert('profile.clients',$arrayInsertProfile);
-        $id_client = $this->db->insert_id();
-        
-        if (is_array($arridpartner)) 
-        {
-            foreach ($arridpartner as $key => $value) {
-                $sqlgetmethod = "SELECT * FROM profile.partner_endpoints a where a.partner_id = ".$value;
+        if ($updated == 1) {
+            $id_client = $arrPost['id_client'];
+            $arrayInsertProfile = array(
+                'client_name'       => $client_name,
+                'nib'               => $nib,
+                'npwp'              => $npwp,
+                'user_endpoint'     => $user_endpoint,
+                'created_at'        => date('Y-m-d H:i:s'),
+                'created_by'        => $this->session->userdata('username'),
+                'address'           => $address,
+                'handphone_no'      => $hp,
+                'telephone_no'      => $tlp,
+                'is_active'         => 't',
+                'is_deleted'        => 'f',
+                'validate'          => $startdate,
+                'valid_until'       => $enddate,
+                'package_id'        => $package_type,
+                'authority_name'    => $authors,
+                'email'             => $email,
+                );
+
+            $this->db->where('id',$id_client);
+            $this->db->update('profile.clients',$arrayInsertProfile);
+
+            $this->db->where('client_id', $id_client);
+            $this->db->delete('profile.client_partners');
+
+            $this->db->where('id_client', $id_client);
+            $this->db->delete('profile.client_chanel');
+
+            if (is_array($arridpartner)) 
+            {
+                foreach ($arridpartner as $key => $value) 
+                {
+                    $sqlgetmethod = "SELECT * FROM profile.partner_endpoints a where a.partner_id = ".$value;
+                    $res = $this->db->query($sqlgetmethod);
+                    $datamethod = $res->result();
+
+                    foreach ($datamethod as $key2 => $value2) 
+                    {
+                        $arrayInsertPartner = array(
+                            'client_id'     => $id_client,
+                            'partner_id'    => $value2->partner_id,
+                            'client_key'    => $arrclientkey[$key],
+                            'created_at'    => date('Y-m-d H:i:s'),
+                            'created_by'    => $this->session->userdata('username'),
+                            'api_key'       => $arrxapikey[$key],
+                            'endpoint_id'   => $value2->id,
+                        );
+                        $this->db->insert('profile.client_partners',$arrayInsertPartner);
+                    }
+
+                }
+            }
+            else 
+            {
+                $sqlgetmethod = "SELECT * FROM profile.partner_endpoints a where a.partner_id = ".$arridpartner;
                 $res = $this->db->query($sqlgetmethod);
                 $datamethod = $res->result();
 
-                foreach ($datamethod as $key2 => $value2) {
-                    $arrayInsertPartner = array(
-                        'client_id'     => $id_client,
-                        'partner_id'    => $value2->partner_id,
-                        'client_key'    => $arrclientkey[$key],
-                        'created_at'    => date('Y-m-d H:i:s'),
-                        'created_by'    => $this->session->userdata('username'),
-                        'api_key'       => $arrxapikey[$key],
-                        'endpoint_id'   => $value2->id,
-                    );
-                    $this->db->insert('profile.client_partners',$arrayInsertPartner);
-                }
-                
-            }
-        }
-        else 
-        {
-            $sqlgetmethod = "SELECT * FROM profile.partner_endpoints a where a.partner_id = ".$arridpartner;
-            $res = $this->db->query($sqlgetmethod);
-            $datamethod = $res->result();
-
-            foreach ($datamethod as $key => $value) {
+                foreach ($datamethod as $key => $value) {
                 $arrayInsertPartner = array(
-                    'client_id'     => $id_client,
-                    'partner_id'    => $value->partner_id,
-                    'client_key'    => $arrclientkey,
-                    'created_at'    => date('Y-m-d H:i:s'),
-                    'created_by'    => $this->session->userdata('username'),
-                    'api_key'       => $arrxapikey,
-                    'endpoint_id'   => $value->id,
+                'client_id'     => $id_client,
+                'partner_id'    => $value->partner_id,
+                'client_key'    => $arrclientkey,
+                'created_at'    => date('Y-m-d H:i:s'),
+                'created_by'    => $this->session->userdata('username'),
+                'api_key'       => $arrxapikey,
+                'endpoint_id'   => $value->id,
                 );
                 $this->db->insert('profile.client_partners',$arrayInsertPartner);
+                }
             }
-        }
 
-        if (is_array($arridchanel)) 
-        {
-            foreach ($arridchanel as $key => $value) 
+            if (is_array($arridchanel)) 
+            {
+                foreach ($arridchanel as $key => $value) 
+                {
+                $arrayInsertChanel = array(
+                                        'id_client'  => $id_client,
+                                        'id_chanel'  => $value,
+                                        'created_at' => date('Y-m-d H:i:s'),
+                                        'created_by' => $this->session->userdata('username'),
+                                        'message_id' => $messtypechanel[$key],
+                                    );
+                $this->db->insert('profile.client_chanel',$arrayInsertChanel);
+                }
+            }
+            else 
             {
                 $arrayInsertChanel = array(
-                                            'id_client'  => $id_client,
-                                            'id_chanel'  => $value,
-                                            'created_at' => date('Y-m-d H:i:s'),
-                                            'created_by' => $this->session->userdata('username'),
-                                            'message_id' => $messtypechanel[$key],
-                                        );
-                $this->db->insert('profile.client_chanel',$arrayInsertChanel);
-            }
-        }
-        else 
-        {
-            $arrayInsertChanel = array(
                 'id_client'  => $id_client,
                 'id_chanel'  => $arridchanel,
                 'created_at' => date('Y-m-d H:i:s'),
                 'created_by' => $this->session->userdata('username'),
                 'message_id' => $messtypechanel,
-            );
-            $this->db->insert('profile.client_chanel',$arrayInsertChanel);
+                );
+                $this->db->insert('profile.client_chanel',$arrayInsertChanel);
+            }
         }
+        else 
+        {
+            $arrayInsertProfile = array(
+                'client_name'       => $client_name,
+                'nib'               => $nib,
+                'npwp'              => $npwp,
+                'user_endpoint'     => $user_endpoint,
+                'created_at'        => date('Y-m-d H:i:s'),
+                'created_by'        => $this->session->userdata('username'),
+                'address'           => $address,
+                'handphone_no'      => $hp,
+                'telephone_no'      => $tlp,
+                'is_active'         => 't',
+                'is_deleted'        => 'f',
+                'validate'          => $startdate,
+                'valid_until'       => $enddate,
+                'package_id'        => $package_type,
+                'authority_name'    => $authors,
+                'email'             => $email,
+                );
+
+            $this->db->insert('profile.clients',$arrayInsertProfile);
+            $id_client = $this->db->insert_id();
+
+            if (is_array($arridpartner)) 
+            {
+                foreach ($arridpartner as $key => $value) {
+                $sqlgetmethod = "SELECT * FROM profile.partner_endpoints a where a.partner_id = ".$value;
+                $res = $this->db->query($sqlgetmethod);
+                $datamethod = $res->result();
+
+                foreach ($datamethod as $key2 => $value2) {
+                $arrayInsertPartner = array(
+                    'client_id'     => $id_client,
+                    'partner_id'    => $value2->partner_id,
+                    'client_key'    => $arrclientkey[$key],
+                    'created_at'    => date('Y-m-d H:i:s'),
+                    'created_by'    => $this->session->userdata('username'),
+                    'api_key'       => $arrxapikey[$key],
+                    'endpoint_id'   => $value2->id,
+                );
+                $this->db->insert('profile.client_partners',$arrayInsertPartner);
+                }
+
+                }
+            }
+            else 
+            {
+                $sqlgetmethod = "SELECT * FROM profile.partner_endpoints a where a.partner_id = ".$arridpartner;
+                $res = $this->db->query($sqlgetmethod);
+                $datamethod = $res->result();
+
+                foreach ($datamethod as $key => $value) {
+                $arrayInsertPartner = array(
+                'client_id'     => $id_client,
+                'partner_id'    => $value->partner_id,
+                'client_key'    => $arrclientkey,
+                'created_at'    => date('Y-m-d H:i:s'),
+                'created_by'    => $this->session->userdata('username'),
+                'api_key'       => $arrxapikey,
+                'endpoint_id'   => $value->id,
+                );
+                $this->db->insert('profile.client_partners',$arrayInsertPartner);
+                }
+            }
+
+            if (is_array($arridchanel)) 
+            {
+                foreach ($arridchanel as $key => $value) 
+                {
+                $arrayInsertChanel = array(
+                                        'id_client'  => $id_client,
+                                        'id_chanel'  => $value,
+                                        'created_at' => date('Y-m-d H:i:s'),
+                                        'created_by' => $this->session->userdata('username'),
+                                        'message_id' => $messtypechanel[$key],
+                                    );
+                $this->db->insert('profile.client_chanel',$arrayInsertChanel);
+                }
+            }
+            else 
+            {
+                $arrayInsertChanel = array(
+                'id_client'  => $id_client,
+                'id_chanel'  => $arridchanel,
+                'created_at' => date('Y-m-d H:i:s'),
+                'created_by' => $this->session->userdata('username'),
+                'message_id' => $messtypechanel,
+                );
+                $this->db->insert('profile.client_chanel',$arrayInsertChanel);
+            }
+        }
+       
+        
         
         if ($this->db->trans_status() === FALSE)
         {
@@ -608,6 +714,28 @@ class Model_cms extends CI_Model {
         $status     = 0;
 
         $sql        = "SELECT * FROM users.groups a WHERE a.id = ".$this->db->escape($id);
+        $result     = $this->db->query($sql);
+        $banyak     = $result->num_rows();
+        if ($banyak > 0) 
+        {
+            $returnData = $result->row();
+            $status     = 1;
+        }
+        $data = array(
+                    'thisdata' => $returnData, 
+                    'status' => $status, 
+                );
+
+        return $data;
+
+    }
+    public function get_edit_client()
+    {
+        $id 		= $this->input->post('id');
+        $data       = array();
+        $status     = 0;
+
+        $sql        = "SELECT * FROM profile.clients a WHERE a.id = ".$this->db->escape($id);
         $result     = $this->db->query($sql);
         $banyak     = $result->num_rows();
         if ($banyak > 0) 
@@ -745,6 +873,32 @@ class Model_cms extends CI_Model {
         if ($banyak > 0) 
         {
             $returnData = $result->row();
+            $status     = 1;
+        }
+        $data = array(
+                    'thisdata' => $returnData, 
+                    'status' => $status, 
+                );
+
+        return $data;
+
+    }
+    public function get_edit_clientpartner()
+    {
+        $id 		= $this->input->post('id');
+        $data       = array();
+        $status     = 0;
+
+        $sql        = "select a.client_id ,a.partner_id ,a.api_key ,a.client_key ,b.partner_name ,b.desc_partner  
+                            from profile.client_partners a
+                            left join profile.partners b on a.partner_id = b.id 
+                            where a.client_id = ".$this->db->escape($id)." 
+                        group by a.client_id ,a.partner_id ,a.api_key ,a.client_key ,b.partner_name ,b.desc_partner";
+        $result     = $this->db->query($sql);
+        $banyak     = $result->num_rows();
+        if ($banyak > 0) 
+        {
+            $returnData = $result->result();
             $status     = 1;
         }
         $data = array(
