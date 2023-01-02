@@ -438,7 +438,16 @@ class Createska extends CI_Controller {
 
 			$data_update = $this->Model_create_ska->update_draft($id, $status, $no_aju);
 			if($data_update == 1) {
-				echo $response;
+				if($kode_resp == 'A01') {
+					echo $response;
+				} else {
+					$arr_err = array(
+						'kode' => 400,
+						'keterangan' => $json_decode->data->keterangan
+					);
+
+					echo json_encode($arr_err);
+				}
 			} else {
 				$arr_err = array(
 					'kode' => 400,
