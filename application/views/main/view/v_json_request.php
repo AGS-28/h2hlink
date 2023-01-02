@@ -3,5 +3,5 @@
     <p>Request Created : <?php echo $data['arrayReturn'][0]['created_at_message'] ?></p>
     <p>Request Id : <?php echo $data['arrayReturn'][0]['message_id'] ?></p>
     <p>Request Type : <?php echo $data['arrayReturn'][0]['urai_message_type'] ?></p>
-    <p>Request Content : <pre> <?php echo $json_pretty; ?> </pre></p>
+    <p>Request Content : <?php echo pretty_print($json_pretty); ?> </p>
 </div>
