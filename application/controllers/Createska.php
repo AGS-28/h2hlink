@@ -147,6 +147,12 @@ class Createska extends CI_Controller {
 				$no_serial = '-';
 			}
 
+			$arr_status = array(1,4,5);
+			$next = '';
+			if(in_array($data['status'], $arr_status)) {
+				$next = '<li><a class="dropdown-item" href="#" onclick="confirm_kirim(send_draft,'.$data['id'].');">Send Document</a></li>';
+			}
+
 			$html[] = $no;
 			$html[] = '<b> Draft Number : <font color="#d75350">'.$data['no_draft'].'</font><br/><b> IPSKA : <font color="#4549a2">'.$data['ipska'].'</font><br/><b> Type Form : <font color="#4549a2">'.$data['cotype'].'</font><br/></b><b> Jenis Pengajuan : <font color="#4549a2">'.$jenis_form.'</font></b><br/><b> Nomor Serial Blanko : <font color="#4549a2">'.$no_serial.'</font><br/></b><b> Status : <font color="#d75350">'.$data['status_desc'].'</font></b><br/><b> Created Date : </b>'.$data['created_at'];
 			$html[] = '<b> Name : <font color="#d75350">'.$data['client_name'].'</font></b><br/><b> NIB : </b>'.$data['nib'].'<br/><b> NPWP : </b>'.$data['npwp'];
@@ -158,7 +164,7 @@ class Createska extends CI_Controller {
 							</button>
 							<ul class="dropdown-menu dropdown-menu-end">
 								<li><a class="dropdown-item" href="#" onclick="show_modal_document('.$data['id'].','.$title.',0,'.$func_name.')">Views Document</a></li>
-								<li><a class="dropdown-item" href="#" onclick="confirm_kirim(send_draft,'.$data['id'].');">Send Document</a></li>
+								'.$next.'
 							</ul>
 						</div>
 					';
@@ -312,9 +318,9 @@ class Createska extends CI_Controller {
 				$file = base64_encode(file_get_contents($value['path']));
 				
 				$support_doc[] = array(
-					'doc_type' => $doc_type,
+					'doc_type' => strval($doc_type),
 					'kppbc' => $kppbc,
-					'value' => $val,
+					'value' => strval($val),
 					'doc_no' => $doc_no,
 					'doc_date' => $doc_date,
 					'file' => 'data:application/pdf;base64,'.$file
@@ -332,6 +338,7 @@ class Createska extends CI_Controller {
 			$url = $this->Model_master->get_url_wso2(2);
 
 			$json_data = json_encode($array_all);
+			// echo $json_data;die();
 			$curl = curl_init();
 				curl_setopt_array($curl, array(
 				CURLOPT_URL => $url,
@@ -396,6 +403,7 @@ class Createska extends CI_Controller {
 		);
 
 		$json_data = json_encode($array_all);
+		echo $json_data;die();
 		$curl = curl_init();
 			curl_setopt_array($curl, array(
 			CURLOPT_URL => $url,
@@ -420,7 +428,15 @@ class Createska extends CI_Controller {
 		$json_decode = json_decode($response);
 		$kode = $json_decode->kode;
 		if($kode == '200') {
-			$data_update = $this->Model_create_ska->update_draft($id);
+			$kode_resp = $json_decode->data->kode;
+			$no_aju = $json_decode->data->no_aju;
+			$status = 3;
+			
+			if($kode_resp != 'A01') {
+				$status = 5;
+			}
+
+			$data_update = $this->Model_create_ska->update_draft($id, $status, $no_aju);
 			if($data_update == 1) {
 				echo $response;
 			} else {
