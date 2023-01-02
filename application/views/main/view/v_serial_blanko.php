@@ -29,8 +29,8 @@
         <tr style="vertical-align: top; text-align: justify;">
             <td>
                 <b>Pengajuan.</b><br/>
-                <input type="radio" id="btn_radio" name="btn_radio" value="0" onchange="changeradiobtn(this);"> e-form &nbsp;&nbsp;&nbsp; 
-                <input type="radio" id="btn_radio" name="btn_radio" value="1" onchange="changeradiobtn(this);"> Konvensional
+                <input type="radio" id="btn_radio" name="btn_radio" value="1" onchange="changeradiobtn(this);"> e-form &nbsp;&nbsp;&nbsp; 
+                <input type="radio" id="btn_radio" name="btn_radio" value="0" onchange="changeradiobtn(this);"> Konvensional
             </td>
         </tr>
         <tr style="vertical-align: top; text-align: justify; display: none;" id="input_serial">

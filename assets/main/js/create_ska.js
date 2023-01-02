@@ -427,7 +427,7 @@ function send_draft(id) {
 
 function changeradiobtn(data) {
     $('#pengajuan').val(data.value);
-    if(data.value == '1') {
+    if(data.value == '0') {
         $('#input_serial').show();
     } else {
         $('#input_serial').hide();
@@ -441,7 +441,7 @@ function submit_file() {
 
     if(pengajuan == '') {
         alert_error('Please select pengajuan.');
-    } else if(pengajuan == '1') {
+    } else if(pengajuan == '0') {
         if(no_serial == '') {
             alert_error('Please input nomor serial.');
         } else {

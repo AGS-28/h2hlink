@@ -136,9 +136,9 @@ class Createska extends CI_Controller {
 			$func_name = "'get_view_draft'";
 
 			$jenis_form = '-';
-			if($data['jenis_form'] == '0') {
+			if($data['jenis_form'] == '1') {
 				$jenis_form = 'e-form';
-			} else if($data['jenis_form'] == '1') {
+			} else if($data['jenis_form'] == '0') {
 				$jenis_form = 'Konvensional';
 			}
 
@@ -429,25 +429,17 @@ class Createska extends CI_Controller {
 		$kode = $json_decode->kode;
 		if($kode == '200') {
 			$kode_resp = $json_decode->data->kode;
-			$no_aju = $json_decode->data->no_aju;
-			$status = 3;
+			$no_aju = '';
+			$status = 5;
 			
-			if($kode_resp != 'A01') {
-				$status = 5;
+			if($kode_resp == 'A01') {
+				$no_aju = $json_decode->data->no_aju;
+				$status = 3;
 			}
 
 			$data_update = $this->Model_create_ska->update_draft($id, $status, $no_aju);
 			if($data_update == 1) {
-				if($kode_resp == 'A01') {
-					echo $response;
-				} else {
-					$arr_err = array(
-						'kode' => 400,
-						'keterangan' => $json_decode->data->keterangan
-					);
-
-					echo json_encode($arr_err);
-				}
+				echo $response;
 			} else {
 				$arr_err = array(
 					'kode' => 400,
