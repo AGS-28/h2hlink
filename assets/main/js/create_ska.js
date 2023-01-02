@@ -140,8 +140,8 @@ function confirm_upload_draft() {
     // }
     
     var dropzone = Dropzone.forElement("#myDropzone");
-    if (dropzone.files.length < 1) {
-        errorString += "- File Upload  <br\>";
+    if (dropzone.files.length != 2) {
+        errorString += "- Uploaded files must be two files <br\>";
     }
 
 

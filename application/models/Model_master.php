@@ -35,7 +35,7 @@ class Model_master extends CI_Model {
     function get_data_ref_document($tipe='', $jenis='') {
         $addSql = 'WHERE id NOT IN (13,14)';
         if($tipe != '') {
-            $addSql = 'WHERE id IN (11,13,14) ORDER BY is_order';
+            $addSql = 'WHERE id IN (11,13) ORDER BY is_order';
         }
         
         $sql = "SELECT * FROM referensi.refdokumen ".$addSql;
@@ -200,12 +200,14 @@ class Model_master extends CI_Model {
     }
 
     function get_data_client_channel($id) {
-        $sql = "SELECT string_agg(CONCAT('', c.id_chanel), ',') AS id_channel, b.id AS id_client
+        $sql = "SELECT string_agg(DISTINCT CONCAT('', c.id_chanel), ',') AS id_channel, b.id AS id_client
                 FROM trans.draft_ska a
                 LEFT JOIN profile.clients b ON b.id = a.client_id
                 LEFT JOIN profile.client_chanel c ON c.id_client = b.id
                 LEFT JOIN referensi.message_type d ON d.id = c.message_id
+                LEFT JOIN referensi.chanel e ON e.id = c.id_chanel
                 WHERE a.id = ".$id."
+                AND e.id = 3
                 GROUP BY b.id";
                 
         $result = $this->db->query($sql);

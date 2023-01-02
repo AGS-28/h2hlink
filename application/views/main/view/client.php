@@ -274,7 +274,8 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-
+                                                                        <input type="hidden" id="updated" name="updated" value="0">
+                                                                        <input type="hidden" id="id_client" name="id_client" value="">
                                                                         <div>
                                                                             <ul class="pager wizard twitter-bs-wizard-pager-link">
                                                                                 <li class="previous"><a href="javascript: void(0);" class="btn btn-primary" onclick="nextTab()" target="_top"><i class="bx bx-chevron-left me-1"></i> Previous</a></li>

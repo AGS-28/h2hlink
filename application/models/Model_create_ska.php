@@ -413,19 +413,36 @@ class Model_create_ska extends CI_Model {
 		return $return;
     }
 
-    function update_draft($id)
+    function update_draft($id, $status, $no_aju)
     {
+        $this->db->trans_begin();
+        
         $arr = array(
-            'status' => 3
+            'status' => $status
         );
 
         $this->db->where('id', $id);
         $this->db->update('trans.draft_ska',$arr);
 
-        if ($this->db->affected_rows() > 0) {
-            $data = 1;
-        } else {
+        if($no_aju != '') {
+            $arr_draft = array(
+                'id_draft' => $id
+            );
+
+            $this->db->where('no_aju', $no_aju);
+            $this->db->where('partner_endpoint_id', 1);
+            $this->db->where('client_id', $this->session->userdata('client_id'));
+            $this->db->update('trans.headers',$arr_draft);
+        }
+
+        if ($this->db->trans_status() == false){
+            $this->db->trans_rollback();
+
             $data = 0;
+        }else{
+            $this->db->trans_commit();
+            
+            $data = 1;
         }
 
         return $data;
