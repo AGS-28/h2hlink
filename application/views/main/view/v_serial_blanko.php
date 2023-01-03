@@ -28,7 +28,7 @@
         </tr>
         <tr style="vertical-align: top; text-align: justify;">
             <td>
-                <b>Pengajuan.</b><br/>
+                <b>Pengajuan. <font color="red">*</font></b><br/>
                 <input type="radio" id="btn_radio" name="btn_radio" value="1" onchange="changeradiobtn(this);"> e-form &nbsp;&nbsp;&nbsp; 
                 <input type="radio" id="btn_radio" name="btn_radio" value="0" onchange="changeradiobtn(this);"> Konvensional
             </td>
@@ -42,6 +42,6 @@
     </table>
     <div class="text-end">
         <input type="hidden" class="form-control" id="pengajuan" name="pengajuan" readonly>
-        <button type="button" onclick="submit_file();" class="btn btn-primary waves-effect btn-label waves-light"><i class="bx bx-check label-icon"></i> Submit</button>
+        <button type="button" onclick="submit_file();" class="btn btn-primary waves-effect btn-label waves-light"><i class="bx bx-check label-icon"></i> Save Draft</button>
     </div>
 </div>

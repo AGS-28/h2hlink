@@ -456,3 +456,27 @@ function submit_file() {
         confirm_kirim(upload_draft);
     }
 }
+
+function delete_draft(id) {
+    showLoading(true);
+    $.post(baseurl + "index.php/createska/delete_draft/"+Math.random(),{id:id}).done(function( data ) {
+        showLoading(false);
+        if(data == '1') {
+            swal.fire({
+                title: 'Succes!',
+                html: 'Successfully deleted data.',
+                icon: 'success',
+                button: "Close",
+            }).then((result) => {
+                location.reload(true);
+            });
+        } else {
+            swal.fire({
+                title: 'Warning!',
+                html: 'Failed to delete data',
+                icon: 'warning',
+                button: "Close",
+            });
+        }
+    });
+}

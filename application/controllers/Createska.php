@@ -149,12 +149,16 @@ class Createska extends CI_Controller {
 
 			$arr_status = array(1,4,5);
 			$next = '';
+			$delete = '';
 			if(in_array($data['status'], $arr_status)) {
-				$next = '<li><a class="dropdown-item" href="#" onclick="confirm_kirim(send_draft,'.$data['id'].');">Send Document</a></li>';
+				if($data['status'] == 1) {
+					$delete = '<li><a class="dropdown-item" href="#" onclick="confirm_kirim(delete_draft,'.$data['id'].');">Delete Draft</a></li>';
+				}
+				$next = '<li><a class="dropdown-item" href="#" onclick="confirm_kirim(send_draft,'.$data['id'].');">Send Draft</a></li>';
 			}
 
 			$html[] = $no;
-			$html[] = '<b> Draft Number : <font color="#d75350">'.$data['no_draft'].'</font><br/><b> IPSKA : <font color="#4549a2">'.$data['ipska'].'</font><br/><b> Type Form : <font color="#4549a2">'.$data['cotype'].'</font><br/></b><b> Jenis Pengajuan : <font color="#4549a2">'.$jenis_form.'</font></b><br/><b> Nomor Serial Blanko : <font color="#4549a2">'.$no_serial.'</font><br/></b><b> Status : <font color="#d75350">'.$data['status_desc'].'</font></b><br/><b> Created Date : </b>'.$data['created_at'];
+			$html[] = '<b> Draft Number : <font color="#d75350">'.$data['no_draft'].'</font><br/><b> IPSKA : <font color="#4549a2">'.$data['ipska'].'</font><br/><b> Form : <font color="#4549a2">'.$data['cotype'].'</font><br/></b><b> Jenis Pengajuan : <font color="#4549a2">'.$jenis_form.'</font></b><br/><b> Nomor Serial Blanko : <font color="#4549a2">'.$no_serial.'</font><br/></b><b> Status : <font color="#d75350">'.$data['status_desc'].'</font></b><br/><b> Created Date : </b>'.$data['created_at'];
 			$html[] = '<b> Name : <font color="#d75350">'.$data['client_name'].'</font></b><br/><b> NIB : </b>'.$data['nib'].'<br/><b> NPWP : </b>'.$data['npwp'];
 			$html[] = '<b> Name : <font color="#4549a2">'.$data['partner_name'].'</font>';
 			$html[] = '
@@ -163,7 +167,8 @@ class Createska extends CI_Controller {
 								<i class="bx bx-dots-horizontal-rounded"></i>
 							</button>
 							<ul class="dropdown-menu dropdown-menu-end">
-								<li><a class="dropdown-item" href="#" onclick="show_modal_document('.$data['id'].','.$title.',0,'.$func_name.')">Views Document</a></li>
+								<li><a class="dropdown-item" href="#" onclick="show_modal_document('.$data['id'].','.$title.',0,'.$func_name.')">Views Draft</a></li>
+								'.$delete.'
 								'.$next.'
 							</ul>
 						</div>
@@ -456,5 +461,10 @@ class Createska extends CI_Controller {
 	public function v_serial_blanko()
 	{
 		echo $this->load->view('main/view/v_serial_blanko','',true);
+	}
+
+	public function delete_draft()
+	{
+		echo json_encode($this->Model_create_ska->delete_draft());
 	}
 }

@@ -12,7 +12,7 @@
                     </div>
                     <div class="card-body p-4 form-horizontal" style="display: none;">
                         <div class="row mb-4">
-                            <label for="horizontal-input" class="col-sm-3 col-form-label">Client Partner</label>
+                            <label for="horizontal-input" class="col-sm-3 col-form-label">Client Partner <font color="red">*</font></label>
                             <div class="col-sm-9">
                                 <select class="form-control single-choices" name="client_partner" id="client_partner">
                                     <?php foreach($data_partner as $partner) { ?>
@@ -22,7 +22,7 @@
                             </div>
                         </div>
                         <div class="row mb-4">
-                            <label for="horizontal-input" class="col-sm-3 col-form-label">IPSKA</label>
+                            <label for="horizontal-input" class="col-sm-3 col-form-label">IPSKA <font color="red">*</font></label>
                             <div class="col-sm-9">
                                 <select class="form-control single-choices" name="ipska" id="ipska">
                                     <?php foreach($data_ipska as $ipska) { ?>
@@ -32,7 +32,7 @@
                             </div>
                         </div>
                         <div class="row mb-4">
-                            <label for="horizontal-input" class="col-sm-3 col-form-label">Type Form</label>
+                            <label for="horizontal-input" class="col-sm-3 col-form-label">Form <font color="red">*</font></label>
                             <div class="col-sm-9">
                                 <select class="form-control single-choices" name="tipe_form" id="tipe_form">
                                     <?php foreach($data_type_form as $form) { ?>
@@ -42,7 +42,7 @@
                             </div>
                         </div>
                         <div class="row mb-4">
-                            <label for="horizontal-input" class="col-sm-3 col-form-label">Document Type</label>
+                            <label for="horizontal-input" class="col-sm-3 col-form-label">Document Type <font color="red">*</font></label>
                             <div class="col-sm-9">
                                 <select class="form-control single-choices" name="tipe_upload" id="tipe_upload">
                                     <?php foreach($data_type_doc as $doc) { ?>
@@ -58,7 +58,7 @@
                             </div>
                         </div> -->
                         <div class="row mb-4">
-                            <label for="horizontal-input" class="col-sm-3 col-form-label">File</label>
+                            <label for="horizontal-input" class="col-sm-3 col-form-label">File <font color="red">*</font></label>
                             <div class="col-sm-9">
                                 <form action="#" class="dropzone" id="myDropzone" name="myDropzone">
                                     <div class="fallback">
@@ -80,7 +80,7 @@
                             <input class="form-control" type="hidden" name="tipe_file" id="tipe_file" value="" readonly>
                             <input class="form-control" type="hidden" name="text_file" id="text_file" value="" readonly>
                             <input class="form-control" type="hidden" id="tipe" name="tipe" value="0" readonly>
-                            <button type="submit" onclick="confirm_upload_draft();" class="btn btn-primary waves-effect btn-label waves-light"><i class="bx bx-check label-icon"></i> Send Files</button>
+                            <button type="submit" onclick="confirm_upload_draft();" class="btn btn-primary waves-effect btn-label waves-light"><i class="bx bx-check label-icon"></i> Save Draft</button>
                         </div>
                     </div>
                 </div>

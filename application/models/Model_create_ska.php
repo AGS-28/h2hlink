@@ -366,6 +366,21 @@ class Model_create_ska extends CI_Model {
         return $data;
     }
 
+    function delete_draft() {
+        $id = $this->input->post('id');
+        $data = 0;
+        $DataUpdate = array('is_delete' => 't' );
+
+        $this->db->where('id', $id);
+        $this->db->update('trans.draft_ska',$DataUpdate);
+
+        if ($this->db->affected_rows() > 0) {
+            $data = 1;
+        }
+
+        return $data;
+    }
+
     function get_data_draft() {
         $start 		= $this->input->post('start');
 		$length 	= $this->input->post('length');
@@ -384,7 +399,8 @@ class Model_create_ska extends CI_Model {
                         LEFT JOIN referensi.tblrefstatus d ON d.id = a.status
                         LEFT JOIN referensi.refcotype e ON e.id = a.co_type_id
                         LEFT JOIN referensi.refipska f ON f.id = a.ipska_office_id
-                        WHERE a.client_id = '.$this->session->userdata('client_id').' '.$addSql.'
+                        WHERE a.is_delete is null 
+                        AND a.client_id = '.$this->session->userdata('client_id').' '.$addSql.'
                         ORDER BY a.created_at DESC';
 		$result_total 	= $this->db->query($sql_total);
 		$banyak 		= $result_total->num_rows();
@@ -397,7 +413,8 @@ class Model_create_ska extends CI_Model {
                     LEFT JOIN referensi.tblrefstatus d ON d.id = a.status
                     LEFT JOIN referensi.refcotype e ON e.id = a.co_type_id
                     LEFT JOIN referensi.refipska f ON f.id = a.ipska_office_id
-                    WHERE a.client_id = '.$this->session->userdata('client_id').' '.$addSql.'
+                    WHERE a.is_delete is null
+                    AND a.client_id = '.$this->session->userdata('client_id').' '.$addSql.'
                     ORDER BY a.created_at DESC
                     LIMIT '.$length.' OFFSET '.$start;
 			$result 		= $this->db->query($sql);
