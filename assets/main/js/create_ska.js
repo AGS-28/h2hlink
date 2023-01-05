@@ -2,23 +2,34 @@ var tipe = $('#tipe').val();
 var extention = $('#extention').val();
 if(tipe == 0) {
     var myDropzone = new Dropzone(".dropzone", { 
-        // maxFiles: 3,
+        maxFiles: 1,
         // acceptedFiles: ".csv, .xls, .xlsx, .txt, .rar, .json, .xml",
         acceptedFiles: extention,
-        // addRemoveLinks: true,
-        // addTypeDocument: true,
+        addRemoveLinks: true,
         accept: function(file, done) {
-            var cek = cekFile();
-            if(cek) {
-                done();
-            } else {
-                alert_error('Please complete the following data : <br\> - Anda hanya bisa melakukan upload sekali dengan tipe dokumen '+$('#tipe_upload option:selected').text());
-                this.removeFile(file);
-            }
+            done();
         },
         init: function() {
-            this.on("completemultiple", function(file) {
-                
+            this.on("maxfilesexceeded", function(file){
+                this.removeFile(file);
+                alert_error('Maximum file uploaded is only one');
+            });
+        }
+    });
+
+    var myDropzone1 = new Dropzone(".dropzone1", { 
+        maxFiles: 1,
+        // acceptedFiles: ".csv, .xls, .xlsx, .txt, .rar, .json, .xml",
+        acceptedFiles: extention,
+        addRemoveLinks: true,
+        // addTypeDocument: true,
+        accept: function(file, done) {
+            done();
+        },
+        init: function() {
+            this.on("maxfilesexceeded", function(file){
+                this.removeFile(file);
+                alert_error('Maximum file uploaded is only one');
             });
         }
     });
@@ -47,89 +58,89 @@ $(document).ready(function() {
     }
 });
 
-function cekFile() {
-    var tipe_upload = $('#tipe_upload').val();
-    var tipe_file = $('#tipe_file').val();
-    var text_file = $('#text_file').val();
-    if(tipe_file.indexOf(tipe_upload) === -1) {
-        var text = $('#tipe_upload option:selected').text();
-        var update_fipe_file = tipe_file+','+tipe_upload;
-        var update_text_file = text_file+','+text;
-        $('#tipe_file').val(update_fipe_file);
-        $('#text_file').val(update_text_file);
+// function cekFile() {
+//     var tipe_upload = $('#tipe_upload').val();
+//     var tipe_file = $('#tipe_file').val();
+//     var text_file = $('#text_file').val();
+//     if(tipe_file.indexOf(tipe_upload) === -1) {
+//         var text = $('#tipe_upload option:selected').text();
+//         var update_fipe_file = tipe_file+','+tipe_upload;
+//         var update_text_file = text_file+','+text;
+//         $('#tipe_file').val(update_fipe_file);
+//         $('#text_file').val(update_text_file);
 
-        var substring = $('#text_file').val();
-        var split = substring.substring(1).split(',');
+//         var substring = $('#text_file').val();
+//         var split = substring.substring(1).split(',');
 
-        var substring1 = $('#tipe_file').val();
-        var split1 = substring1.substring(1).split(',');
+//         var substring1 = $('#tipe_file').val();
+//         var split1 = substring1.substring(1).split(',');
         
-        $('#table_text').html('');
-        var satu = '';
-        var dua = '';
-        var tiga = '';
+//         $('#table_text').html('');
+//         var satu = '';
+//         var dua = '';
+//         var tiga = '';
 
-        var satu1 = '';
-        var dua1 = '';
-        var tiga1 = '';
+//         var satu1 = '';
+//         var dua1 = '';
+//         var tiga1 = '';
 
-        if (typeof split[0] !== 'undefined') {
-            satu = split[0].replace(/^\s+|\s+$/gm,"");
-        }
+//         if (typeof split[0] !== 'undefined') {
+//             satu = split[0].replace(/^\s+|\s+$/gm,"");
+//         }
 
-        if (typeof split[1] !== 'undefined') {
-            dua = split[1].replace(/^\s+|\s+$/gm,"");
-        }
+//         if (typeof split[1] !== 'undefined') {
+//             dua = split[1].replace(/^\s+|\s+$/gm,"");
+//         }
 
-        if (typeof split[2] !== 'undefined') {
-            tiga = split[2].replace(/^\s+|\s+$/gm,"");
-        }
+//         if (typeof split[2] !== 'undefined') {
+//             tiga = split[2].replace(/^\s+|\s+$/gm,"");
+//         }
 
-        if (typeof split1[0] !== 'undefined') {
-            satu1 = split1[0].replace(/^\s+|\s+$/gm,"");
-        }
+//         if (typeof split1[0] !== 'undefined') {
+//             satu1 = split1[0].replace(/^\s+|\s+$/gm,"");
+//         }
 
-        if (typeof split1[1] !== 'undefined') {
-            dua1 = split1[1].replace(/^\s+|\s+$/gm,"");
-        }
+//         if (typeof split1[1] !== 'undefined') {
+//             dua1 = split1[1].replace(/^\s+|\s+$/gm,"");
+//         }
 
-        if (typeof split1[2] !== 'undefined') {
-            tiga1 = split1[2].replace(/^\s+|\s+$/gm,"");
-        }
+//         if (typeof split1[2] !== 'undefined') {
+//             tiga1 = split1[2].replace(/^\s+|\s+$/gm,"");
+//         }
 
-        var cek = '';
-        if(satu1 == '11') {
-            cek = '1';
-            html = '<a class="relative1" style="cursor: default;">'+satu+'</a>';
-            html += '<a class="relative2" style="cursor: default;">'+dua+'</a>';
-            html += '<a class="relative3" style="cursor: default;">'+tiga+'</a>';
-        } else {
-            html = '<a class="relative" style="cursor: default;">'+satu+'</a>';
-        }
+//         var cek = '';
+//         if(satu1 == '11') {
+//             cek = '1';
+//             html = '<a class="relative1" style="cursor: default;">'+satu+'</a>';
+//             html += '<a class="relative2" style="cursor: default;">'+dua+'</a>';
+//             html += '<a class="relative3" style="cursor: default;">'+tiga+'</a>';
+//         } else {
+//             html = '<a class="relative" style="cursor: default;">'+satu+'</a>';
+//         }
 
-        if(dua1 == '11') {
-            html = '<a class="relative" style="cursor: default;">'+satu+'</a>';
-            html += '<a class="relative4" style="cursor: default;">'+dua+'</a>';
-            html += '<a class="relative3" style="cursor: default;">'+tiga+'</a>';
-        } else {
-            if(cek == '') {
-                html = '<a class="relative" style="cursor: default;">'+satu+'</a>';
-                html += '<a class="relative5" style="cursor: default;">'+dua+'</a>';
-            }
-        }
+//         if(dua1 == '11') {
+//             html = '<a class="relative" style="cursor: default;">'+satu+'</a>';
+//             html += '<a class="relative4" style="cursor: default;">'+dua+'</a>';
+//             html += '<a class="relative3" style="cursor: default;">'+tiga+'</a>';
+//         } else {
+//             if(cek == '') {
+//                 html = '<a class="relative" style="cursor: default;">'+satu+'</a>';
+//                 html += '<a class="relative5" style="cursor: default;">'+dua+'</a>';
+//             }
+//         }
 
-        if(tiga1 == '11') {
-            html = '<a class="relative" style="cursor: default;">'+satu+'</a>';
-            html += '<a class="relative5" style="cursor: default;">'+dua+'</a>';
-            html += '<a class="relative6" style="cursor: default;">'+tiga+'</a>';
-        }
+//         if(tiga1 == '11') {
+//             html = '<a class="relative" style="cursor: default;">'+satu+'</a>';
+//             html += '<a class="relative5" style="cursor: default;">'+dua+'</a>';
+//             html += '<a class="relative6" style="cursor: default;">'+tiga+'</a>';
+//         }
 
-        $('#table_text').html(html);
-        return true;
-    } else {
-        return false;
-    }
-}
+//         $('#table_text').html(html);
+//         return true;
+//     } else {
+//         return false;
+//     }
+// }
 
 function confirm_upload_draft() {
     var errorString = "Please complete the following data : <br\>";
@@ -138,10 +149,27 @@ function confirm_upload_draft() {
     // if ($('#invoice_number').val() == '') {
         // errorString += "- Invoice Number  <br\>";
     // }
-    
+
+    if (!$('#client_partner').val()) {
+        errorString += "- Select a client partner <br\>";
+    }
+
+    if (!$('#ipska').val()) {
+        errorString += "- Select a IPSKA <br\>";
+    }
+
+    if (!$('#tipe_form').val()) {
+        errorString += "- Select a Form <br\>";
+    }
+
     var dropzone = Dropzone.forElement("#myDropzone");
-    if (dropzone.files.length != 2) {
-        errorString += "- Uploaded files must be two files <br\>";
+    if (dropzone.files.length == 0) {
+        errorString += "- Upload file header & barang <br\>";
+    }
+
+    var dropzone1 = Dropzone.forElement("#myDropzone1");
+    if (dropzone1.files.length == 0) {
+        errorString += "- Upload file cost structure <br\>";
     }
 
 
@@ -167,19 +195,25 @@ function confirm_upload_draft() {
 function upload_draft() {
     showLoading(true);
     var dropzone = Dropzone.forElement("#myDropzone");
+    var dropzone1 = Dropzone.forElement("#myDropzone1");
 
     var formdata  = new FormData();
     formdata.append('length', dropzone.files.length);
+    formdata.append('length1', dropzone1.files.length);
     formdata.append('client_partner', $('#client_partner').val());
     // formdata.append('invoice_number', $('#invoice_number').val());
     formdata.append('ipska', $('#ipska').val());
     formdata.append('tipe_form', $('#tipe_form').val());
-    formdata.append('tipe_file', $('#tipe_file').val());
+    // formdata.append('tipe_file', $('#tipe_file').val());
     formdata.append('pengajuan', $('#pengajuan').val());
     formdata.append('no_serial', $('#no_serial').val());
 
     for (var i = 0; i < dropzone.files.length; i++) {
         formdata.append('file_' + i, dropzone.files[i]);
+    }
+
+    for (var i = 0; i < dropzone1.files.length; i++) {
+        formdata.append('file1_' + i, dropzone1.files[i]);
     }
 
     var url = baseurl + "index.php/createska/upload_draft/"+Math.random();

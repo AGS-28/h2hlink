@@ -300,30 +300,39 @@ class Tracking extends CI_Controller {
 			$response = curl_exec($curl);
 			curl_close($curl);
 
-			if($tipe == 5) {
-				$json_decode = json_decode($response);
-				$kode = $json_decode->kode;
-				if($kode == '200') {
-					$co_number = $json_decode->data->co_number;
-					$co_date = $json_decode->data->co_date;
-					$status = $json_decode->data->status;
+			$json_decode = json_decode($response);
+			if($json_decode == '' or $json_decode == null) {
+				$arr_err = array(
+					'kode' => 400,
+					'keterangan' => 'Service error, please try again periodically.'
+				);
 
-					$data_update = $this->Model_tracking->update_coo($no_aju, $co_number, $co_date, $status);
-					if($data_update == 1) {
-						echo $response;
+				echo json_encode($arr_err);
+			} else {
+				if($tipe == 5) {
+					$kode = $json_decode->kode;
+					if($kode == '200') {
+						$co_number = $json_decode->data->co_number;
+						$co_date = $json_decode->data->co_date;
+						$status = $json_decode->data->status;
+
+						$data_update = $this->Model_tracking->update_coo($no_aju, $co_number, $co_date, $status);
+						if($data_update == 1) {
+							echo $response;
+						} else {
+							$arr_err = array(
+								'kode' => 400,
+								'keterangan' => 'Gagal Update Coo'
+							);
+
+							echo json_encode($arr_err);
+						}
 					} else {
-						$arr_err = array(
-							'kode' => 400,
-							'keterangan' => 'Gagal Update Coo'
-						);
-
-						echo json_encode($arr_err);
+						echo $response;
 					}
 				} else {
 					echo $response;
 				}
-			} else {
-				echo $response;
 			}
 		}
 	}

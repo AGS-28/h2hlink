@@ -267,11 +267,17 @@ function submit(aju, nib, npwp, user_endpoint, tipe, no_serial='') {
                 icon: 'success',
                 button: "Close",
             }).then((result) => {
+                location.reload(true);
                 if(tipe == '4') {
                     var url = obj.data.url_draft;
-                    window.open(url, '_blank');
-                } else {
-                    location.reload(true);
+                    if(url != '') {
+                        window.open(url, '_blank');
+                    }
+                } else if(tipe == '5') {
+                    var url = obj.data.url_dok;
+                    if(url != '' && url != null) {
+                        window.open(url, '_blank');
+                    }
                 }
             });
         } else {
