@@ -5,6 +5,8 @@ $(document).ready(function() {
         new Choices('#npwp',{removeItemButton: true,});
         new Choices('#nib',{removeItemButton: true,});
         new Choices('#end_point',{removeItemButton: true,});
+
+        cari_data('form_tracking');
     }
     
     if($('#tipe').val() == '1') {
@@ -30,6 +32,8 @@ $(document).ready(function() {
         new Choices('#client_name',{removeItemButton: true,});
         new Choices('#npwp',{removeItemButton: true,});
         new Choices('#nib',{removeItemButton: true,});
+
+        cari_data('form_tracking');
     }
 });
 
@@ -263,7 +267,12 @@ function submit(aju, nib, npwp, user_endpoint, tipe, no_serial='') {
                 icon: 'success',
                 button: "Close",
             }).then((result) => {
-                location.reload(true);
+                if(tipe == '4') {
+                    var url = obj.data.url_draft;
+                    window.open(url, '_blank');
+                } else {
+                    location.reload(true);
+                }
             });
         } else {
             swal.fire({

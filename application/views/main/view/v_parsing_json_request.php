@@ -44,7 +44,7 @@
                 $header .= '<tr bgcolor="'.$warna.'" style="vertical-align: top;">';
                 $header .= '<td width="2%" align="center">'.$i.'.</td>';
                 $header .= '<td>'.ucwords(preg_replace("~[\\\\/:*?<>|_]~", " ", $key1)).'</td>';
-
+                
                 if(is_array($value1)) {
                     $header_sambung = '<table class="table dt-responsive nowrap w-100" width="100%">';
                     $arr_cekcok = array();
@@ -90,7 +90,7 @@
                                 $header_sambung .= '<td><input class="form-control form-control-sm" type="text" id="form-sm-input" value="'.$value2.'" readonly style="cursor: not-allowed;"></td>';
                                 $header_sambung .= '</tr>';
                             } else {
-                                $header .= '<td>'.$value2.'</td>';
+                                $header .= '<td><input class="form-control form-control-sm" type="text" id="form-sm-input" value="'.$value2.'" readonly style="cursor: not-allowed;"></td>';
                             }
                         }
                     }
@@ -105,6 +105,16 @@
                 } else {
                     if($key1 == 'co_type') {
                         $header .= '<td><input class="form-control form-control-sm" type="text" id="form-sm-input" value="'.$refform[$value1].'" readonly style="cursor: not-allowed;"></td>';
+                    }  else if($key1 == 'jenis_form') {
+                        if($value1 == '1') {
+                            $jenis_form = 'e-Form';
+                        } else if($value1 == '0') {
+                            $jenis_form = 'Konvensional';
+                        } else {
+                            $jenis_form = '-';
+                        }
+
+                        $header .= '<td><input class="form-control form-control-sm" type="text" id="form-sm-input" value="'.$jenis_form.'" readonly style="cursor: not-allowed;"></td>';
                     } else {
                         $header .= '<td><input class="form-control form-control-sm" type="text" id="form-sm-input" value="'.$value1.'" readonly style="cursor: not-allowed;"></td>';
                     }

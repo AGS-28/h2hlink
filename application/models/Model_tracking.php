@@ -336,11 +336,12 @@ class Model_tracking extends CI_Model {
         $user_endpoint = $this->input->post('user_endpoint');
         $tipe = $this->input->post('tipe');
 
-        $sql = "SELECT a.message_type, a.message_id, a.message_content, a.created_at as created_at_message, c.message_type as urai_message_type, b.result_code, b.result_responses, b.created_at as created_at_responses, a.partner_endpoint_id
+        $sql = "SELECT a.message_type, a.message_id, a.message_content, a.created_at as created_at_message, c.message_type as urai_message_type, b.result_code, b.result_responses, b.created_at as created_at_responses, a.partner_endpoint_id, e.no_serial_blanko
                 FROM trans.headers a 
                 LEFT JOIN trans.responses b ON b.transaction_id = a.id
                 LEFT JOIN referensi.message_type c ON c.id = a.message_type
                 LEFT JOIN profile.partner_endpoints d ON d.id = a.partner_endpoint_id
+                LEFT JOIN trans.draft_ska e ON e.id = a.id_draft
                 WHERE a.no_aju = '".$no_aju."'
                 AND a.partner_endpoint_id = 1";
 

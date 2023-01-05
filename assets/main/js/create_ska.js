@@ -427,7 +427,7 @@ function send_draft(id) {
 
 function changeradiobtn(data) {
     $('#pengajuan').val(data.value);
-    if(data.value == '1') {
+    if(data.value == '0') {
         $('#input_serial').show();
     } else {
         $('#input_serial').hide();
@@ -441,7 +441,7 @@ function submit_file() {
 
     if(pengajuan == '') {
         alert_error('Please select pengajuan.');
-    } else if(pengajuan == '1') {
+    } else if(pengajuan == '0') {
         if(no_serial == '') {
             alert_error('Please input nomor serial.');
         } else {
@@ -455,4 +455,28 @@ function submit_file() {
     if(stat) {
         confirm_kirim(upload_draft);
     }
+}
+
+function delete_draft(id) {
+    showLoading(true);
+    $.post(baseurl + "index.php/createska/delete_draft/"+Math.random(),{id:id}).done(function( data ) {
+        showLoading(false);
+        if(data == '1') {
+            swal.fire({
+                title: 'Succes!',
+                html: 'Successfully deleted data.',
+                icon: 'success',
+                button: "Close",
+            }).then((result) => {
+                location.reload(true);
+            });
+        } else {
+            swal.fire({
+                title: 'Warning!',
+                html: 'Failed to delete data',
+                icon: 'warning',
+                button: "Close",
+            });
+        }
+    });
 }

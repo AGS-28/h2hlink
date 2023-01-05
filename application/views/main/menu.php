@@ -30,8 +30,8 @@
         </div>
 
         <div class="d-flex">
-            <div class="dropdown d-none d-sm-inline-block">
-                <button type="button" class="btn header-item" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <!-- <div class="dropdown d-none d-sm-inline-block"> -->
+                <!-- <button type="button" class="btn header-item" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <?php
                     // $session = \Config\Services::session();
                     // $lang = $session->get('lang');
@@ -56,15 +56,13 @@
                             echo '<img src="'.base_url().'assets/images/flags/us.jpg" alt="Header Language" height="16">';
                     }
                     ?>
-                </button>
-                <div class="dropdown-menu dropdown-menu-end">
-
-                    <!-- item-->
+                </button> -->
+                <!-- <div class="dropdown-menu dropdown-menu-end">
                     
                         <a href="<?= base_url('lang/en'); ?>" class="dropdown-item notify-item language" data-lang="en">
                             <img src="<?= base_url(); ?>assets/images/flags/us.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">English</span>
                         </a>
-                   
+
                         <a href="<?= base_url('lang/es'); ?>" class="dropdown-item notify-item language" data-lang="sp">
                             <img src="<?= base_url(); ?>assets/images/flags/spain.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">Spanish</span>
                         </a>
@@ -81,8 +79,8 @@
                             <img src="<?= base_url(); ?>assets/images/flags/russia.jpg" alt="user-image" class="me-1" height="12"> <span class="align-middle">Russian</span>
                         </a>
 
-                </div>
-            </div>
+                </div> -->
+            <!-- </div> -->
 
             <div class="dropdown d-none d-sm-inline-block">
                 <button type="button" class="btn header-item" id="mode-setting-btn">
@@ -91,7 +89,7 @@
                 </button>
             </div>
 
-            <div class="dropdown d-inline-block">
+            <!-- <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item noti-icon position-relative" id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i data-feather="bell" class="icon-lg"></i>
                     <span class="badge bg-danger rounded-pill">5</span>
@@ -129,7 +127,7 @@
                         </a>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item right-bar-toggle me-2">

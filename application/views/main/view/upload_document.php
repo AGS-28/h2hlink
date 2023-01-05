@@ -16,7 +16,7 @@
                                 <div class="col-lg-6 ms-lg-auto">
                                     <div class="mt-4 mt-lg-0">
                                         <div class="row mb-4">
-                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Aju Number</label>
+                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Aju Number <font color="red">*</font></label>
                                             <div class="col-sm-9">
                                                 <select class="form-control single-choices" name="aju_number" id="aju_number" title="Aju Number">
                                                     <?php foreach($data_aju as $aju) { ?>
@@ -26,13 +26,13 @@
                                             </div>
                                         </div>
                                         <div class="row mb-4">
-                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Document Number</label>
+                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Document Number <font color="red">*</font></label>
                                             <div class="col-sm-9">
                                                 <input class="form-control" type="text" id="document_number" name="document_number" title="Document Number">
                                             </div>
                                         </div>
                                         <div class="row mb-4" id="div_kppbc" style="display: none;">
-                                            <label for="horizontal-input" class="col-sm-3 col-form-label">KPPBC</label>
+                                            <label for="horizontal-input" class="col-sm-3 col-form-label">KPPBC <font color="red">*</font></label>
                                             <div class="col-sm-9">
                                                 <select class="form-control single-choices" name="kppbc" id="kppbc" title="KPPBC">
                                                     <?php foreach($ref_kppbc as $kppbc) { ?>
@@ -46,7 +46,7 @@
                                 <div class="col-lg-6 ms-lg-auto">
                                     <div class="mt-4 mt-lg-0">
                                         <div class="row mb-4">
-                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Document Type</label>
+                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Document Type <font color="red">*</font></label>
                                             <div class="col-sm-9">
                                                 <select class="form-control single-choices" name="document_type" id="document_type" title="Document Type" onchange="show_hide_input();">
                                                     <?php foreach($ref_document as $document) { ?>
@@ -56,13 +56,13 @@
                                             </div>
                                         </div>
                                         <div class="row mb-4">
-                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Document Date</label>
+                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Document Date <font color="red">*</font></label>
                                             <div class="col-sm-9">
                                                 <input class="form-control" type="text" id="document_date" name="document_date" title="Document Date">
                                             </div>
                                         </div>
                                         <div class="row mb-4" id="div_value" style="display: none;">
-                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Value FOB (USD)</label>
+                                            <label for="horizontal-input" class="col-sm-3 col-form-label">Value FOB (USD) <font color="red">*</font></label>
                                             <div class="col-sm-9">
                                                 <input class="form-control" type="text" id="value" name="value" title="Value">
                                                 <p style="color: red; font-style: italic;">Gunakan titik (.) untuk bilangan decimal</p>
@@ -73,7 +73,7 @@
                                 <hr>
                                 <div class="col-lg-12 ms-lg-auto">
                                     <div class="mt-12 mt-lg-0">
-                                        <div class="row mb-12 text-center">
+                                        <div class="row mb-12 text-end">
                                             <div>
                                                 <input type="file" class="btn_upload_input" name="file_upload" id="file_upload" hidden="enabled" accept="application/pdf">
                                                 <label class="btn_upload" id="file_upload_show" for="file_upload"><b>Upload File</b></label>
