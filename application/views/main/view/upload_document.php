@@ -18,7 +18,8 @@
                                         <div class="row mb-4">
                                             <label for="horizontal-input" class="col-sm-3 col-form-label">Aju Number <font color="red">*</font></label>
                                             <div class="col-sm-9">
-                                                <select class="form-control single-choices" name="aju_number" id="aju_number" title="Aju Number">
+                                                <select class="form-control single-choices" name="aju_number" id="aju_number" title="Aju Number" placeholder="Select a Aju Number">
+                                                    <option value="">Select a Aju Number</option>
                                                     <?php foreach($data_aju as $aju) { ?>
                                                         <option value="<?php echo $aju['id']; ?>"> <?php echo $aju['no_aju']; ?> </option>
                                                     <?php } ?>
@@ -48,7 +49,8 @@
                                         <div class="row mb-4">
                                             <label for="horizontal-input" class="col-sm-3 col-form-label">Document Type <font color="red">*</font></label>
                                             <div class="col-sm-9">
-                                                <select class="form-control single-choices" name="document_type" id="document_type" title="Document Type" onchange="show_hide_input();">
+                                                <select class="form-control single-choices" name="document_type" id="document_type" title="Document Type" placeholder="Select a Document Type" onchange="show_hide_input();">
+                                                    <option value="">Select a Document Type</option>
                                                     <?php foreach($ref_document as $document) { ?>
                                                         <option value="<?php echo $document['id']; ?>"> <?php echo $document['name']; ?> </option>
                                                     <?php } ?>

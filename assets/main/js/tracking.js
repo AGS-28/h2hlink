@@ -88,6 +88,10 @@ function show_modal(id, tipe) {
     .done(function( data ) {
         loading('modal_body', false);
         $('#modal_body').html(data);
+
+        if(tipe == 3) {
+            $('#exampleModalScrollable').modal('toggle');
+        }
     });
 }
 

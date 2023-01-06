@@ -365,7 +365,17 @@ class Createska extends CI_Controller {
 			$response = curl_exec($curl);
 			curl_close($curl);
 
-			echo $response;
+			$json_decode = json_decode($response);
+			if($json_decode == '' or $json_decode == null) {
+				$arr_err = array(
+					'kode' => 400,
+					'keterangan' => 'Service error, please try again periodically.'
+				);
+
+				echo json_encode($arr_err);
+			} else {
+				echo $response;
+			}
 		}
 	}
 
@@ -429,32 +439,40 @@ class Createska extends CI_Controller {
 
 		$response = curl_exec($curl);
 		curl_close($curl);
-
 		$json_decode = json_decode($response);
-		$kode = $json_decode->kode;
-		if($kode == '200') {
-			$kode_resp = $json_decode->data->kode;
-			$no_aju = '';
-			$status = 5;
-			
-			if($kode_resp == 'A01') {
-				$no_aju = $json_decode->data->no_aju;
-				$status = 3;
-			}
+		if($json_decode == '' or $json_decode == null) {
+			$arr_err = array(
+				'kode' => 400,
+				'keterangan' => 'Service error, please try again periodically.'
+			);
 
-			$data_update = $this->Model_create_ska->update_draft($id, $status, $no_aju);
-			if($data_update == 1) {
-				echo $response;
-			} else {
-				$arr_err = array(
-					'kode' => 400,
-					'keterangan' => 'Gagal Update Status'
-				);
-
-				echo json_encode($arr_err);
-			}
+			echo json_encode($arr_err);
 		} else {
-			echo $response;
+			$kode = $json_decode->kode;
+			if($kode == '200') {
+				$kode_resp = $json_decode->data->kode;
+				$no_aju = '';
+				$status = 5;
+				
+				if($kode_resp == 'A01') {
+					$no_aju = $json_decode->data->no_aju;
+					$status = 3;
+				}
+
+				$data_update = $this->Model_create_ska->update_draft($id, $status, $no_aju);
+				if($data_update == 1) {
+					echo $response;
+				} else {
+					$arr_err = array(
+						'kode' => 400,
+						'keterangan' => 'Gagal Update Status'
+					);
+
+					echo json_encode($arr_err);
+				}
+			} else {
+				echo $response;
+			}
 		}
 	}
 

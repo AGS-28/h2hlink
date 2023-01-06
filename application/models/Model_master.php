@@ -16,7 +16,7 @@ class Model_master extends CI_Model {
 
     function get_data_partner()
     {
-        $sql = "SELECT * FROM profile.partners";
+        $sql = "SELECT * FROM profile.partners WHERE is_active = true";
         $result = $this->db->query($sql);
         $arr_result = $result->result_array();
 

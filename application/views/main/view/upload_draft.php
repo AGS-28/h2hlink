@@ -14,7 +14,8 @@
                         <div class="row mb-4">
                             <label for="horizontal-input" class="col-sm-3 col-form-label">Client Partner <font color="red">*</font></label>
                             <div class="col-sm-9">
-                                <select class="form-control single-choices" name="client_partner" id="client_partner">
+                                <select class="form-control single-choices" name="client_partner" id="client_partner" placeholder="Select a Client Partner">
+                                    <option value="">Select a Client Partner</option>
                                     <?php foreach($data_partner as $partner) { ?>
                                         <option value="<?php echo $partner['id']; ?>"> <?php echo $partner['partner_name']; ?> </option>
                                     <?php } ?>
@@ -24,7 +25,8 @@
                         <div class="row mb-4">
                             <label for="horizontal-input" class="col-sm-3 col-form-label">IPSKA <font color="red">*</font></label>
                             <div class="col-sm-9">
-                                <select class="form-control single-choices" name="ipska" id="ipska">
+                                <select class="form-control single-choices" name="ipska" id="ipska" placeholder="Select a IPSKA">
+                                    <option value="">Select a IPSKA</option>
                                     <?php foreach($data_ipska as $ipska) { ?>
                                         <option value="<?php echo $ipska['id']; ?>"> <?php echo $ipska['name']; ?> </option>
                                     <?php } ?>
@@ -34,23 +36,24 @@
                         <div class="row mb-4">
                             <label for="horizontal-input" class="col-sm-3 col-form-label">Form <font color="red">*</font></label>
                             <div class="col-sm-9">
-                                <select class="form-control single-choices" name="tipe_form" id="tipe_form">
+                                <select class="form-control single-choices" name="tipe_form" id="tipe_form" placeholder="Select a Form">
+                                    <option value="">Select a Form</option>
                                     <?php foreach($data_type_form as $form) { ?>
                                         <option value="<?php echo $form['id']; ?>"> <?php echo $form['name']; ?> </option>
                                     <?php } ?>
                                 </select>
                             </div>
                         </div>
-                        <div class="row mb-4">
+                        <!-- <div class="row mb-4">
                             <label for="horizontal-input" class="col-sm-3 col-form-label">Document Type <font color="red">*</font></label>
                             <div class="col-sm-9">
                                 <select class="form-control single-choices" name="tipe_upload" id="tipe_upload">
-                                    <?php foreach($data_type_doc as $doc) { ?>
-                                        <option value="<?php echo $doc['id']; ?>"> <?php echo $doc['name']; ?> </option>
-                                    <?php } ?>
+                                    <?php //foreach($data_type_doc as $doc) { ?>
+                                        <option value="<?php //echo $doc['id']; ?>"> <?php //echo $doc['name']; ?> </option>
+                                    <?php //} ?>
                                 </select>
                             </div>
-                        </div>
+                        </div> -->
                         <!-- <div class="row mb-4">
                             <label for="horizontal-input" class="col-sm-3 col-form-label">Invoice Number</label>
                             <div class="col-sm-9">
@@ -58,9 +61,27 @@
                             </div>
                         </div> -->
                         <div class="row mb-4">
-                            <label for="horizontal-input" class="col-sm-3 col-form-label">File <font color="red">*</font></label>
+                            <label for="horizontal-input" class="col-sm-3 col-form-label">File Header & Barang <font color="red">*</font></label>
                             <div class="col-sm-9">
                                 <form action="#" class="dropzone" id="myDropzone" name="myDropzone">
+                                    <div class="fallback">
+                                        <input name="file" type="file" multiple="multiple">
+                                    </div>
+                                    <div id="table_text"></div>
+                                    <div class="dz-message needsclick">
+                                        <div class="mb-3">
+                                            <i class="display-4 text-muted bx bx-cloud-upload"></i>
+                                        </div>
+                                        
+                                        <h5>Drop files here or click to upload.</h5>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <label for="horizontal-input" class="col-sm-3 col-form-label">File Cost Structure <font color="red">*</font></label>
+                            <div class="col-sm-9">
+                                <form action="#" class="dropzone dropzone1" id="myDropzone1" name="myDropzone1">
                                     <div class="fallback">
                                         <input name="file" type="file" multiple="multiple">
                                     </div>
