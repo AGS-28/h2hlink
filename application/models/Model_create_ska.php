@@ -221,6 +221,10 @@ class Model_create_ska extends CI_Model {
                 $refkkpbc = null;
             }
 
+            if($arrPost['document_type'] != '6') {
+                $refkkpbc = null;
+            }
+
             if($arrPost['document_type'] == '1' OR $arrPost['document_type'] == '6') {
                 $value = str_replace(',','',$arrPost['value']);
             } else {
