@@ -30,6 +30,7 @@
                                             <label for="horizontal-input" class="col-sm-3 col-form-label">Document Number <font color="red">*</font></label>
                                             <div class="col-sm-9">
                                                 <input class="form-control" type="text" id="document_number" name="document_number" title="Document Number">
+                                                <p id="inv_num" style="color: red; font-style: italic;" style="display: none;">Pastikan untuk isian document number sama dengan isian element nomor invoice pada file header yang diupload</p>
                                             </div>
                                         </div>
                                         <div class="row mb-4" id="div_kppbc" style="display: none;">
@@ -61,13 +62,14 @@
                                             <label for="horizontal-input" class="col-sm-3 col-form-label">Document Date <font color="red">*</font></label>
                                             <div class="col-sm-9">
                                                 <input class="form-control" type="text" id="document_date" name="document_date" title="Document Date">
+                                                <p id="inv_date" style="color: red; font-style: italic;" style="display: none;">Pastikan untuk isian document date sama dengan isian element nomor invoice pada file header yang diupload</p>
                                             </div>
                                         </div>
                                         <div class="row mb-4" id="div_value" style="display: none;">
                                             <label for="horizontal-input" class="col-sm-3 col-form-label">Value FOB (USD) <font color="red">*</font></label>
                                             <div class="col-sm-9">
                                                 <input class="form-control" type="text" id="value" name="value" title="Value">
-                                                <p style="color: red; font-style: italic;">Gunakan titik (.) untuk bilangan decimal</p>
+                                                <p style="color: red; font-style: italic;">- Gunakan titik (.) untuk bilangan decimal<br/>- Silahkan convert ke USD jika value FOB menggunakan currency selain USD</p>
                                             </div>
                                         </div>
                                     </div>
@@ -79,6 +81,7 @@
                                             <div>
                                                 <input type="file" class="btn_upload_input" name="file_upload" id="file_upload" hidden="enabled" accept="application/pdf">
                                                 <label class="btn_upload" id="file_upload_show" for="file_upload"><b>Upload File</b></label>
+                                                <p style="color: red; font-style: italic;">Accepted file type .pdf</p>
                                             </div>
                                             <div>
                                                 <input type="hidden" class="form-control" name="index_data" id="index_data" value="0" readonly>

@@ -186,6 +186,7 @@ function confirm_upload_draft() {
         .done(function( data ) {
             loading('modal_body1', false);
             $('#modal_body1').html(data);
+            $('#judul').html('Input Serial Blangko Yang Akan Digunakan Pada Pengajuan COO <font color="red">'+$('#tipe_form option:selected').text()+'</font>');
         });
     } else {
         alert_error(errorString);
@@ -423,9 +424,13 @@ function show_hide_input() {
     var document_type = $('#document_type').val();
     $('#div_kppbc').hide();
     $('#div_value').hide();
+    $('#inv_num').hide();
+    $('#inv_date').hide();
 
     if(document_type == '1') {
         $('#div_value').show();
+        $('#inv_num').show();
+        $('#inv_date').show();
     }
 
     if(document_type == '6') {

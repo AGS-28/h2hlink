@@ -40,7 +40,7 @@
                     <th>Document Number</th>
                     <th>Document Date</th>
                     <th>KPPBC</th>
-                    <th>Value</th>
+                    <th>Value FOB (USD)</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -55,8 +55,14 @@
                         <td><?php echo $arr_refdokumen[$value['doc_type']]; ?></td>
                         <td><?php echo $value['doc_no']; ?></td>
                         <td><?php echo $value['doc_date']; ?></td>
-                        <td><?php echo $arr_refkppbc[$value['kppbc']]; ?></td>
-                        <td>
+                        <?php 
+                            $kppbc = $value['kppbc'];
+                            if($kppbc != '') {
+                                $kppbc = $arr_refkppbc[$kppbc];
+                            }
+                        ?>
+                        <td><?php echo $kppbc; ?></td>
+                        <td align="right">
                             <?php 
                                 $val = $value['value'];
                                 if($val != '') {
