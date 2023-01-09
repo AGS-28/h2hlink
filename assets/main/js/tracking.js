@@ -276,11 +276,12 @@ function submit(aju, nib, npwp, user_endpoint, tipe, no_serial='') {
                     if(url != '' && url != 'null') {
                         window.open(url, '_blank');
                     }
-                } else if(tipe == '3') {
+                } else if(tipe == '5') {
                     var url = obj.data.url_dok;
                     if(url != '' && url != 'null') {
                         window.open(url, '_blank');
                     }
+                    cari_data('form_tracking');
                 } else {
                     location.reload(true);
                 }
