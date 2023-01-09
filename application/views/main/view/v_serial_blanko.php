@@ -1,7 +1,7 @@
 <div style="text-align: left;">
     <table class="table dt-responsive w-100" width="100%">
         <tr style="vertical-align: top; text-align: center;">
-            <td><h5><b>Input Serial Blangko Yang Akan Digunakan Pada SKA</h5></b></td>
+            <td><h5 id="judul"><b>Input Serial Blangko Yang Akan Digunakan Pada SKA</h5></b></td>
         </tr>
         <tr style="vertical-align: top; text-align: justify;">
             <td>

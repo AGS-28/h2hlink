@@ -96,6 +96,12 @@
                                 </form>
                             </div>
                         </div>
+                        <div class="row mb-4">
+                            <label for="horizontal-input" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <font color="red"><i>Dengan ini saya menyatakan bahwa data yang saya input/upload merupakan data yang sebenar benarnya dan saya akan bertanggung jawab jika terdapat kesalahan pada data yang bisa menghambat proses pengajuan COO.</i></font>
+                            </div>
+                        </div>
                         <div class="text-end mt-4">
                             <input class="form-control" type="hidden" name="extention" id="extention" value="<?php echo $data_extention[0]['message_type']; ?>" readonly>
                             <input class="form-control" type="hidden" name="tipe_file" id="tipe_file" value="" readonly>
