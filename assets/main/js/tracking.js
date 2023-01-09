@@ -273,7 +273,14 @@ function submit(aju, nib, npwp, user_endpoint, tipe, no_serial='') {
             }).then((result) => {
                 if(tipe == '4') {
                     var url = obj.data.url_draft;
-                    window.open(url, '_blank');
+                    if(url != '' && url != 'null') {
+                        window.open(url, '_blank');
+                    }
+                } else if(tipe == '3') {
+                    var url = obj.data.url_dok;
+                    if(url != '' && url != 'null') {
+                        window.open(url, '_blank');
+                    }
                 } else {
                     location.reload(true);
                 }
