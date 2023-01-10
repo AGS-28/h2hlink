@@ -7,8 +7,12 @@ File: Dashboard Init Js File
 */
 $(document).ready(function() {
     loading('div_transaction', true);
+    loading('div_pengajuan', true);
+    loading('div_penerbitan', true);
 
     get_data_dashboard('get_data_transaction','div_transaction');
+    get_data_dashboard('get_data_pengajuan','div_pengajuan');
+    get_data_dashboard('get_data_total_penerbitan','div_penerbitan');
 });
 
 // get colors array from the string

@@ -495,7 +495,8 @@ class Model_create_ska extends CI_Model {
 
         $arr = array(
             'status' => $status,
-            'no_aju' => $no_aju
+            'no_aju' => $no_aju,
+            'updated_at' => date("Y-m-d h:i:s")
         );
 
         $this->db->where('id', $id);

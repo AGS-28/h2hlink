@@ -1,38 +1,104 @@
 <script>
 $(document).ready(function() {
-    if ($.fn.DataTable.isDataTable("#table_data")) {
-        $("#table_data").DataTable().destroy();
+    if ($.fn.DataTable.isDataTable("#table_data1")) {
+        $("#table_data1").DataTable().destroy();
     } 
 
-    $("#table_data").DataTable({
+    $("#table_data1").DataTable({
+        "bInfo" : false,
+        "bLengthChange": false
+    });
+
+    if ($.fn.DataTable.isDataTable("#table_data2")) {
+        $("#table_data2").DataTable().destroy();
+    } 
+
+    $("#table_data2").DataTable({
+        "bInfo" : false,
+        "bLengthChange": false
+    });
+
+    if ($.fn.DataTable.isDataTable("#table_data3")) {
+        $("#table_data3").DataTable().destroy();
+    } 
+
+    $("#table_data3").DataTable({
         "bInfo" : false,
         "bLengthChange": false
     });
 });
 </script>
-<table id="table_data" class="table_data table table-bordered dt-responsive nowrap w-100" width="100%">
-    <thead style="width:100%">
-        <tr align="center">
-            <th>No</th>
-            <th>Client Name</th>
-            <th>Partner Name</th>
-            <th>Nomor Aju</th>
-            <th>IPSKA</th>
-            <th>Form</th>
-            <th>Nomor SKA</th>
-            <th>Tanggal SKA</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td align="center">No</td>
-            <td>Client Name</td>
-            <td>Partner Name</td>
-            <td>Nomor Aju</td>
-            <td>IPSKA</td>
-            <td>Form</td>
-            <td>Nomor SKA</td>
-            <td>Tanggal SKA</td>
-        </tr>
-    </tbody>
-</table>
+<?php if($tipe == 1) { ?>
+    <table id="table_data1" class="table_data table table-bordered dt-responsive nowrap w-100" width="100%">
+        <thead style="width:100%">
+            <tr align="center">
+                <th>No</th>
+                <th>Client Name</th>
+                <th>Nomor Aju</th>
+                <th>Tanggal Aju</th>
+                <th>IPSKA</th>
+                <th>Form</th>
+                <th>Status</th>
+                <th>Nomor SKA</th>
+                <th>Tanggal SKA</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php $no = 1; foreach ($data as $key => $value) { ?>
+                <tr>
+                    <td align="center"><?php echo $no; ?></td>
+                    <td><?php echo $value['client_name']; ?></td>
+                    <td><?php echo $value['no_aju']; ?></td>
+                    <td><?php echo $value['tgl_aju']; ?></td>
+                    <td><?php echo $value['ipska']; ?></td>
+                    <td><?php echo $value['form']; ?></td>
+                    <td><?php echo $value['status_ska']; ?></td>
+                    <td><?php echo $value['no_ska']; ?></td>
+                    <td><?php echo $value['tgl_ska']; ?></td>
+                </tr>
+            <?php $no++; } ?>
+        </tbody>
+    </table>
+<?php } ?>
+
+<?php if($tipe == 2) { ?>
+    <table id="table_data2" class="table_data table table-bordered dt-responsive nowrap w-100" width="100%">
+        <thead style="width:100%">
+            <tr align="center">
+                <th>No</th>
+                <th>Client Name</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php $no = 1; foreach ($data as $key => $value) { ?>
+                <tr>
+                    <td align="center"><?php echo $no; ?></td>
+                    <td><?php echo $value['client_name']; ?></td>
+                    <td align="right"><?php echo $value['jml']; ?></td>
+                </tr>
+            <?php $no++; } ?>
+        </tbody>
+    </table>
+<?php } ?>
+
+<?php if($tipe == 3) { ?>
+    <table id="table_data3" class="table_data table table-bordered dt-responsive nowrap w-100" width="100%">
+        <thead style="width:100%">
+            <tr align="center">
+                <th>No</th>
+                <th>Client Name</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php $no = 1; foreach ($data as $key => $value) { ?>
+                <tr>
+                    <td align="center"><?php echo $no; ?></td>
+                    <td><?php echo $value['client_name']; ?></td>
+                    <td align="right"><?php echo $value['jml']; ?></td>
+                </tr>
+            <?php $no++; } ?>
+        </tbody>
+    </table>
+<?php } ?>

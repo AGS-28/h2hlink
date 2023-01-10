@@ -25,11 +25,11 @@ class Home extends CI_Controller {
 		
 		//Page Data Content
 		$param['data_client'] 	= $this->Model_master->get_data_client();
-		$param['data_partner'] 	= $this->Model_master->get_data_partner();
 		$param['data_draft'] 	= $this->Model_home->get_data_draft();
-		$param['data_doc_draft'] 	= $this->Model_home->get_data_doc_draft();
+		$param['data_aju'] 		= $this->Model_home->get_data_data_aju();
 		$param['data_end_point'] 	= $this->Model_home->get_data_end_point();
 		$param['data_draft_status'] = $this->Model_home->get_data_draft_status();
+		$param['data_penerbitan'] 	= $this->Model_home->get_data_penerbitan();
 		$param['page_title'] 	= $this->load->view('main/partials/page-title', $tittle,true);
 		
 		$data['content']    	= $this->load->view('main/view/dashboard',$param,true);
@@ -44,6 +44,18 @@ class Home extends CI_Controller {
 	public function get_data_transaction() {
 		$data['data'] = $this->Model_home->get_data_transaction();
 		$data['tipe'] = 1;
+		echo $this->load->view('main/view/v_table_dashboard',$data,true);
+	}
+
+	public function get_data_pengajuan() {
+		$data['data'] = $this->Model_home->get_data_pengajuan();
+		$data['tipe'] = 2;
+		echo $this->load->view('main/view/v_table_dashboard',$data,true);
+	}
+
+	public function get_data_total_penerbitan() {
+		$data['data'] = $this->Model_home->get_data_total_penerbitan();
+		$data['tipe'] = 3;
 		echo $this->load->view('main/view/v_table_dashboard',$data,true);
 	}
 

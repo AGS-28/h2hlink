@@ -36,7 +36,7 @@
                             <div class="col-6">
                                 <span class="text-muted mb-3 lh-1 d-block text-truncate">Total Draft</span>
                                 <h4 class="mb-3">
-                                    <span class="counter-value" data-target="<?php echo COUNT($data_partner); ?>">0</span>
+                                    <span class="counter-value" data-target="<?php echo COUNT($data_draft); ?>">0</span>
                                 </h4>
                             </div>
                             <div class="col-6">
@@ -56,7 +56,7 @@
                             <div class="col-6">
                                 <span class="text-muted mb-3 lh-1 d-block text-truncate">Total Nomor Aju</span>
                                 <h4 class="mb-3">
-                                    <span class="counter-value" data-target="<?php echo COUNT($data_draft); ?>">0</span>
+                                    <span class="counter-value" data-target="<?php echo COUNT($data_aju); ?>">0</span>
                                 </h4>
                             </div>
                             <div class="col-6">
@@ -74,9 +74,9 @@
                     <div class="card-body">
                         <div class="row align-items-center">
                             <div class="col-6">
-                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Total Penerbitan</span>
+                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Total SKA Terbit</span>
                                 <h4 class="mb-3">
-                                    <span class="counter-value" data-target="<?php echo COUNT($data_doc_draft); ?>">0</span>
+                                    <span class="counter-value" data-target="<?php echo COUNT($data_penerbitan); ?>">0</span>
                                 </h4>
                             </div>
                             <div class="col-6">
@@ -204,7 +204,7 @@
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-header align-items-center d-flex">
-                        <h4 class="card-title mb-0 flex-grow-1">Draft Transactions By Eksportir</h4>
+                        <h4 class="card-title mb-0 flex-grow-1">50 Data Pengajuan Terakhir Berdasarkan Eksportir</h4>
                         <div class="flex-shrink-0">
                             <select class="form-select form-select-sm mb-0 my-n1">
                                 <option value="Today" selected="">Today</option>
@@ -220,6 +220,70 @@
                             <div class="tab-pane active" id="transactions-all-tab" role="tabpanel">
                                 <div class="table-responsive px-3" data-simplebar style="max-height: 352px;">
                                     <div id="div_transaction" align="center">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end tab content -->
+                    </div>
+                    <!-- end card body -->
+                </div>
+                <!-- end card -->
+            </div>
+            <!-- end col -->
+        </div> <!-- end row-->
+
+        <div class="row">
+            <div class="col-xl-6">
+                <div class="card">
+                    <div class="card-header align-items-center d-flex">
+                        <h4 class="card-title mb-0 flex-grow-1">Total Pengajuan Berdasarkan Eksportir</h4>
+                        <div class="flex-shrink-0">
+                            <select class="form-select form-select-sm mb-0 my-n1">
+                                <option value="Today" selected="">Today</option>
+                                <option value="Yesterday">Yesterday</option>
+                                <option value="Week">Last Week</option>
+                                <option value="Month">Last Month</option>
+                            </select>
+                        </div>
+                    </div><!-- end card header -->
+
+                    <div class="card-body px-0">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="transactions-all-tab" role="tabpanel">
+                                <div class="table-responsive px-3" data-simplebar style="max-height: 352px;">
+                                    <div id="div_pengajuan" align="center">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end tab content -->
+                    </div>
+                    <!-- end card body -->
+                </div>
+                <!-- end card -->
+            </div>
+            <!-- end col -->
+
+            <div class="col-xl-6">
+                <div class="card">
+                    <div class="card-header align-items-center d-flex">
+                        <h4 class="card-title mb-0 flex-grow-1">Total Penerbitan Berdasarkan Eksportir</h4>
+                        <div class="flex-shrink-0">
+                            <select class="form-select form-select-sm mb-0 my-n1">
+                                <option value="Today" selected="">Today</option>
+                                <option value="Yesterday">Yesterday</option>
+                                <option value="Week">Last Week</option>
+                                <option value="Month">Last Month</option>
+                            </select>
+                        </div>
+                    </div><!-- end card header -->
+
+                    <div class="card-body px-0">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="transactions-all-tab" role="tabpanel">
+                                <div class="table-responsive px-3" data-simplebar style="max-height: 352px;">
+                                    <div id="div_penerbitan" align="center">
                                     </div>
                                 </div>
                             </div>
