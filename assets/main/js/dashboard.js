@@ -6,11 +6,13 @@ Contact: themesbrand@gmail.com
 File: Dashboard Init Js File
 */
 $(document).ready(function() {
-    loading('div_draft_transaction', true);
-    loading('div_request_transaction', true);
+    loading('div_transaction', true);
+    loading('div_pengajuan', true);
+    loading('div_penerbitan', true);
 
-    get_data_dashboard('get_data_draft_transaction','div_draft_transaction');
-    get_data_dashboard('get_data_request_transaction','div_request_transaction');
+    get_data_dashboard('get_data_transaction','div_transaction');
+    get_data_dashboard('get_data_pengajuan','div_pengajuan');
+    get_data_dashboard('get_data_total_penerbitan','div_penerbitan');
 });
 
 // get colors array from the string
@@ -152,13 +154,13 @@ function each_arr(arr) {
     return arr_value;
 }
 
-function show_modal_dashboard(id, tipe) {
-    loading('modal_body', true);
-    $('#exampleModalScrollable').modal('toggle');
+// function show_modal_dashboard(id, tipe) {
+//     loading('modal_body', true);
+//     $('#exampleModalScrollable').modal('toggle');
 
-    var url = baseurl + "index.php/home/get_data_modal_dashboard/"+Math.random();
-    $.post( url, { id: id, tipe: tipe }, function( data ) {
-        loading('modal_body', false);
-        $('#modal_body').html( data );
-    });
-}
+//     var url = baseurl + "index.php/home/get_data_modal_dashboard/"+Math.random();
+//     $.post( url, { id: id, tipe: tipe }, function( data ) {
+//         loading('modal_body', false);
+//         $('#modal_body').html( data );
+//     });
+// }
