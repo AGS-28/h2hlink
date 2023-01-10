@@ -1,28 +1,38 @@
-<table class="table align-middle table-nowrap table-borderless">
-    <thead>
-        <tr>
+<script>
+$(document).ready(function() {
+    if ($.fn.DataTable.isDataTable("#table_data")) {
+        $("#table_data").DataTable().destroy();
+    } 
+
+    $("#table_data").DataTable({
+        "bInfo" : false,
+        "bLengthChange": false
+    });
+});
+</script>
+<table id="table_data" class="table_data table table-bordered dt-responsive nowrap w-100" width="100%">
+    <thead style="width:100%">
+        <tr align="center">
+            <th>No</th>
             <th>Client Name</th>
-            <th>Total</th>
-            <th>Action</th>
+            <th>Partner Name</th>
+            <th>Nomor Aju</th>
+            <th>IPSKA</th>
+            <th>Form</th>
+            <th>Nomor SKA</th>
+            <th>Tanggal SKA</th>
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($data as $key => $value) { ?>
-            <tr>
-                <td>
-                    <span class="text-muted mb-3 lh-1 d-block text-truncate"><?php echo $value['client_name']; ?></span>
-                </td>
-                <td>
-                    <span class="text-muted mb-3 lh-1 d-block text-truncate"><?php echo $value['jml']; ?></span>
-                </td>
-                <td>
-                    <span class="text-muted mb-3 lh-1 d-block text-truncate">
-                        <button onclick="show_modal_dashboard(<?php echo $value['id']; ?>,<?php echo $tipe; ?>);" class="btn btn-link font-size-16 shadow-none py-0 text-muted dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bx bx-dots-horizontal-rounded"></i>
-                        </button>
-                    </span>
-                </td>
-            </tr>
-        <?php } ?>
+        <tr>
+            <td align="center">No</td>
+            <td>Client Name</td>
+            <td>Partner Name</td>
+            <td>Nomor Aju</td>
+            <td>IPSKA</td>
+            <td>Form</td>
+            <td>Nomor SKA</td>
+            <td>Tanggal SKA</td>
+        </tr>
     </tbody>
 </table>

@@ -76,6 +76,7 @@
                                         <h5>Drop files here or click to upload.</h5>
                                     </div>
                                 </form>
+                                <a href="<?php echo base_url() ?>assets/file/Contoh Format Upload SKA.csv"><i>Klik disini untuk mendapatkan format file header & barang</i></a>
                             </div>
                         </div>
                         <div class="row mb-4">
@@ -94,8 +95,10 @@
                                         <h5>Drop files here or click to upload.</h5>
                                     </div>
                                 </form>
+                                <a href="<?php echo base_url() ?>assets/file/Contoh Format Cost Structure.xls"><i>Klik disini untuk mendapatkan format file cost structure</i></a>
                             </div>
                         </div>
+                        <hr>
                         <div class="row mb-4">
                             <label for="horizontal-input" class="col-sm-3 col-form-label"></label>
                             <div class="col-sm-9">

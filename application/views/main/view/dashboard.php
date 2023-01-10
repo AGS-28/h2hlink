@@ -34,7 +34,7 @@
                     <div class="card-body">
                         <div class="row align-items-center">
                             <div class="col-6">
-                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Total Partner</span>
+                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Total Draft</span>
                                 <h4 class="mb-3">
                                     <span class="counter-value" data-target="<?php echo COUNT($data_partner); ?>">0</span>
                                 </h4>
@@ -54,7 +54,7 @@
                     <div class="card-body">
                         <div class="row align-items-center">
                             <div class="col-6">
-                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Total Draft SKA</span>
+                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Total Nomor Aju</span>
                                 <h4 class="mb-3">
                                     <span class="counter-value" data-target="<?php echo COUNT($data_draft); ?>">0</span>
                                 </h4>
@@ -74,7 +74,7 @@
                     <div class="card-body">
                         <div class="row align-items-center">
                             <div class="col-6">
-                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Total File Draft</span>
+                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Total Penerbitan</span>
                                 <h4 class="mb-3">
                                     <span class="counter-value" data-target="<?php echo COUNT($data_doc_draft); ?>">0</span>
                                 </h4>
@@ -89,7 +89,7 @@
         </div><!-- end row-->
 
         <div class="row">
-            <div class="col-xl-4">
+            <div class="col-xl-6">
                 <!-- card -->
                 <div class="card card-h-100">
                     <!-- card body -->
@@ -115,19 +115,15 @@
                         </div>
 
                         <div class="row align-items-center">
-                            <div class="col-sm">
-                                <div id="wallet-balance" data-colors='["#777aca", "#5156be", "#a8aada"]' class="apex-charts"></div>
-                            </div>
                             <div class="col-sm align-self-center">
-                                <div class="mt-4 mt-sm-0">
+                                <div class="mt-6 mt-sm-0">
                                     <?php 
                                         $urai_end_point = ''; 
                                         $jml_end_point = ''; 
                                         foreach ($data_end_point as $key => $value) { 
                                     ?>
                                             <div>
-                                                <p class="mb-2"><i class="mdi mdi-circle align-middle font-size-10 me-2 text-success"></i> <?php echo $value['method_name']; ?></p>
-                                                <h6><?php echo $value['jml']; ?></h6>
+                                                <p class="mb-2"><i class="mdi mdi-circle align-middle font-size-10 me-2 text-success"></i> <?php echo $value['method_name']; ?> : <b> <?php echo $value['jml']; ?> </b></p>
                                             </div>
                                     <?php 
                                         $jml_end_point .= $value['jml'].',';
@@ -138,82 +134,23 @@
                                     <input type="hidden" id="jml_end_point" name="jml_end_point" value="<?php echo $jml_end_point; ?>">                                
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end card -->
-            </div>
-            <!-- end col -->
-            <div class="col-xl-4">
-                <div class="card">
-                    <div class="card-header align-items-center d-flex">
-                        <h4 class="card-title mb-0 flex-grow-1">Draft Transactions By Eksportir</h4>
-                        <div class="flex-shrink-0">
-                            <select class="form-select form-select-sm mb-0 my-n1">
-                                <option value="Today" selected="">Today</option>
-                                <option value="Yesterday">Yesterday</option>
-                                <option value="Week">Last Week</option>
-                                <option value="Month">Last Month</option>
-                            </select>
-                        </div>
-                    </div><!-- end card header -->
-
-                    <div class="card-body px-0">
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="transactions-all-tab" role="tabpanel">
-                                <div class="table-responsive px-3" data-simplebar style="max-height: 352px;">
-                                    <div id="div_draft_transaction" align="center">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- end tab content -->
-                    </div>
-                    <!-- end card body -->
-                </div>
-                <!-- end card -->
-            </div>
-            <!-- end col -->
-
-            <div class="col-xl-4">
-                <div class="card">
-                    <div class="card-header align-items-center d-flex">
-                        <h4 class="card-title mb-0 flex-grow-1">Method Transactions By Eksportir</h4>
-                        <div class="flex-shrink-0">
-                            <select class="form-select form-select-sm mb-0 my-n1">
-                                <option value="Today" selected="">Today</option>
-                                <option value="Yesterday">Yesterday</option>
-                                <option value="Week">Last Week</option>
-                                <option value="Month">Last Month</option>
-                            </select>
-                        </div>
-                    </div><!-- end card header -->
-
-                    <div class="card-body px-0">
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="transactions-all-tab" role="tabpanel">
-                                <div class="table-responsive px-3" data-simplebar style="max-height: 352px;">
-                                    <div id="div_request_transaction" align="center">
-                                    </div>
-                                </div>
+                            <div class="col-sm">
+                                <div id="wallet-balance" data-colors='["#777aca", "#5156be", "#a8aada"]' class="apex-charts"></div>
                             </div>
                         </div>
                     </div>
-                    <!-- end card body -->
                 </div>
                 <!-- end card -->
             </div>
             <!-- end col -->
-        </div> <!-- end row-->
 
-        <div class="row">
-            <div class="col-xl-4">
+            <div class="col-xl-6">
                 <!-- card -->
                 <div class="card card-h-100">
                     <!-- card body -->
                     <div class="card-body">
                         <div class="d-flex flex-wrap align-items-center mb-4">
-                            <h5 class="card-title me-2">Draft Status</h5>
+                            <h5 class="card-title me-2">Total Draft Status</h5>
                             <div class="ms-auto">
                                 <div>
                                     <button type="button" class="btn btn-soft-secondary btn-sm">
@@ -233,19 +170,15 @@
                         </div>
 
                         <div class="row align-items-center">
-                            <div class="col-sm">
-                                <div id="wallet-balance1" data-colors='["#777aca", "#5156be", "#a8aada"]' class="apex-charts"></div>
-                            </div>
                             <div class="col-sm align-self-center">
-                                <div class="mt-4 mt-sm-0">
+                                <div class="mt-6 mt-sm-0">
                                     <?php 
                                         $urai_draft_status = ''; 
                                         $jml_draft_status = ''; 
                                         foreach ($data_draft_status as $key => $value) { 
                                     ?>
                                             <div>
-                                                <p class="mb-2"><i class="mdi mdi-circle align-middle font-size-10 me-2 text-success"></i> <?php echo $value['status']; ?></p>
-                                                <h6><?php echo $value['jml']; ?></h6>
+                                                <p class="mb-2"><i class="mdi mdi-circle align-middle font-size-10 me-2 text-success"></i> <?php echo $value['status']; ?> : <b> <?php echo $value['jml']; ?> </b></p>
                                             </div>
                                     <?php 
                                         $jml_draft_status .= $value['jml'].',';
@@ -256,16 +189,52 @@
                                     <input type="hidden" id="jml_draft_status" name="jml_draft_status" value="<?php echo $jml_draft_status; ?>">   
                                 </div>
                             </div>
+                            <div class="col-sm">
+                                <div id="wallet-balance1" data-colors='["#777aca", "#5156be", "#a8aada"]' class="apex-charts"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <!-- end card -->
             </div>
             <!-- end col -->
-            
+        </div> <!-- end row-->
+        
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-header align-items-center d-flex">
+                        <h4 class="card-title mb-0 flex-grow-1">Draft Transactions By Eksportir</h4>
+                        <div class="flex-shrink-0">
+                            <select class="form-select form-select-sm mb-0 my-n1">
+                                <option value="Today" selected="">Today</option>
+                                <option value="Yesterday">Yesterday</option>
+                                <option value="Week">Last Week</option>
+                                <option value="Month">Last Month</option>
+                            </select>
+                        </div>
+                    </div><!-- end card header -->
+
+                    <div class="card-body px-0">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="transactions-all-tab" role="tabpanel">
+                                <div class="table-responsive px-3" data-simplebar style="max-height: 352px;">
+                                    <div id="div_transaction" align="center">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end tab content -->
+                    </div>
+                    <!-- end card body -->
+                </div>
+                <!-- end card -->
+            </div>
             <!-- end col -->
-            <!-- end row-->
-            <div class="col-xl-4">
+        </div> <!-- end row-->
+
+        <div class="row">
+            <div class="col-xl-12">
                 <!-- card -->
                 <div class="card bg-primary text-white shadow-primary card-h-100">
                     <!-- card body -->
@@ -281,7 +250,7 @@
                                             </span>
                                         </div>
                                         <h4 class="mt-3 lh-base fw-normal text-white"><b>AGS</b> News</h4>
-                                        <p class="text-white-50 font-size-13">Ilham Ganteng </p>
+                                        <p class="text-white-50 font-size-13">Update News </p>
                                         <button type="button" class="btn btn-light btn-sm">View details <i class="mdi mdi-arrow-right ms-1"></i></button>
                                     </div>
                                 </div>
@@ -295,7 +264,7 @@
                                             </span>
                                         </div>
                                         <h4 class="mt-3 lh-base fw-normal text-white"><b>AGS</b> News</h4>
-                                        <p class="text-white-50 font-size-13">Ilham Ganteng </p>
+                                        <p class="text-white-50 font-size-13">Update News </p>
                                         <button type="button" class="btn btn-light btn-sm">View details <i class="mdi mdi-arrow-right ms-1"></i></button>
                                     </div>
                                 </div>
