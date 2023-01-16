@@ -115,6 +115,8 @@ class Model_auth extends CI_Model {
         {
             $emailOK = 1;
         }
+
+        echo $emailOK."--".$this->email->print_debugger(array('headers'));;
     }
 
     function send_email($to = "",$message = "",$subject="",$bcc="")
