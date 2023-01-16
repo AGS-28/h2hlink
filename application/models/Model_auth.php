@@ -92,6 +92,57 @@ class Model_auth extends CI_Model {
         return $returnData;
 	}
 
+    function send_recover_pass()
+    {
+        $email = $this->input->post('email');
+        
+        $this->load->library('email');
+        $this->load->helper('email');
+        $emailOK = 0;
+            
+        $config['mailtype'] = 'html';
+        $config['protocol'] = 'smtp';
+        $config['charset'] = 'iso-8859-1';
+        $email = 'muhammadafifp2997@gmail.com';
+        $this->email->initialize($config);
+        $this->email->from('admin@h2hlink.com');
+        $this->email->to('muhammadafifp2997@gmail.com');
+        $this->email->bcc('muhammadafif2908@gmail.com');
+        $this->email->subject('TEST EMAIL H2HLink.com');
+        $message = 'TEST email H2HLink.com';
+        $this->email->message($message);
+        if ($this->email->send())
+        {
+            $emailOK = 1;
+        }
+    }
+
+    function send_email($to = "",$message = "",$subject="",$bcc="")
+    {
+        echo $to."-".$message."-".$subject."-".$bcc;exit;
+        
+        $this->load->library('email');
+        $this->load->helper('email');
+        $emailOK = 0;
+            
+        $config['mailtype'] = 'html';
+        $config['protocol'] = 'smtp';
+        $config['charset'] = 'iso-8859-1';
+        
+        $this->email->initialize($config);
+        $this->email->from('admin@h2hlink.com');
+        $this->email->to($to);
+        if ($bcc != "") {
+            $this->email->bcc($bcc);
+        }
+        $this->email->subject($subject);
+        $this->email->message($message);
+        if ($this->email->send())
+        {
+            $emailOK = 1;
+        }
+    }
+
 
 
 }
