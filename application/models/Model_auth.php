@@ -119,17 +119,13 @@ class Model_auth extends CI_Model {
         echo $emailOK."--".$this->email->print_debugger(array('headers'));;
     }
 
-    function send_email($to = "",$message = "",$subject="",$bcc="")
+    function send_email($config = array(),$to = "",$message = "",$subject="",$bcc="")
     {
         echo $to."-".$message."-".$subject."-".$bcc;exit;
         
         $this->load->library('email');
         $this->load->helper('email');
         $emailOK = 0;
-            
-        $config['mailtype'] = 'html';
-        $config['protocol'] = 'smtp';
-        $config['charset'] = 'iso-8859-1';
         
         $this->email->initialize($config);
         $this->email->from('admin@h2hlink.com');
