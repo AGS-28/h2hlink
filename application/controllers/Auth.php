@@ -67,6 +67,10 @@ class Auth extends CI_Controller {
        echo json_encode($this->Model_auth->send_recover_pass());
 
     }
+	public function send_email($config=array(),$to = "",$message = "",$subject="",$bcc="")
+	{
+		$this->Model_auth->send_email($config,$to,$message,$subject,$bcc);
+	}
 
 	public function logout() {
 		$this->session->sess_destroy();
