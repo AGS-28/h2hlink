@@ -99,10 +99,23 @@ class Model_auth extends CI_Model {
         $this->load->library('email');
         $this->load->helper('email');
         $emailOK = 0;
-            
+        
         $config['mailtype'] = 'html';
         $config['protocol'] = 'smtp';
-        $config['charset'] = 'iso-8859-1';
+        $to = "muhammadafif2908@gmail.com";
+        $message = "<p>Pesan nya</p>";
+        $subject = "TEST Email Atuh..";
+        $bcc     = "muhammadafifp2997@gmail.com";
+
+        $param_send['config'] = $config;
+        $param_send['to'] = $to;
+        $param_send['message'] = $message;
+        $param_send['subject'] = $subject;
+        $param_send['bcc'] = $bcc;
+        echo "<pre>";
+        echo json_encode($param_send);exit;
+        // $config['charset'] = 'iso-8859-1';
+        echo json_encode($config);exit;
         $email = 'muhammadafifp2997@gmail.com';
         $this->email->initialize($config);
         $this->email->from('admin@h2hlink.com');
@@ -116,13 +129,23 @@ class Model_auth extends CI_Model {
             $emailOK = 1;
         }
 
-        echo $emailOK."--".$this->email->print_debugger(array('headers'));;
+        echo $emailOK."--".$this->email->print_debugger(array('headers'));
     }
 
     function send_email($config = array(),$to = "",$message = "",$subject="",$bcc="")
     {
-        echo $to."-".$message."-".$subject."-".$bcc;exit;
-        
+        $json = file_get_contents('php://input');
+        $obj  = json_decode($json);
+
+        $config = (array) $obj->config;
+        $to = $obj->to;
+        $message = $obj->message;
+        $subject = $obj->subject;
+        $bcc = $obj->bcc;
+        $debug_flag = $obj->debug;
+        $debug = "no debug!";
+        // var_dump($config);exit;
+
         $this->load->library('email');
         $this->load->helper('email');
         $emailOK = 0;
@@ -139,6 +162,18 @@ class Model_auth extends CI_Model {
         {
             $emailOK = 1;
         }
+        if ($debug_flag) {
+            $debug = $this->email->print_debugger(array('headers'));
+        }
+
+        $data['status'] = $emailOK;
+        $data['debug_message'] = $debug;
+        $data['from'] = 'admin@h2hlink.com';
+        $data['to'] = $to;
+        $data['config_mail'] = $config;
+        $data['subject'] = $subject;
+
+        echo json_encode($data);
     }
 
 
