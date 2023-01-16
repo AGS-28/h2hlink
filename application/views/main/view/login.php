@@ -8,13 +8,13 @@
                             <div class="d-flex flex-column h-100">
                                 <div class="mb-4 mb-md-5 text-center">
                                     <a href="/" class="d-block auth-logo">
-                                        <img src="<?= base_url(); ?>assets/images/logo-sm.svg" alt="" height="28"> <span class="logo-txt">AGS Web Service Portal</span>
+                                        <img src="<?= base_url(); ?>assets/images/logo-sm.svg" alt="" height="28"> <span class="logo-txt">H2HLink.com</span>
                                     </a>
                                 </div>
                                 <div class="auth-content my-auto">
                                     <div class="text-center">
                                         <h5 class="mb-0">Selamat Datang !</h5>
-                                        <p class="text-muted mt-2">Login untuk masuk ke portal AGS</p>
+                                        <p class="text-muted mt-2">Login untuk masuk ke H2Hlink.com</p>
                                     </div>
                                     <form class="custom-form mt-4 pt-2" action="/">
                                         <div class="mb-3">
@@ -28,7 +28,7 @@
                                                 </div>
                                                 <div class="flex-shrink-0">
                                                     <div class="">
-                                                        <a href="auth-recoverpw" class="text-muted">Lupa Password</a>
+                                                        <a href="<?= site_url('auth/lupa_password') ?>" class="text-muted">Lupa Password</a>
                                                     </div>
                                                 </div>
                                             </div>
