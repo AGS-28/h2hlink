@@ -151,7 +151,7 @@ class Model_auth extends CI_Model {
         $emailOK = 0;
         
         $this->email->initialize($config);
-        $this->email->from('admin@h2hlink.com');
+        $this->email->from('portal@h2hlink.com');
         $this->email->to($to);
         if ($bcc != "") {
             $this->email->bcc($bcc);

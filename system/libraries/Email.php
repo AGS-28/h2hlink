@@ -76,7 +76,8 @@ class CI_Email {
 	 *
 	 * @var	string
 	 */
-	public $smtp_host	= 'mail.h2hlink.com';
+	// public $smtp_host	= 'mail.h2hlink.com';
+	public $smtp_host	= '10.127.221.39';
 
 	/**
 	 * SMTP Username
@@ -97,7 +98,7 @@ class CI_Email {
 	 *
 	 * @var	int
 	 */
-	public $smtp_port	= 25;
+	public $smtp_port	= "25";
 
 	/**
 	 * SMTP connection timeout in seconds
@@ -111,7 +112,7 @@ class CI_Email {
 	 *
 	 * @var	bool
 	 */
-	public $smtp_keepalive	= FALSE;
+	// public $smtp_keepalive	= FALSE;
 
 	/**
 	 * SMTP Encryption
@@ -133,21 +134,21 @@ class CI_Email {
 	 * @see	CI_Email::$wordwrap
 	 * @var	int
 	 */
-	public $wrapchars	= 76;
+	public $wrapchars	= "100";
 
 	/**
 	 * Message format.
 	 *
 	 * @var	string	'text' or 'html'
 	 */
-	public $mailtype	= 'html';
+	public $mailtype	= 'text';
 
 	/**
 	 * Character set (default: utf-8)
 	 *
 	 * @var	string
 	 */
-	public $charset		= 'UTF-8';
+	public $charset		= 'iso-8859-1';
 
 	/**
 	 * Alternative message (for HTML messages only)
