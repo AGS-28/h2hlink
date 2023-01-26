@@ -16,15 +16,19 @@
                                             <p class="text-muted mt-2">Reset Password Akun H2HLink Anda.</p>
                                         </div>
                                         <div class="alert alert-success text-center mb-4 mt-4 pt-2" role="alert">
-                                           Masukan Email Anda Untuk Mereset Password, Link Reset Password akan dikirimkan ke Email Anda!
+                                           Masukan Email / Username Anda Untuk Mereset Password, Link Reset Password akan dikirimkan ke Email Anda!
                                         </div>
                                         <form class="custom-form mt-4" action="/">
                                             <div class="mb-3">
-                                                <label class="form-label">Email</label>
+                                                <label class="form-label">Masukan Email / Username Anda</label>
                                                 <input type="text" class="form-control" id="email" placeholder="Enter email">
                                             </div>
+                                            
                                             <div class="mb-3 mt-4">
-                                                <button class="btn btn-primary w-100 waves-effect waves-light" type="button" onclick="lupa_password()" >Reset</button>
+                                                <div class="spinner-border text-primary m-1" role="status" id="loading" style="display : none;">
+                                                    <span class="sr-only">Loading...</span> 
+                                                </div>
+                                                <button id="btn-reset" class="btn btn-primary w-100 waves-effect waves-light" type="button" onclick="lupa_password()" >Reset</button>
                                             </div>
                                         </form>
 

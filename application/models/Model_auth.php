@@ -94,42 +94,94 @@ class Model_auth extends CI_Model {
 
     function send_recover_pass()
     {
-        $email = $this->input->post('email');
-        
         $this->load->library('email');
         $this->load->helper('email');
         $emailOK = 0;
-        
+        $email_send = "Email / Username Tidak Ditemukan..";
+        $debug = "-";
+        $subject = "-";
+        $from = "portal@h2hlink.com";
+
+        //config email
         $config['mailtype'] = 'html';
         $config['protocol'] = 'smtp';
-        $to = "muhammadafif2908@gmail.com";
-        $message = "<p>Pesan nya</p>";
-        $subject = "TEST Email Atuh..";
-        $bcc     = "muhammadafifp2997@gmail.com";
+        
 
-        $param_send['config'] = $config;
-        $param_send['to'] = $to;
-        $param_send['message'] = $message;
-        $param_send['subject'] = $subject;
-        $param_send['bcc'] = $bcc;
-        echo "<pre>";
-        echo json_encode($param_send);exit;
-        // $config['charset'] = 'iso-8859-1';
-        echo json_encode($config);exit;
-        $email = 'muhammadafifp2997@gmail.com';
-        $this->email->initialize($config);
-        $this->email->from('admin@h2hlink.com');
-        $this->email->to('muhammadafifp2997@gmail.com');
-        $this->email->bcc('muhammadafif2908@gmail.com');
-        $this->email->subject('TEST EMAIL H2HLink.com');
-        $message = 'TEST email H2HLink.com';
-        $this->email->message($message);
-        if ($this->email->send())
-        {
-            $emailOK = 1;
+
+        $email = $this->input->post('email');
+        
+        $cek = "SELECT * FROM users.user a where a.username = ".$this->db->escape($email)." OR a.email = ".$this->db->escape($email);
+
+        $ret_cek = $this->db->query($cek);
+        $banyak = $ret_cek->num_rows();
+        if ($banyak > 0 ) {
+            $result = $ret_cek->row();
+            $email_send = $result->email;
+            $id_user = $result->id_user;
+            $key = encryptpassword($id_user);
+            $key_id = bin2hex($key);
+            
+            $subject = "=== RESET PASSWORD H2Hlink.com ===";
+
+            $message = '<p>Yth. Bapak/Ibu Pengguna H2HLink.com</p>
+            <p>Terima kasih atas partisipasi Anda dalam menggunakan aplikasi Portal H2hLink</p>
+            <p>Berikut ini adalah informasi data Akun Anda</p>
+            
+            <table border="0" cellpadding="1" cellspacing="1" style="width:100%">
+                <tbody>
+                    <tr>
+                        <td style="width:30%;font-weight:bold">Username</td>
+                        <td style="width:5%;font-weight:bold">:</td>
+                        <td style="width:65%;font-weight:bold">'.$result->username.'</td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%;font-weight:bold">Nama User</td>
+                        <td style="width:5%;font-weight:bold">:</td>
+                        <td style="width:65%;font-weight:bold">'.$result->name.'</td>
+                    </tr>	
+                </tbody>
+            </table>
+            
+            <p>Silahkan melakukan Reset Password dengan klik link berikut :</p>
+            
+            <a href="'.site_url().'/auth/reset/'.$key_id.'" style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#3aaee0;border-radius:4px;width:auto;border-top:0px solid transparent;font-weight:400;border-right:0px solid transparent;border-bottom:0px solid transparent;border-left:0px solid transparent;padding-top:5px;padding-bottom:5px;font-family:Nunito,Arial,Helvetica Neue,Helvetica,sans-serif;text-align:center;word-break:keep-all" target="_blank" data-saferedirecturl="https://www.google.com/url?q=https://ska.kemendag.go.id/reset-pass/c42a239d36d22c5688b3d7774403fe3e863bc81268f964592c50eefc4a526ff03e76b194c34f74bc69884ee59f1fe0aeaa6c450d28db9a539d4a98be6dff9e82b6d5a40720d60ec1e8298b1edddee526&amp;source=gmail&amp;ust=1674722880381000&amp;usg=AOvVaw1ANoZrH54YXH3QeHSFR8Jr"><span style="padding-left:20px;padding-right:20px;font-size:14px;display:inline-block;letter-spacing:normal"><span style="line-height:28px">Reset Password</span></span></a>';
+            // echo $message;exit;
+            $bcc     = "muhammadafifp2997@gmail.com";
+
+            $this->email->initialize($config);
+            $this->email->from($from);
+            $this->email->to($email_send);
+            $this->email->bcc('muhammadafif2908@gmail.com');
+            $this->email->subject($subject);
+            $this->email->message($message);
+            if ($this->email->send())
+            {
+                $emailOK = 1;
+                $arrayUpdate = array(
+                                        'reset' => 1,
+                                        'datereset' => date('Y-m-d H:i:s'),
+                                     );
+                $this->db->where('id_user',$id_user);
+                $this->db->update('users.user',$arrayUpdate);
+            }
+            else 
+            {
+                $emailOK = 99;
+                $email_send = " Kirim email ke ".$email_send;
+            }
+            $debug = $this->email->print_debugger(array('headers'));
         }
+        
+        
+        $data['status']         = $emailOK;
+        $data['debug_message']  = $debug;
+        $data['from']           = $from;
+        $data['to']             = $email_send;
+        $data['config_mail']    = $config;
+        $data['subject']        = $subject;
 
-        echo $emailOK."--".$this->email->print_debugger(array('headers'));
+        return $data;
+        
     }
 
     function send_email($config = array(),$to = "",$message = "",$subject="",$bcc="")
