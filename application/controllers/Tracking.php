@@ -6,6 +6,7 @@ class Tracking extends CI_Controller {
 		parent::__construct();
 		$this->load->model('Model_tracking');
 		$this->load->model('Model_master');
+		cek_session(array(1,2,3),'main');
 	}
 
 	public function index()

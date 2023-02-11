@@ -5,6 +5,7 @@ class Cms extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->model('Model_cms');
+		cek_session(array(1,2,3),'main');
 	}
 
 	public function role()
