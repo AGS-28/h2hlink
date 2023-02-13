@@ -4,18 +4,18 @@
         <div class="d-flex">
             <!-- LOGO -->
             <div class="navbar-brand-box">
-                <a href="/" class="logo logo-dark">
+                <a class="logo logo-dark">
                     <span class="logo-sm">
-                        <img src="<?= base_url(); ?>assets/images/logo-sm.svg" alt="" height="24">
+                        <!-- <img src="<?= base_url(); ?>assets/images/logo-sm.svg" alt="" height="24" width="40"> -->
                     </span>
                     <span class="logo-lg">
                         <img src="<?= base_url(); ?>assets/images/logo-sm.svg" alt="" height="24"> <span class="logo-txt">AGS WS Portal</span>
                     </span>
                 </a>
 
-                <a href="/" class="logo logo-light">
+                <a class="logo logo-light">
                     <span class="logo-sm">
-                        <img src="<?= base_url(); ?>assets/images/logo-sm.svg" alt="" height="24">
+                        <!-- <img src="<?= base_url(); ?>assets/images/logo-sm.svg" alt="" height="24" width="40"> -->
                     </span>
                     <span class="logo-lg">
                         <img src="<?= base_url(); ?>assets/images/logo-sm.svg" alt="" height="24"> <span class="logo-txt">AGS WS Portal</span>
@@ -129,11 +129,11 @@
                 </div>
             </div> -->
 
-            <div class="dropdown d-inline-block">
+            <!-- <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item right-bar-toggle me-2">
                     <i data-feather="settings" class="icon-lg"></i>
                 </button>
-            </div>
+            </div> -->
 
             <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item bg-soft-light border-start border-end" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -143,8 +143,8 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                     <!-- item-->
-                    <a class="dropdown-item" href="apps-contacts-profile"><i class="mdi mdi-face-profile font-size-16 align-middle me-1"></i> <?= $this->session->userdata('username') ?></a>
-                   <a class="dropdown-item" href="auth-lock-screen"><i class="mdi mdi-lock font-size-16 align-middle me-1"></i> <?= 'Update Password' ?></a>
+                    <!-- <a class="dropdown-item" href="apps-contacts-profile"><i class="mdi mdi-face-profile font-size-16 align-middle me-1"></i> <?= $this->session->userdata('username') ?></a>
+                    <a class="dropdown-item" href="auth-lock-screen"><i class="mdi mdi-lock font-size-16 align-middle me-1"></i> <?= 'Update Password' ?></a> -->
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="<?= site_url(); ?>/auth/logout"><i class="mdi mdi-logout font-size-16 align-middle me-1"></i> <?= 'Logout' ?></a>
                 </div>
