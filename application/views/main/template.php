@@ -72,7 +72,7 @@ document.write(unescape("%3Cscript src='" + tlJsHost + "trustlogo/javascript/tru
 
     <!-- favicon 
             ============================================ -->
-    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="<?= base_url(); ?>assets/images/favicon.ico">
     <?= $title_meta ?>
     <link href="<?= base_url(); ?>assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css" rel="stylesheet" type="text/css" />
     <!-- preloader css -->
@@ -116,7 +116,7 @@ document.write(unescape("%3Cscript src='" + tlJsHost + "trustlogo/javascript/tru
 
 
 <script language="JavaScript" type="text/javascript">
-TrustLogo("https://h2hlink.com", "CL1", "none");
+TrustLogo("https://h2hlink.com/assets/images/favicon.ico", "CL1", "none");
 </script>
 <a  href="https://www.positivessl.com/" id="comodoTL">Positive SSL</a>
 
