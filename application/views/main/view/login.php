@@ -41,10 +41,12 @@
                                         </div>
                                         <div class="mb-3">
                                             <button class="btn btn-primary w-100 waves-effect waves-light" id="btn-login" type="button">Masuk</button>
-                                            <br/>
-                                            <a href="https://trustlogo.com" target="_blank" class="d-block auth-logo" style="text-align: right">
-                                                <img src="<?= base_url(); ?>assets/images/positivessl_trust_seal_lg_222x54.png" alt="" width="160" height="40">
-                                            </a>
+                                        </div>
+                                        <div class="mb-3" style="text-align: right">
+                                            <script language="JavaScript" type="text/javascript">
+                                                TrustLogo("https://h2hlink.com/assets/images/positivessl_trust_seal_lg_222x54.png", "CL1", "none");
+                                            </script>
+                                            <a  href="https://www.positivessl.com/" id="comodoTL">Positive SSL</a>
                                         </div>
                                     </form>
 
