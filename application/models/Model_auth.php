@@ -228,6 +228,29 @@ class Model_auth extends CI_Model {
         echo json_encode($data);
     }
 
+    public function check_link($id)
+    {
+        $sql     = "SELECT * FROM users.user WHERE id_user = ".$this->db->escape($id);
+        $result  = $this->db->query($sql);
+        $status = "99";
+        $date   = "";
+        
+        $banyak = $result->num_rows();
+        if ($banyak > 0) {
+                $data   = $result->row();
+                $status = $data->reset;
+                $date   = $data->datereset;
+
+        }
+        
+
+        $returndata['status'] = $status;
+        $returndata['date']   = $date;
+
+        return $returndata;
+
+    }
+
 
 
 }
