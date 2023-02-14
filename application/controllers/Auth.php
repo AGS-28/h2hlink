@@ -48,6 +48,34 @@ class Auth extends CI_Controller {
 		$data['content']    	= $this->load->view('main/view/lupapass',$param,true);
 		$this->load->view('main/template',$data);
 	}
+	public function reset()
+	{
+		$key = $this->uri->segment('3');
+		$key_nya = hex2bin($key);
+		$id_user = decryptpassword($key_nya);
+
+		$check_link = $this->Model_auth->check_link($id_user);
+		
+		//Tittle
+		$tittle['title'] 	= 'Dashboard';
+		$tittle['li_1'] 	= 'Minia';
+		$tittle['li_2'] 	= 'Dashboard';
+
+		//Teamplate
+		$data['addmenu'] 	= false;
+		$data['addcss'] 	= '';
+		$data['addjs'] 		= '<script src="'.base_url().'assets/js/pages/pass-addon.init.js"></script>';
+		$data['addjs'] 		.= '<script src="'.base_url().'assets/main/js/login.js"></script>';
+		$data['addjs'] 		.= '<script>const hex_id = "'.$key.'"</script>';
+		$data['title_meta'] = $this->load->view('template/partials/title-meta', $tittle,true);
+		
+		//Page Data Content
+		$param['page_title'] 	= '';
+		$param['check_link'] 	= $check_link;
+		
+		$data['content']    	= $this->load->view('main/view/resetpass',$param,true);
+		$this->load->view('main/template',$data);
+	}
 
     public function crypt()
     {
