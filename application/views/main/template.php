@@ -1,10 +1,6 @@
 <!doctype html>
 <html lang="en">
-<script type="text/javascript"> //<![CDATA[ 
-var tlJsHost = ((window.location.protocol == "https:") ? "https://secure.trust-provider.com/" : "http://www.trustlogo.com/");
-document.write(unescape("%3Cscript src='" + tlJsHost + "trustlogo/javascript/trustlogo.js' type='text/javascript'%3E%3C/script%3E"));
-//]]>
-</script>
+
 <head>
     <style type="text/css">
         .btn_upload{
@@ -112,14 +108,13 @@ document.write(unescape("%3Cscript src='" + tlJsHost + "trustlogo/javascript/tru
 
      <?php if(isset($addcss)) echo $addcss; ?>
 
+    <script type="text/javascript"> //<![CDATA[ 
+    var tlJsHost = ((window.location.protocol == "https:") ? "https://secure.trust-provider.com/" : "http://www.trustlogo.com/");
+    document.write(unescape("%3Cscript src='" + tlJsHost + "trustlogo/javascript/trustlogo.js' type='text/javascript'%3E%3C/script%3E"));
+    //]]>
+    </script>
+
 </head>
-
-
-<script language="JavaScript" type="text/javascript">
-TrustLogo("https://h2hlink.com/assets/images/favicon.ico", "CL1", "none");
-</script>
-<a  href="https://www.positivessl.com/" id="comodoTL">Positive SSL</a>
-
 
 <body>
     <?php if($addmenu) { ?>
