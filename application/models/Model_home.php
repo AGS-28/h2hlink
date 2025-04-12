@@ -1,5 +1,6 @@
 <?php
-class Model_home extends CI_Model {
+class Model_home extends CI_Model
+{
 
     function get_data_draft()
     {
@@ -80,17 +81,17 @@ class Model_home extends CI_Model {
         $arr_result = $result->result_array();
 
         $arr_data = array();
-        if($result->num_rows() > 0) {
+        if ($result->num_rows() > 0) {
             foreach ($arr_result as $key => $value) {
                 $sql_log = "SELECT a.no_ska, a.tgl_ska, a.status_ska
                             FROM trans.headers a 
                             WHERE a.partner_endpoint_id = 5 
-                            AND a.no_aju = '".$value['no_aju']."'
+                            AND a.no_aju = '" . $value['no_aju'] . "'
                             ORDER BY a.created_at DESC LIMIT 1";
                 $result_log = $this->db->query($sql_log);
                 $arr_result_log = $result_log->result_array();
 
-                if($result_log->num_rows() > 0) {
+                if ($result_log->num_rows() > 0) {
                     $no_ska = $arr_result_log[0]['no_ska'];
                     $tgl_ska = $arr_result_log[0]['tgl_ska'];
                     $status_ska = $arr_result_log[0]['status_ska'];
@@ -168,7 +169,7 @@ class Model_home extends CI_Model {
     //                 GROUP BY a.id
     //                 ORDER BY a.method_name";
     //     }
-        
+
     //     $result = $this->db->query($sql);
     //     $arr_result = $result->result_array();
 
