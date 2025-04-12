@@ -1,12 +1,22 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-class Tracking extends CI_Controller {
+defined('BASEPATH') or exit('No direct script access allowed');
+
+/**
+ * @property CI_DB_query_builder $db
+ * @property CI_URI $uri
+ * @property CI_Input $input
+ * @property CI_Session $session
+ * @property Model_tracking $Model_tracking
+ * @property Model_master $Model_master
+ */
+class Tracking extends CI_Controller
+{
 	public function __construct()
 	{
 		parent::__construct();
 		$this->load->model('Model_tracking');
 		$this->load->model('Model_master');
-		cek_session(array(1,2,3),'main');
+		cek_session(array(1, 2, 3), 'main');
 	}
 
 	public function index()
@@ -19,29 +29,29 @@ class Tracking extends CI_Controller {
 		//Teamplate
 		$data['addmenu'] 	= true;
 		$data['addcss'] 	= '';
-		$data['addjs'] 		= '<script src="'.base_url().'assets/main/js/tracking.js"></script>';
-		$data['title_meta'] = $this->load->view('main/partials/title-meta', $tittle,true);
-		
+		$data['addjs'] 		= '<script src="' . base_url() . 'assets/main/js/tracking.js"></script>';
+		$data['title_meta'] = $this->load->view('main/partials/title-meta', $tittle, true);
+
 		//Page Data Content
-		$param['page_title'] 	 = $this->load->view('main/partials/page-title', $tittle,true);
+		$param['page_title'] 	 = $this->load->view('main/partials/page-title', $tittle, true);
 		$param['data_client'] 	 = $this->Model_master->get_data_client();
 		$param['data_partner'] 	 = $this->Model_master->get_data_partner();
 		$param['data_end_point'] = $this->Model_master->get_data_end_point();
 		$param['tipe'] 			 = 0;
 
-		if($this->input->post('tipe') != '') {
+		if ($this->input->post('tipe') != '') {
 			$param['tipe'] = 1;
 			$param['partner_id'] = $this->input->post('partner_id');
-			if($this->input->post('tipe') == '0') {
+			if ($this->input->post('tipe') == '0') {
 				$param['data_client_byid'] = $this->Model_master->get_data_client($this->input->post('client_id'));
 			}
-			
+
 			$param['years_select'] = explode(',', $this->input->post('years_tracking'));
 			$param['month_select'] = explode(',', $this->input->post('month_tracking'));
 		}
 
-		$data['content']    	= $this->load->view('main/view/tracking',$param,true);
-		$this->load->view('main/template',$data);
+		$data['content']    	= $this->load->view('main/view/tracking', $param, true);
+		$this->load->view('main/template', $data);
 	}
 
 	public function cari()
@@ -56,25 +66,25 @@ class Tracking extends CI_Controller {
 			}
 
 			$html[] = $no;
-			$html[] = '<b> Name : <font color="#d75350">'.$data['client_name'].'</font></b><br/><b> NIB : </b>'.$data['nib'].'<br/><b> NPWP : </b>'.$data['npwp'];
-			$html[] = '<b> Name : <font color="#4549a2">'.$data['partner_name'].'</font><br/> End Point : </b>'.$data['partner_endpoint'];
-			$html[] = '<b> Aju Number : <font color="#4549a2">'.$data['no_aju'].'</font><br/> Created : </b>'.$data['created_at_message'];
+			$html[] = '<b> Name : <font color="#d75350">' . $data['client_name'] . '</font></b><br/><b> NIB : </b>' . $data['nib'] . '<br/><b> NPWP : </b>' . $data['npwp'];
+			$html[] = '<b> Name : <font color="#4549a2">' . $data['partner_name'] . '</font><br/> End Point : </b>' . $data['partner_endpoint'];
+			$html[] = '<b> Aju Number : <font color="#4549a2">' . $data['no_aju'] . '</font><br/> Created : </b>' . $data['created_at_message'];
 			// $json_pretty = json_decode(json_encode($data['message_content']));
 
 			$views = '';
-			if($data['endpoint_id'] == '1') {
+			if ($data['endpoint_id'] == '1') {
 				$views = '
-						<li><a class="dropdown-item" href="#" onclick="show_modal('.$data['id'].',2);">Views Data</a></li>
-						<li><a class="dropdown-item" href="#" onclick="show_modal('.$data['id'].',3);">Views Draft</a></li>
+						<li><a class="dropdown-item" href="#" onclick="show_modal(' . $data['id'] . ',2);">Views Data</a></li>
+						<li><a class="dropdown-item" href="#" onclick="show_modal(' . $data['id'] . ',3);">Views Draft</a></li>
 						';
 			}
 
-			if($data['endpoint_id'] == '4') {
-				$views = '<li><a class="dropdown-item" href="#" onclick="show_modal('.$data['id'].',3);">Views Draft</a></li>';
+			if ($data['endpoint_id'] == '4') {
+				$views = '<li><a class="dropdown-item" href="#" onclick="show_modal(' . $data['id'] . ',3);">Views Draft</a></li>';
 			}
 
-			if($data['endpoint_id'] == '2') {
-				$views = '<li><a class="dropdown-item" href="#" onclick="show_modal('.$data['id'].',4);">Views Document</a></li>';
+			if ($data['endpoint_id'] == '2') {
+				$views = '<li><a class="dropdown-item" href="#" onclick="show_modal(' . $data['id'] . ',4);">Views Document</a></li>';
 			}
 
 			$html[] = '
@@ -83,8 +93,8 @@ class Tracking extends CI_Controller {
 								<i class="bx bx-dots-horizontal-rounded"></i>
 							</button>
 							<ul class="dropdown-menu dropdown-menu-end">
-								<li><a class="dropdown-item" href="#" onclick="show_modal('.$data['id'].',0);">Request</a></li>
-								<li><a class="dropdown-item" href="#" onclick="show_modal('.$data['id'].',1);">Respons</a></li>'.$views.'
+								<li><a class="dropdown-item" href="#" onclick="show_modal(' . $data['id'] . ',0);">Request</a></li>
+								<li><a class="dropdown-item" href="#" onclick="show_modal(' . $data['id'] . ',1);">Respons</a></li>' . $views . '
 							</ul>
 						</div>
 					';
@@ -98,8 +108,8 @@ class Tracking extends CI_Controller {
 		$return['recordsFiltered'] 	= $arrRet['totalRow'];
 		$return['error'] 			= '';
 
-        unset($row);
-        echo json_encode($return);
+		unset($row);
+		echo json_encode($return);
 	}
 
 	public function cari_ska()
@@ -112,28 +122,28 @@ class Tracking extends CI_Controller {
 			if (isset($html)) {
 				unset($html);
 			}
-			
-			$nib = "'".$data['nib']."'";
-			$npwp = "'".$data['npwp']."'";
-			$user_endpoint = "'".$data['user_endpoint']."'";
-			$no_aju = "'".$data['no_aju']."'";
+
+			$nib = "'" . $data['nib'] . "'";
+			$npwp = "'" . $data['npwp'] . "'";
+			$user_endpoint = "'" . $data['user_endpoint'] . "'";
+			$no_aju = "'" . $data['no_aju'] . "'";
 
 			$coo = $this->Model_tracking->get_coo($no_aju);
 
 			$html[] = $no;
-			$html[] = '<b> Name : <font color="#d75350">'.$data['client_name'].'</font></b><br/><b> NIB : </b>'.$data['nib'].'<br/><b> NPWP : </b>'.$data['npwp'];
-			$html[] = '<b> Name : <font color="#4549a2">'.$data['partner_name'].'</font>';
-			$html[] = '<b> Aju Number : <font color="#4549a2">'.$data['no_aju'].'</font><br/> SKA Number : </b>'.$coo['no_ska'].'<br/><b>SKA Date : </b>'.$coo['tgl_ska'].'<br/><b> Status : </b>'.$coo['status_ska'];
-			
+			$html[] = '<b> Name : <font color="#d75350">' . $data['client_name'] . '</font></b><br/><b> NIB : </b>' . $data['nib'] . '<br/><b> NPWP : </b>' . $data['npwp'];
+			$html[] = '<b> Name : <font color="#4549a2">' . $data['partner_name'] . '</font>';
+			$html[] = '<b> Aju Number : <font color="#4549a2">' . $data['no_aju'] . '</font><br/> SKA Number : </b>' . $coo['no_ska'] . '<br/><b>SKA Date : </b>' . $coo['tgl_ska'] . '<br/><b> Status : </b>' . $coo['status_ska'];
+
 			$html[] = '
 						<div class="dropdown">
 							<button class="btn btn-link font-size-16 shadow-none py-0 text-muted dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 								<i class="bx bx-dots-horizontal-rounded"></i>
 							</button>
 							<ul class="dropdown-menu dropdown-menu-end">
-								<li><a class="dropdown-item" href="#" onclick="get_draftcoo('.$no_aju.','.$nib.','.$npwp.','.$user_endpoint.',4);">Get Draft</a></li>
-								<li><a class="dropdown-item" href="#" onclick="get_draftcoo('.$no_aju.','.$nib.','.$npwp.','.$user_endpoint.',5);">Get Coo</a></li>
-								<li><a class="dropdown-item" href="#" onclick="get_draftcoo('.$no_aju.','.$nib.','.$npwp.','.$user_endpoint.',3);">Submit Coo</a></li>
+								<li><a class="dropdown-item" href="#" onclick="get_draftcoo(' . $no_aju . ',' . $nib . ',' . $npwp . ',' . $user_endpoint . ',4);">Get Draft</a></li>
+								<li><a class="dropdown-item" href="#" onclick="get_draftcoo(' . $no_aju . ',' . $nib . ',' . $npwp . ',' . $user_endpoint . ',5);">Get Coo</a></li>
+								<li><a class="dropdown-item" href="#" onclick="get_draftcoo(' . $no_aju . ',' . $nib . ',' . $npwp . ',' . $user_endpoint . ',3);">Submit Coo</a></li>
 							</ul>
 						</div>
 					';
@@ -147,46 +157,46 @@ class Tracking extends CI_Controller {
 		$return['recordsFiltered'] 	= $arrRet['totalRow'];
 		$return['error'] 			= '';
 
-        unset($row);
-        echo json_encode($return);
+		unset($row);
+		echo json_encode($return);
 	}
 
 	public function get_message_respons()
 	{
 		$tipe = $this->input->post('tipe');
 		$data['data'] = $this->Model_tracking->get_message_respons();
-		$data['arr_refdokumen'] = $this->Model_master->get_data_ref_document('',1);
+		$data['arr_refdokumen'] = $this->Model_master->get_data_ref_document('', 1);
 		$data['arr_refkppbc'] = $this->Model_master->get_data_ref_kppbc(1);
 		$data['refform'] = $this->Model_master->get_data_ref_form(1);
 
 		switch ($tipe) {
 			case '0':
-				echo $this->load->view('main/view/v_json_request',$data,true);
+				echo $this->load->view('main/view/v_json_request', $data, true);
 				break;
 
 			case '1':
-				echo $this->load->view('main/view/v_json_respons',$data,true);
+				echo $this->load->view('main/view/v_json_respons', $data, true);
 				break;
 
 			case '2':
-				echo $this->load->view('main/view/v_parsing_json_request',$data,true);
+				echo $this->load->view('main/view/v_parsing_json_request', $data, true);
 				break;
 
 			case '3':
-				echo $this->load->view('main/view/v_draft',$data,true);
+				echo $this->load->view('main/view/v_draft', $data, true);
 				break;
-			
+
 			case '4':
-				echo $this->load->view('main/view/v_document_pendukung',$data,true);
+				echo $this->load->view('main/view/v_document_pendukung', $data, true);
 				break;
-			
+
 			default:
 				exit;
 				break;
 		}
 	}
 
-	public function show_table_document() 
+	public function show_table_document()
 	{
 		$post 		= $this->input->post('formdata');
 		$arr_post 	= postajax_toarray($post);
@@ -197,10 +207,10 @@ class Tracking extends CI_Controller {
 			}
 
 			$html[] = $i;
-			$html[] = $arr_post['hide_aju_number['.$i.']'];
-			$html[] = $arr_post['hide_document_type['.$i.']'];
-			$html[] = $arr_post['hide_document_number['.$i.']'];
-			$html[] = $arr_post['hide_document_date['.$i.']'];
+			$html[] = $arr_post['hide_aju_number[' . $i . ']'];
+			$html[] = $arr_post['hide_document_type[' . $i . ']'];
+			$html[] = $arr_post['hide_document_number[' . $i . ']'];
+			$html[] = $arr_post['hide_document_date[' . $i . ']'];
 			$html[] = '<button type="button" class="btn btn-soft-light btn-sm w-xs waves-effect btn-label waves-light"><i class="bx bx-download label-icon"></i> File</button>';
 			$row[]  = $html;
 		}
@@ -224,21 +234,21 @@ class Tracking extends CI_Controller {
 		//Teamplate
 		$data['addmenu'] 	= true;
 		$data['addcss'] 	= '';
-		$data['addjs'] 		= '<script src="'.base_url().'assets/main/js/tracking.js"></script>';
-		$data['title_meta'] = $this->load->view('main/partials/title-meta', $tittle,true);
-		
+		$data['addjs'] 		= '<script src="' . base_url() . 'assets/main/js/tracking.js"></script>';
+		$data['title_meta'] = $this->load->view('main/partials/title-meta', $tittle, true);
+
 		//Page Data Content
-		$param['page_title'] 	 = $this->load->view('main/partials/page-title', $tittle,true);
+		$param['page_title'] 	 = $this->load->view('main/partials/page-title', $tittle, true);
 		$param['data_client'] 	 = $this->Model_master->get_data_client();
 		$param['data_partner'] 	 = $this->Model_master->get_data_partner();
 		$param['data_end_point'] = $this->Model_master->get_data_end_point();
 		$param['tipe'] 			 = 2;
 
-		$data['content']    	= $this->load->view('main/view/tracking_ska',$param,true);
-		$this->load->view('main/template',$data);
+		$data['content']    	= $this->load->view('main/view/tracking_ska', $param, true);
+		$this->load->view('main/template', $data);
 	}
 
-	function get_draftcoo() 
+	function get_draftcoo()
 	{
 		$no_aju = $this->input->post('aju');
 		$nib = $this->input->post('nib');
@@ -246,8 +256,8 @@ class Tracking extends CI_Controller {
 		$user_endpoint = $this->input->post('user_endpoint');
 		$tipe = $this->input->post('tipe');
 		$no_serial = $this->input->post('no_serial');
-		
-		if($tipe != '') {
+
+		if ($tipe != '') {
 			$url = $this->Model_master->get_url_wso2($tipe);
 
 			// if($tipe == 4) {
@@ -261,8 +271,8 @@ class Tracking extends CI_Controller {
 			// if($tipe == 3) {
 			// 	$url = 'http://103.191.92.175:8290/submitRequestCoo';
 			// }
-			
-			if($tipe == 3) {
+
+			if ($tipe == 3) {
 				$array_all = array(
 					'username' => $user_endpoint,
 					'npwp' => $npwp,
@@ -281,7 +291,7 @@ class Tracking extends CI_Controller {
 
 			$json_data = json_encode($array_all);
 			$curl = curl_init();
-				curl_setopt_array($curl, array(
+			curl_setopt_array($curl, array(
 				CURLOPT_URL => $url,
 				CURLOPT_RETURNTRANSFER => true,
 				CURLOPT_ENCODING => '',
@@ -290,7 +300,7 @@ class Tracking extends CI_Controller {
 				CURLOPT_FOLLOWLOCATION => true,
 				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 				CURLOPT_CUSTOMREQUEST => 'POST',
-				CURLOPT_POSTFIELDS =>$json_data,
+				CURLOPT_POSTFIELDS => $json_data,
 				CURLOPT_HTTPHEADER => array(
 					'x-Gateway-APIKey: ae5653c9-1ba9-4bbb-8955-7da25cd4fd5b',
 					'Content-Type: application/json',
@@ -302,7 +312,7 @@ class Tracking extends CI_Controller {
 			curl_close($curl);
 
 			$json_decode = json_decode($response);
-			if($json_decode == '' or $json_decode == null) {
+			if ($json_decode == '' or $json_decode == null) {
 				$arr_err = array(
 					'kode' => 400,
 					'keterangan' => 'Service error, please try again periodically.'
@@ -310,15 +320,15 @@ class Tracking extends CI_Controller {
 
 				echo json_encode($arr_err);
 			} else {
-				if($tipe == 5) {
+				if ($tipe == 5) {
 					$kode = $json_decode->kode;
-					if($kode == '200') {
+					if ($kode == '200') {
 						$co_number = $json_decode->data->co_number;
 						$co_date = $json_decode->data->co_date;
 						$status = $json_decode->data->status;
 
 						$data_update = $this->Model_tracking->update_coo($no_aju, $co_number, $co_date, $status);
-						if($data_update == 1) {
+						if ($data_update == 1) {
 							echo $response;
 						} else {
 							$arr_err = array(
@@ -342,13 +352,12 @@ class Tracking extends CI_Controller {
 	{
 		$data['data'] = $this->Model_tracking->get_data_coo();
 		$data['refform'] = $this->Model_master->get_data_ref_form(1);
-		echo $this->load->view('main/view/v_submit_coo',$data,true);
+		echo $this->load->view('main/view/v_submit_coo', $data, true);
 	}
 
 	public function get_path_document()
-    {
-        $data['data'] = json_encode($this->Model_master->get_path_document());
-        echo $this->load->view('main/view/v_document',$data,true);
-    }
-
+	{
+		$data['data'] = json_encode($this->Model_master->get_path_document());
+		echo $this->load->view('main/view/v_document', $data, true);
+	}
 }
