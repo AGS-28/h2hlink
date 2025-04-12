@@ -1,12 +1,19 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-class Createska extends CI_Controller {
+defined('BASEPATH') or exit('No direct script access allowed');
+
+/**
+ * @property CI_Input $input
+ * @property Model_master $Model_master
+ * @property Model_create_ska $Model_create_ska
+ */
+class Createska extends CI_Controller
+{
 	public function __construct()
 	{
 		parent::__construct();
 		$this->load->model('Model_create_ska');
 		$this->load->model('Model_master');
-		cek_session(array(1,2,3),'main');
+		cek_session(array(1, 2, 3), 'main');
 	}
 
 	public function index()
@@ -19,30 +26,30 @@ class Createska extends CI_Controller {
 		//Teamplate
 		$data['addmenu'] 	= true;
 		$data['addcss'] 	= '';
-		$data['addjs'] 		= '<script src="'.base_url().'assets/main/js/create_ska.js"></script>';
-		$data['title_meta'] = $this->load->view('main/partials/title-meta', $tittle,true);
-		
+		$data['addjs'] 		= '<script src="' . base_url() . 'assets/main/js/create_ska.js"></script>';
+		$data['title_meta'] = $this->load->view('main/partials/title-meta', $tittle, true);
+
 		//Page Data Content
-        $param['data_partner'] 	 = $this->Model_master->get_data_partner();
-        $param['data_extention'] = $this->Model_master->get_data_extention();
-        $param['data_type_doc']  = $this->Model_master->get_data_ref_document(1);
-        $param['data_ipska']  = $this->Model_master->get_data_ref_ipska();
-        $param['data_type_form']  = $this->Model_master->get_data_ref_form();
-		$param['page_title'] 	 = $this->load->view('main/partials/page-title', $tittle,true);
+		$param['data_partner'] 	 = $this->Model_master->get_data_partner();
+		$param['data_extention'] = $this->Model_master->get_data_extention();
+		$param['data_type_doc']  = $this->Model_master->get_data_ref_document(1);
+		$param['data_ipska']  = $this->Model_master->get_data_ref_ipska();
+		$param['data_type_form']  = $this->Model_master->get_data_ref_form();
+		$param['page_title'] 	 = $this->load->view('main/partials/page-title', $tittle, true);
 
-		$data['content']    	= $this->load->view('main/view/upload_draft',$param,true);
-		$this->load->view('main/template',$data);
+		$data['content']    	= $this->load->view('main/view/upload_draft', $param, true);
+		$this->load->view('main/template', $data);
 	}
-	
-    public function upload_draft()
-    {
-		$arr_message_type = $this->Model_master->get_message_type();
-        echo json_encode($this->Model_create_ska->upload_draft($arr_message_type));
-    }
 
-    public function upload_document()
-    {
-        //Tittle
+	public function upload_draft()
+	{
+		$arr_message_type = $this->Model_master->get_message_type();
+		echo json_encode($this->Model_create_ska->upload_draft($arr_message_type));
+	}
+
+	public function upload_document()
+	{
+		//Tittle
 		$tittle['title'] 	= 'Upload Document SKA';
 		$tittle['li_1'] 	= 'Create SKA';
 		$tittle['li_2'] 	= 'Upload Document SKA';
@@ -50,27 +57,27 @@ class Createska extends CI_Controller {
 		//Teamplate
 		$data['addmenu'] 	= true;
 		$data['addcss'] 	= '';
-		$data['addjs'] 		= '<script src="'.base_url().'assets/main/js/create_ska.js"></script>';
-		$data['title_meta'] = $this->load->view('main/partials/title-meta', $tittle,true);
-		
+		$data['addjs'] 		= '<script src="' . base_url() . 'assets/main/js/create_ska.js"></script>';
+		$data['title_meta'] = $this->load->view('main/partials/title-meta', $tittle, true);
+
 		//Page Data Content
-		$param['page_title'] 	 = $this->load->view('main/partials/page-title', $tittle,true);
-        $param['ref_document'] 	 = $this->Model_master->get_data_ref_document();
-        $param['data_aju'] 	     = $this->Model_master->get_data_aju(1);
-        $param['ref_kppbc'] 	 = $this->Model_master->get_data_ref_kppbc();
-		
-		$data['content']    	= $this->load->view('main/view/upload_document',$param,true);
-		$this->load->view('main/template',$data);
-    }
+		$param['page_title'] 	 = $this->load->view('main/partials/page-title', $tittle, true);
+		$param['ref_document'] 	 = $this->Model_master->get_data_ref_document();
+		$param['data_aju'] 	     = $this->Model_master->get_data_aju(1);
+		$param['ref_kppbc'] 	 = $this->Model_master->get_data_ref_kppbc();
 
-    public function save_upload_document()
-    {
-        echo json_encode($this->Model_create_ska->save_upload_document());
-    }
+		$data['content']    	= $this->load->view('main/view/upload_document', $param, true);
+		$this->load->view('main/template', $data);
+	}
 
-    public function get_data_document()
-    {
-        $arrRet 	= $this->Model_create_ska->get_data_document();
+	public function save_upload_document()
+	{
+		echo json_encode($this->Model_create_ska->save_upload_document());
+	}
+
+	public function get_data_document()
+	{
+		$arrRet 	= $this->Model_create_ska->get_data_document();
 		$arrData 	= $arrRet['arrData'];
 		$no 		= $this->input->post('start') + 1;
 		foreach ($arrData as $key => $data) {
@@ -78,21 +85,21 @@ class Createska extends CI_Controller {
 				unset($html);
 			}
 
-            $title = "'Views Document'";
-            $func_send = "send_document";
-            $func_name = "'get_view_document'";
+			$title = "'Views Document'";
+			$func_send = "send_document";
+			$func_name = "'get_view_document'";
 			$html[] = $no;
-			$html[] = '<b> Aju Number : <font color="#4549a2">'.$data['no_aju'].'</font><br/> Created Date : </b>'.$data['created_at_message'];
-			$html[] = '<b> Name : <font color="#d75350">'.$data['client_name'].'</font></b><br/><b> NIB : </b>'.$data['nib'].'<br/><b> NPWP : </b>'.$data['npwp'];
-			$html[] = '<b> Name : <font color="#4549a2">'.$data['partner_name'].'</font><br/> End Point : </b>'.$data['partner_endpoint'];
+			$html[] = '<b> Aju Number : <font color="#4549a2">' . $data['no_aju'] . '</font><br/> Created Date : </b>' . $data['created_at_message'];
+			$html[] = '<b> Name : <font color="#d75350">' . $data['client_name'] . '</font></b><br/><b> NIB : </b>' . $data['nib'] . '<br/><b> NPWP : </b>' . $data['npwp'];
+			$html[] = '<b> Name : <font color="#4549a2">' . $data['partner_name'] . '</font><br/> End Point : </b>' . $data['partner_endpoint'];
 			$html[] = '
 						<div class="dropdown">
 							<button class="btn btn-link font-size-16 shadow-none py-0 text-muted dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 								<i class="bx bx-dots-horizontal-rounded"></i>
 							</button>
 							<ul class="dropdown-menu dropdown-menu-end">
-								<li><a class="dropdown-item" href="#" onclick="show_modal_document('.$data['id'].','.$title.',0,'.$func_name.')">Views Document</a></li>
-								<li><a class="dropdown-item" href="#" onclick="confirm_kirim('.$func_send.','.$data['id'].')">Send Document</a></li>
+								<li><a class="dropdown-item" href="#" onclick="show_modal_document(' . $data['id'] . ',' . $title . ',0,' . $func_name . ')">Views Document</a></li>
+								<li><a class="dropdown-item" href="#" onclick="confirm_kirim(' . $func_send . ',' . $data['id'] . ')">Send Document</a></li>
 							</ul>
 						</div>
 					';
@@ -106,70 +113,70 @@ class Createska extends CI_Controller {
 		$return['recordsFiltered'] 	= $arrRet['totalRow'];
 		$return['error'] 			= '';
 
-        unset($row);
-        echo json_encode($return);
-    }
+		unset($row);
+		echo json_encode($return);
+	}
 
-    public function delete_document()
-    {
-        echo json_encode($this->Model_create_ska->delete_document());
-    }
+	public function delete_document()
+	{
+		echo json_encode($this->Model_create_ska->delete_document());
+	}
 
-    public function get_path_document()
-    {
-        $data['data'] = json_encode($this->Model_master->get_path_document());
-        echo $this->load->view('main/view/v_document',$data,true);
-    }
+	public function get_path_document()
+	{
+		$data['data'] = json_encode($this->Model_master->get_path_document());
+		echo $this->load->view('main/view/v_document', $data, true);
+	}
 
-    public function get_data_draft()
-    {
-        $arrRet 	= $this->Model_create_ska->get_data_draft();
+	public function get_data_draft()
+	{
+		$arrRet 	= $this->Model_create_ska->get_data_draft();
 		$arrData 	= $arrRet['arrData'];
 		$no 		= $this->input->post('start') + 1;
 
 		foreach ($arrData as $key => $data) {
-			if (isset($html)) { 
+			if (isset($html)) {
 				unset($html);
 			}
-			
-            $title = "'Views Document'";
+
+			$title = "'Views Document'";
 			$func_name = "'get_view_draft'";
 
 			$jenis_form = '-';
-			if($data['jenis_form'] == '1') {
+			if ($data['jenis_form'] == '1') {
 				$jenis_form = 'e-form';
-			} else if($data['jenis_form'] == '0') {
+			} else if ($data['jenis_form'] == '0') {
 				$jenis_form = 'Konvensional';
 			}
 
 			$no_serial = $data['no_serial_blanko'];
-			if($no_serial == '') {
+			if ($no_serial == '') {
 				$no_serial = '-';
 			}
 
-			$arr_status = array(1,4,5);
+			$arr_status = array(1, 4, 5);
 			$next = '';
 			$delete = '';
-			if(in_array($data['status'], $arr_status)) {
-				if($data['status'] == 1) {
-					$delete = '<li><a class="dropdown-item" href="#" onclick="confirm_kirim(delete_draft,'.$data['id'].');">Delete Draft</a></li>';
+			if (in_array($data['status'], $arr_status)) {
+				if ($data['status'] == 1) {
+					$delete = '<li><a class="dropdown-item" href="#" onclick="confirm_kirim(delete_draft,' . $data['id'] . ');">Delete Draft</a></li>';
 				}
-				$next = '<li><a class="dropdown-item" href="#" onclick="confirm_kirim(send_draft,'.$data['id'].');">Send Draft</a></li>';
+				$next = '<li><a class="dropdown-item" href="#" onclick="confirm_kirim(send_draft,' . $data['id'] . ');">Send Draft</a></li>';
 			}
 
 			$html[] = $no;
-			$html[] = '<b> Draft Number : <font color="#d75350">'.$data['no_draft'].'</font><br/><b> Aju Number : <font color="#d75350">'.$data['no_aju'].'</font><br/><b> IPSKA : <font color="#4549a2">'.$data['ipska'].'</font><br/><b> Form : <font color="#4549a2">'.$data['cotype'].'</font><br/></b><b> Jenis Pengajuan : <font color="#4549a2">'.$jenis_form.'</font></b><br/><b> Nomor Serial Blanko : <font color="#4549a2">'.$no_serial.'</font><br/></b><b> Status : <font color="#d75350">'.$data['status_desc'].'</font></b><br/><b> Created Date : </b>'.$data['created_at'];
-			$html[] = '<b> Name : <font color="#d75350">'.$data['client_name'].'</font></b><br/><b> NIB : </b>'.$data['nib'].'<br/><b> NPWP : </b>'.$data['npwp'];
-			$html[] = '<b> Name : <font color="#4549a2">'.$data['partner_name'].'</font>';
+			$html[] = '<b> Draft Number : <font color="#d75350">' . $data['no_draft'] . '</font><br/><b> Aju Number : <font color="#d75350">' . $data['no_aju'] . '</font><br/><b> IPSKA : <font color="#4549a2">' . $data['ipska'] . '</font><br/><b> Form : <font color="#4549a2">' . $data['cotype'] . '</font><br/></b><b> Jenis Pengajuan : <font color="#4549a2">' . $jenis_form . '</font></b><br/><b> Nomor Serial Blanko : <font color="#4549a2">' . $no_serial . '</font><br/></b><b> Status : <font color="#d75350">' . $data['status_desc'] . '</font></b><br/><b> Created Date : </b>' . $data['created_at'];
+			$html[] = '<b> Name : <font color="#d75350">' . $data['client_name'] . '</font></b><br/><b> NIB : </b>' . $data['nib'] . '<br/><b> NPWP : </b>' . $data['npwp'];
+			$html[] = '<b> Name : <font color="#4549a2">' . $data['partner_name'] . '</font>';
 			$html[] = '
 						<div class="dropdown">
 							<button class="btn btn-link font-size-16 shadow-none py-0 text-muted dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 								<i class="bx bx-dots-horizontal-rounded"></i>
 							</button>
 							<ul class="dropdown-menu dropdown-menu-end">
-								<li><a class="dropdown-item" href="#" onclick="show_modal_document('.$data['id'].','.$title.',0,'.$func_name.')">Views Draft</a></li>
-								'.$delete.'
-								'.$next.'
+								<li><a class="dropdown-item" href="#" onclick="show_modal_document(' . $data['id'] . ',' . $title . ',0,' . $func_name . ')">Views Draft</a></li>
+								' . $delete . '
+								' . $next . '
 							</ul>
 						</div>
 					';
@@ -183,27 +190,27 @@ class Createska extends CI_Controller {
 		$return['recordsFiltered'] 	= $arrRet['totalRow'];
 		$return['error'] 			= '';
 
-        unset($row);
-        echo json_encode($return);
-    }
+		unset($row);
+		echo json_encode($return);
+	}
 
-    public function get_view_document()
-    {
-        $post 		= $this->input->post('formdata');
-        $arrPost 	= postajax_toarray($post);
-        $id         = $arrPost['header_id'];
+	public function get_view_document()
+	{
+		$post 		= $this->input->post('formdata');
+		$arrPost 	= postajax_toarray($post);
+		$id         = $arrPost['header_id'];
 
-        $arrRet 	= $this->Model_create_ska->get_view_document($id);
+		$arrRet 	= $this->Model_create_ska->get_view_document($id);
 		$arrData 	= $arrRet['arrData'];
 		$no 		= $this->input->post('start') + 1;
 		foreach ($arrData as $key => $data) {
 			if (isset($html)) {
 				unset($html);
 			}
-			
+
 			$value = $data['value'];
-			if($value != '') {
-				if(strpos($value, '.') !== false) {
+			if ($value != '') {
+				if (strpos($value, '.') !== false) {
 					$exp_value = explode('.', $value);
 					if ($exp_value[1]) {
 						$jml = strlen($exp_value[1]);
@@ -216,8 +223,8 @@ class Createska extends CI_Controller {
 				}
 			}
 
-            $title = "'Views Document ".$data['name']."'";
-            $func_name = "'get_path_document'";
+			$title = "'Views Document " . $data['name'] . "'";
+			$func_name = "'get_path_document'";
 			$html[] = $no;
 			$html[] = $data['name'];
 			$html[] = $data['document_number'];
@@ -230,8 +237,8 @@ class Createska extends CI_Controller {
 								<i class="bx bx-dots-horizontal-rounded"></i>
 							</button>
 							<ul class="dropdown-menu dropdown-menu-end">
-								<li><a class="dropdown-item" href="#" onclick="show_modal_document('.$data['id'].','.$title.',1,'.$func_name.')">Views Document</a></li>
-								<li><a class="dropdown-item" href="#" onclick="delete_document('.$data['id'].', '.$id.')">Delete Document</a></li>
+								<li><a class="dropdown-item" href="#" onclick="show_modal_document(' . $data['id'] . ',' . $title . ',1,' . $func_name . ')">Views Document</a></li>
+								<li><a class="dropdown-item" href="#" onclick="delete_document(' . $data['id'] . ', ' . $id . ')">Delete Document</a></li>
 							</ul>
 						</div>
 					';
@@ -245,17 +252,17 @@ class Createska extends CI_Controller {
 		$return['recordsFiltered'] 	= $arrRet['totalRow'];
 		$return['error'] 			= '';
 
-        unset($row);
-        echo json_encode($return);
-    }
+		unset($row);
+		echo json_encode($return);
+	}
 
-    public function get_view_draft()
-    {
-        $post 		= $this->input->post('formdata');
-        $arrPost 	= postajax_toarray($post);
-        $id         = $arrPost['header_id'];
+	public function get_view_draft()
+	{
+		$post 		= $this->input->post('formdata');
+		$arrPost 	= postajax_toarray($post);
+		$id         = $arrPost['header_id'];
 
-        $arrRet 	= $this->Model_create_ska->get_view_draft($id);
+		$arrRet 	= $this->Model_create_ska->get_view_draft($id);
 		// var_dump($arrRet);die();
 		$arrData 	= $arrRet['arrData'];
 		$no 		= $this->input->post('start') + 1;
@@ -274,7 +281,7 @@ class Createska extends CI_Controller {
 								<i class="bx bx-dots-horizontal-rounded"></i>
 							</button>
 							<ul class="dropdown-menu dropdown-menu-end">
-								<li><a class="dropdown-item" href="'.base_url().$data['path'].'" download>Download Document</a></li>
+								<li><a class="dropdown-item" href="' . base_url() . $data['path'] . '" download>Download Document</a></li>
 							</ul>
 						</div>
 					';
@@ -288,9 +295,9 @@ class Createska extends CI_Controller {
 		$return['recordsFiltered'] 	= $arrRet['totalRow'];
 		$return['error'] 			= '';
 
-        unset($row);
-        echo json_encode($return);
-    }
+		unset($row);
+		echo json_encode($return);
+	}
 
 	public function send_document()
 	{
@@ -298,8 +305,8 @@ class Createska extends CI_Controller {
 		$arrRet = $this->Model_create_ska->get_view_document($id, 1);
 		$arrData = $arrRet['arrData'];
 		$jmlData = $arrRet['totalRow'];
-		
-		if($jmlData > 0) {
+
+		if ($jmlData > 0) {
 			$username = $arrData[0]['user_endpoint'];
 			$npwp = $arrData[0]['npwp'];
 			$nib = $arrData[0]['nib'];
@@ -309,26 +316,26 @@ class Createska extends CI_Controller {
 			foreach ($arrData as $key => $value) {
 				$doc_type = (int)$value['kode'];
 				$kppbc = $value['refkppbc_id'];
-				if($kppbc == '') {
+				if ($kppbc == '') {
 					$kppbc = '';
 				}
 
 				$val = (float)$value['value'];
-				if($val == '') {
+				if ($val == '') {
 					$val = '';
 				}
 
 				$doc_no = $value['document_number'];
 				$doc_date = $value['document_date'];
 				$file = base64_encode(file_get_contents($value['path']));
-				
+
 				$support_doc[] = array(
 					'doc_type' => strval($doc_type),
 					'kppbc' => $kppbc,
 					'value' => strval($val),
 					'doc_no' => $doc_no,
 					'doc_date' => $doc_date,
-					'file' => 'data:application/pdf;base64,'.$file
+					'file' => 'data:application/pdf;base64,' . $file
 				);
 			}
 
@@ -345,7 +352,7 @@ class Createska extends CI_Controller {
 			$json_data = json_encode($array_all);
 			// echo $json_data;die();
 			$curl = curl_init();
-				curl_setopt_array($curl, array(
+			curl_setopt_array($curl, array(
 				CURLOPT_URL => $url,
 				CURLOPT_RETURNTRANSFER => true,
 				CURLOPT_ENCODING => '',
@@ -354,7 +361,7 @@ class Createska extends CI_Controller {
 				CURLOPT_FOLLOWLOCATION => true,
 				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 				CURLOPT_CUSTOMREQUEST => 'POST',
-				CURLOPT_POSTFIELDS =>$json_data,
+				CURLOPT_POSTFIELDS => $json_data,
 				CURLOPT_HTTPHEADER => array(
 					'x-Gateway-APIKey: ae5653c9-1ba9-4bbb-8955-7da25cd4fd5b',
 					'Content-Type: application/json',
@@ -366,7 +373,7 @@ class Createska extends CI_Controller {
 			curl_close($curl);
 
 			$json_decode = json_decode($response);
-			if($json_decode == '' or $json_decode == null) {
+			if ($json_decode == '' or $json_decode == null) {
 				$arr_err = array(
 					'kode' => 400,
 					'keterangan' => 'Service error, please try again periodically.'
@@ -387,14 +394,14 @@ class Createska extends CI_Controller {
 		$jmlData = $arrRet['totalRow'];
 		$arr_dok = array();
 
-		if($jmlData > 0) {
+		if ($jmlData > 0) {
 			foreach ($arrData as $key => $value) {
-				if($value['dok_id'] == '1' or $value['dok_id'] == '6') {
+				if ($value['dok_id'] == '1' or $value['dok_id'] == '6') {
 					$arr_dok[] = 1;
 				}
 			}
 
-			if(COUNT($arr_dok) < 2) {
+			if (COUNT($arr_dok) < 2) {
 				echo 0;
 			} else {
 				echo 1;
@@ -420,7 +427,7 @@ class Createska extends CI_Controller {
 		$json_data = json_encode($array_all);
 		// echo $json_data;die();
 		$curl = curl_init();
-			curl_setopt_array($curl, array(
+		curl_setopt_array($curl, array(
 			CURLOPT_URL => $url,
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_ENCODING => '',
@@ -429,7 +436,7 @@ class Createska extends CI_Controller {
 			CURLOPT_FOLLOWLOCATION => true,
 			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 			CURLOPT_CUSTOMREQUEST => 'POST',
-			CURLOPT_POSTFIELDS =>$json_data,
+			CURLOPT_POSTFIELDS => $json_data,
 			CURLOPT_HTTPHEADER => array(
 				'x-Gateway-APIKey: ae5653c9-1ba9-4bbb-8955-7da25cd4fd5b',
 				'Content-Type: application/json',
@@ -440,7 +447,7 @@ class Createska extends CI_Controller {
 		$response = curl_exec($curl);
 		curl_close($curl);
 		$json_decode = json_decode($response);
-		if($json_decode == '' or $json_decode == null) {
+		if ($json_decode == '' or $json_decode == null) {
 			$arr_err = array(
 				'kode' => 400,
 				'keterangan' => 'Service error, please try again periodically.'
@@ -449,18 +456,18 @@ class Createska extends CI_Controller {
 			echo json_encode($arr_err);
 		} else {
 			$kode = $json_decode->kode;
-			if($kode == '200') {
+			if ($kode == '200') {
 				$kode_resp = $json_decode->data->kode;
 				$no_aju = '';
 				$status = 5;
-				
-				if($kode_resp == 'A01') {
+
+				if ($kode_resp == 'A01') {
 					$no_aju = $json_decode->data->no_aju;
 					$status = 3;
 				}
 
 				$data_update = $this->Model_create_ska->update_draft($id, $status, $no_aju);
-				if($data_update == 1) {
+				if ($data_update == 1) {
 					echo $response;
 				} else {
 					$arr_err = array(
@@ -478,7 +485,7 @@ class Createska extends CI_Controller {
 
 	public function v_serial_blanko()
 	{
-		echo $this->load->view('main/view/v_serial_blanko','',true);
+		echo $this->load->view('main/view/v_serial_blanko', '', true);
 	}
 
 	public function delete_draft()
