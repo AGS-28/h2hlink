@@ -1,15 +1,18 @@
 <?php
-class Model_create_ska extends CI_Model {
+class Model_create_ska extends CI_Model
+{
 
-    function get_transaction($id) {
-        $sql = "SELECT partner_id, client_id, no_aju FROM trans.headers WHERE id = ".$id;
+    function get_transaction($id)
+    {
+        $sql = "SELECT partner_id, client_id, no_aju FROM trans.headers WHERE id = " . $id;
         $result = $this->db->query($sql);
         $arr_result = $result->result_array();
 
         return $arr_result;
     }
 
-    function upload_draft($arr_message_type) {
+    function upload_draft($arr_message_type)
+    {
         $length = $this->input->post('length');
         $length1 = $this->input->post('length1');
         $client_partner = $this->input->post('client_partner');
@@ -18,7 +21,7 @@ class Model_create_ska extends CI_Model {
         $tipe_form = $this->input->post('tipe_form');
         $pengajuan = $this->input->post('pengajuan');
         $no_serial = $this->input->post('no_serial');
-        if($no_serial == '') {
+        if ($no_serial == '') {
             $no_serial = null;
         }
 
@@ -27,9 +30,9 @@ class Model_create_ska extends CI_Model {
 
         $val_draft = false;
         while ($val_draft == false) {
-            $no_draft = uniqid().rand();
-            
-            $val_sql = "SELECT no_draft FROM trans.draft_ska WHERE no_draft = ".$this->db->escape($no_draft);
+            $no_draft = uniqid() . rand();
+
+            $val_sql = "SELECT no_draft FROM trans.draft_ska WHERE no_draft = " . $this->db->escape($no_draft);
             $result_val_sql = $this->db->query($val_sql);
             if ($result_val_sql->num_rows() == 0) {
                 $val_draft = true;
@@ -37,7 +40,7 @@ class Model_create_ska extends CI_Model {
                 $val_draft = false;
             }
         }
-        
+
         $draft_ska = array(
             'client_id' => $this->session->userdata('client_id'),
             'partner_id' => $client_partner,
@@ -51,23 +54,23 @@ class Model_create_ska extends CI_Model {
             'created_by' => $this->session->userdata('username'),
             'status' => '1'
         );
-        
+
         $this->db->trans_begin();
-        $this->db->insert('trans.draft_ska', $draft_ska); 
+        $this->db->insert('trans.draft_ska', $draft_ska);
         $id = $this->db->insert_id();
         // var_dump($length);die();
-        for ($i = 0; $i < $length; $i++) { 
+        for ($i = 0; $i < $length; $i++) {
             if (!empty($_FILES)) {
-                $file = $_FILES['file_'.$i];
-                
-                $nama_file = $id.'_'.md5(uniqid().uniqid().rand());
+                $file = $_FILES['file_' . $i];
+
+                $nama_file = $id . '_' . md5(uniqid() . uniqid() . rand());
                 $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
                 $root = 'upload/';
-                $dir = $root.'draft/'.date("Y-m-d").'/';
-                
-                if(in_array(strtoupper($extension),$arr_message_type)) {
-                    
-                    if ( !is_dir( $dir ) ) {
+                $dir = $root . 'draft/' . date("Y-m-d") . '/';
+
+                if (in_array(strtoupper($extension), $arr_message_type)) {
+
+                    if (!is_dir($dir)) {
                         mkdir($dir, 0777, true);
                     }
 
@@ -75,16 +78,16 @@ class Model_create_ska extends CI_Model {
                         'upload_path'       => $dir,
                         'allowed_types'     => 'xls|csv|xlsx|txt|rar|json|xml',
                         // 'max_size'          => 2097152,
-                        'file_name'         => $nama_file.'.'.$extension,
+                        'file_name'         => $nama_file . '.' . $extension,
                         'file_ext_tolower'  => TRUE,
                     );
 
                     $this->load->library('upload', $upload_file);
                     $this->upload->initialize($upload_file);
-                    if ($this->upload->do_upload('file_'.$i)) {
-                        $path_file = $dir.$nama_file.'.'.$extension;
+                    if ($this->upload->do_upload('file_' . $i)) {
+                        $path_file = $dir . $nama_file . '.' . $extension;
 
-                        $tipe_file = array_search(strtoupper($extension),$arr_message_type,true);
+                        $tipe_file = array_search(strtoupper($extension), $arr_message_type, true);
                         $data = array(
                             'draft_id' => $id,
                             'file_name' => $file['name'],
@@ -98,7 +101,8 @@ class Model_create_ska extends CI_Model {
                         $draft_ska_doc[] = $data;
                         // var_dump($draft_ska_doc);die();
                     } else {
-                        echo $this->upload->display_errors();die();
+                        echo $this->upload->display_errors();
+                        die();
                     }
                 } else {
                     $resp = 2;
@@ -110,16 +114,16 @@ class Model_create_ska extends CI_Model {
 
         for ($i = 0; $i < $length1; $i++) {
             if (!empty($_FILES)) {
-                $file = $_FILES['file1_'.$i];
-                
-                $nama_file = $id.'_'.md5(uniqid().uniqid().rand());
+                $file = $_FILES['file1_' . $i];
+
+                $nama_file = $id . '_' . md5(uniqid() . uniqid() . rand());
                 $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
                 $root = 'upload/';
-                $dir = $root.'draft/'.date("Y-m-d").'/';
-                
-                if(in_array(strtoupper($extension),$arr_message_type)) {
-                    
-                    if ( !is_dir( $dir ) ) {
+                $dir = $root . 'draft/' . date("Y-m-d") . '/';
+
+                if (in_array(strtoupper($extension), $arr_message_type)) {
+
+                    if (!is_dir($dir)) {
                         mkdir($dir, 0777, true);
                     }
 
@@ -127,16 +131,16 @@ class Model_create_ska extends CI_Model {
                         'upload_path'       => $dir,
                         'allowed_types'     => 'xls|csv|xlsx|txt|rar|json|xml',
                         // 'max_size'          => 2097152,
-                        'file_name'         => $nama_file.'.'.$extension,
+                        'file_name'         => $nama_file . '.' . $extension,
                         'file_ext_tolower'  => TRUE,
                     );
 
                     $this->load->library('upload', $upload_file);
                     $this->upload->initialize($upload_file);
-                    if ($this->upload->do_upload('file1_'.$i)) {
-                        $path_file = $dir.$nama_file.'.'.$extension;
+                    if ($this->upload->do_upload('file1_' . $i)) {
+                        $path_file = $dir . $nama_file . '.' . $extension;
 
-                        $tipe_file = array_search(strtoupper($extension),$arr_message_type,true);
+                        $tipe_file = array_search(strtoupper($extension), $arr_message_type, true);
                         $data = array(
                             'draft_id' => $id,
                             'file_name' => $file['name'],
@@ -150,7 +154,8 @@ class Model_create_ska extends CI_Model {
                         $draft_ska_doc[] = $data;
                         // var_dump($draft_ska_doc);die();
                     } else {
-                        echo $this->upload->display_errors();die();
+                        echo $this->upload->display_errors();
+                        die();
                     }
                 } else {
                     $resp = 2;
@@ -161,13 +166,13 @@ class Model_create_ska extends CI_Model {
         }
 
         // var_dump($draft_ska_doc);die();
-        
-        if(COUNT($draft_ska_doc) > 0) {
-            $this->db->insert_batch('trans.draft_ska_document', $draft_ska_doc); 
 
-            if ($this->db->trans_status() == false){
+        if (COUNT($draft_ska_doc) > 0) {
+            $this->db->insert_batch('trans.draft_ska_document', $draft_ska_doc);
+
+            if ($this->db->trans_status() == false) {
                 $this->db->trans_rollback();
-            }else{
+            } else {
                 $this->db->trans_commit();
                 $resp = 1;
             }
@@ -178,9 +183,10 @@ class Model_create_ska extends CI_Model {
         return $resp;
     }
 
-    function save_upload_document() {
+    function save_upload_document()
+    {
         $post = $this->input->post('formdata');
-		$arrPost = postajax_toarray($post);
+        $arrPost = postajax_toarray($post);
         // var_dump($_POST, $_FILES);die();
         $data_client = $this->get_transaction($arrPost['aju_number']);
 
@@ -189,12 +195,12 @@ class Model_create_ska extends CI_Model {
         if (!empty($_FILES)) {
             $file = $_FILES['file'];
 
-            $nama_file = md5(uniqid().uniqid().rand());
+            $nama_file = md5(uniqid() . uniqid() . rand());
             $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
             $root = 'upload/';
-            $dir = $root.'document/'.date("Y-m-d").'/';
-            
-            if ( !is_dir( $dir ) ) {
+            $dir = $root . 'document/' . date("Y-m-d") . '/';
+
+            if (!is_dir($dir)) {
                 mkdir($dir, 0777, true);
             }
 
@@ -202,35 +208,35 @@ class Model_create_ska extends CI_Model {
                 'upload_path'       => $dir,
                 'allowed_types'     => 'pdf',
                 // 'max_size'          => 2097152,
-                'file_name'         => $nama_file.'.'.$extension,
+                'file_name'         => $nama_file . '.' . $extension,
                 'file_ext_tolower'  => TRUE,
             );
 
             $this->load->library('upload', $upload_file);
             $this->upload->initialize($upload_file);
             if ($this->upload->do_upload('file')) {
-                $path_file = $dir.$nama_file.'.'.$extension;
+                $path_file = $dir . $nama_file . '.' . $extension;
                 $status = true;
             }
         }
 
-        if($status) {
-            if(isset($arrPost['kppbc'])) {
+        if ($status) {
+            if (isset($arrPost['kppbc'])) {
                 $refkkpbc = $arrPost['kppbc'];
             } else {
                 $refkkpbc = null;
             }
 
-            if($arrPost['document_type'] != '6') {
+            if ($arrPost['document_type'] != '6') {
                 $refkkpbc = null;
             }
 
-            if($arrPost['document_type'] == '1' OR $arrPost['document_type'] == '6') {
-                $value = str_replace(',','',$arrPost['value']);
+            if ($arrPost['document_type'] == '1' or $arrPost['document_type'] == '6') {
+                $value = str_replace(',', '', $arrPost['value']);
             } else {
                 $value = null;
             }
-            
+
             $this->db->trans_begin();
             $array_data = array(
                 'transaction_id' => $arrPost['aju_number'],
@@ -249,10 +255,10 @@ class Model_create_ska extends CI_Model {
                 'is_delete' => 'f'
             );
 
-            $this->db->insert('trans.document', $array_data); 
-            if ($this->db->trans_status() == false){
+            $this->db->insert('trans.document', $array_data);
+            if ($this->db->trans_status() == false) {
                 $this->db->trans_rollback();
-            }else{
+            } else {
                 $this->db->trans_commit();
                 $resp = 1;
             }
@@ -261,31 +267,32 @@ class Model_create_ska extends CI_Model {
         return $resp;
     }
 
-    function get_data_document() {
-        $start 		= $this->input->post('start');
-		$length 	= $this->input->post('length');
-		$post 		= $this->input->post('formdata');
-		$arrPost 	= postajax_toarray($post);
+    function get_data_document()
+    {
+        $start         = $this->input->post('start');
+        $length     = $this->input->post('length');
+        $post         = $this->input->post('formdata');
+        $arrPost     = postajax_toarray($post);
         $addSql     = '';
-        
-        if($arrPost['no_aju'] != '') {
-            $addSql .= ' AND a.no_aju = '.$this->db->escape($arrPost['no_aju']);
+
+        if ($arrPost['no_aju'] != '') {
+            $addSql .= ' AND a.no_aju = ' . $this->db->escape($arrPost['no_aju']);
         }
-        
-        $sql_total 	= ' SELECT a.id, a.no_aju, b.client_name, b.npwp, b.nib, c.partner_name, d.method_name as partner_endpoint, a.created_at as created_at_message
+
+        $sql_total     = ' SELECT a.id, a.no_aju, b.client_name, b.npwp, b.nib, c.partner_name, d.method_name as partner_endpoint, a.created_at as created_at_message
                         FROM trans.headers a 
                         LEFT JOIN profile.clients b ON b.id = a.client_id
                         LEFT JOIN profile.partners c ON c.id = a.partner_id
                         LEFT JOIN profile.partner_endpoints d ON d.id = a.partner_endpoint_id
                         WHERE a.partner_endpoint_id = 1
                         AND a.no_aju IS NOT NULL
-                        AND a.client_id = '.$this->session->userdata('client_id').' '.$addSql.'
+                        AND a.client_id = ' . $this->session->userdata('client_id') . ' ' . $addSql . '
                         ORDER BY a.created_at DESC';
-    
-		$result_total 	= $this->db->query($sql_total);
-		$banyak 		= $result_total->num_rows();
 
-		if($banyak > 0){
+        $result_total     = $this->db->query($sql_total);
+        $banyak         = $result_total->num_rows();
+
+        if ($banyak > 0) {
             $sql = 'SELECT a.id, a.no_aju, b.client_name, b.npwp, b.nib, c.partner_name, d.method_name as partner_endpoint, a.created_at as created_at_message
                     FROM trans.headers a 
                     LEFT JOIN profile.clients b ON b.id = a.client_id
@@ -293,60 +300,61 @@ class Model_create_ska extends CI_Model {
                     LEFT JOIN profile.partner_endpoints d ON d.id = a.partner_endpoint_id
                     WHERE a.partner_endpoint_id = 1
                     AND a.no_aju IS NOT NULL
-                    AND a.client_id = '.$this->session->userdata('client_id').' '.$addSql.'
+                    AND a.client_id = ' . $this->session->userdata('client_id') . ' ' . $addSql . '
                     ORDER BY a.created_at DESC
-                    LIMIT '.$length.' OFFSET '.$start;
-			$result 		= $this->db->query($sql);
-			$arrayReturn 	= $result->result_array();
+                    LIMIT ' . $length . ' OFFSET ' . $start;
+            $result         = $this->db->query($sql);
+            $arrayReturn     = $result->result_array();
 
-			$return['totalRow'] = $banyak;
-			$return['arrData'] 	= $arrayReturn;
-		}else{
-			$return['totalRow'] = 0;
-			$return['arrData'] 	= array();
-		}		
+            $return['totalRow'] = $banyak;
+            $return['arrData']     = $arrayReturn;
+        } else {
+            $return['totalRow'] = 0;
+            $return['arrData']     = array();
+        }
 
-		return $return;
+        return $return;
     }
 
-    function get_view_document($id,$tipe='') {
-        $start 		= $this->input->post('start');
-		$length 	= $this->input->post('length');
+    function get_view_document($id, $tipe = '')
+    {
+        $start         = $this->input->post('start');
+        $length     = $this->input->post('length');
 
-        if($tipe == '') {
-            $sql_total 	= ' SELECT a.id, b.name, a.document_number, a.document_date, a.created_at AS created_at_document, c.name as kppbc, a.value
+        if ($tipe == '') {
+            $sql_total     = ' SELECT a.id, b.name, a.document_number, a.document_date, a.created_at AS created_at_document, c.name as kppbc, a.value
                             FROM trans.document a 
                             LEFT JOIN referensi.refdokumen b ON b.id = a.refdokumen_id
                             LEFT JOIN referensi.refkppbc c ON c.code = a.refkppbc_id
                             WHERE a.is_delete = false 
-                            AND a.client_id = '.$this->session->userdata('client_id').' 
-                            AND a.transaction_id = '.$id.'
+                            AND a.client_id = ' . $this->session->userdata('client_id') . ' 
+                            AND a.transaction_id = ' . $id . '
                             ORDER BY a.created_at DESC';
         } else {
-            $sql_total 	= ' SELECT c.user_endpoint, c.npwp, c.nib, a.no_aju, b.document_number, b.document_date, b.path, d.kode, b.value, b.refkppbc_id, d.id as dok_id
+            $sql_total     = ' SELECT c.user_endpoint, c.npwp, c.nib, a.no_aju, b.document_number, b.document_date, b.path, d.kode, b.value, b.refkppbc_id, d.id as dok_id
                             FROM trans.headers a 
                             LEFT JOIN trans.document b ON b.transaction_id = a.id
                             LEFT JOIN profile.clients c ON c.id = a.client_id
                             LEFT JOIN referensi.refdokumen d ON d.id = b.refdokumen_id
                             WHERE b.is_delete = false 
-                            AND c.id = '.$this->session->userdata('client_id').' 
-                            AND a.id = '.$id;
+                            AND c.id = ' . $this->session->userdata('client_id') . ' 
+                            AND a.id = ' . $id;
         }
-        
-		$result_total 	= $this->db->query($sql_total);
-		$banyak 		= $result_total->num_rows();
 
-		if($banyak > 0){		
-            if($tipe == '') {
+        $result_total     = $this->db->query($sql_total);
+        $banyak         = $result_total->num_rows();
+
+        if ($banyak > 0) {
+            if ($tipe == '') {
                 $sql = 'SELECT a.id, b.name, a.document_number, a.document_date, a.created_at AS created_at_document, c.name as kppbc, a.value
                         FROM trans.document a 
                         LEFT JOIN referensi.refdokumen b ON b.id = a.refdokumen_id
                         LEFT JOIN referensi.refkppbc c ON c.code = a.refkppbc_id
                         WHERE a.is_delete = false 
-                        AND a.client_id = '.$this->session->userdata('client_id').' 
-                        AND a.transaction_id = '.$id.'
+                        AND a.client_id = ' . $this->session->userdata('client_id') . ' 
+                        AND a.transaction_id = ' . $id . '
                         ORDER BY a.created_at DESC
-                        LIMIT '.$length.' OFFSET '.$start;
+                        LIMIT ' . $length . ' OFFSET ' . $start;
             } else {
                 $sql = 'SELECT c.user_endpoint, c.npwp, c.nib, a.no_aju, b.document_number, b.document_date, b.path, d.kode, b.value, b.refkppbc_id, d.id as dok_id
                         FROM trans.headers a 
@@ -354,65 +362,67 @@ class Model_create_ska extends CI_Model {
                         LEFT JOIN profile.clients c ON c.id = a.client_id
                         LEFT JOIN referensi.refdokumen d ON d.id = b.refdokumen_id
                         WHERE b.is_delete = false 
-                        AND c.id = '.$this->session->userdata('client_id').' 
-                        AND a.id = '.$id;
+                        AND c.id = ' . $this->session->userdata('client_id') . ' 
+                        AND a.id = ' . $id;
             }
-            
-			$result 		= $this->db->query($sql);
-			$arrayReturn 	= $result->result_array();
 
-			$return['totalRow'] = $banyak;
-			$return['arrData'] 	= $arrayReturn;
-		}else{
-			$return['totalRow'] = 0;
-			$return['arrData'] 	= array();
-		}		
+            $result         = $this->db->query($sql);
+            $arrayReturn     = $result->result_array();
 
-		return $return;
+            $return['totalRow'] = $banyak;
+            $return['arrData']     = $arrayReturn;
+        } else {
+            $return['totalRow'] = 0;
+            $return['arrData']     = array();
+        }
+
+        return $return;
     }
 
-    function get_view_draft($id) {
-        $start 		= $this->input->post('start');
-		$length 	= $this->input->post('length');
+    function get_view_draft($id)
+    {
+        $start         = $this->input->post('start');
+        $length     = $this->input->post('length');
 
-        $sql_total 	= ' SELECT a.id, b.message_type, a.path, a.file_name, c.name
+        $sql_total     = ' SELECT a.id, b.message_type, a.path, a.file_name, c.name
                         FROM trans.draft_ska_document a
                         LEFT JOIN referensi.message_type b ON b.id = a.tipe_file
                         LEFT JOIN referensi.refdokumen c ON c.id = a.refdokumen_id
-                        WHERE a.draft_id = '.$id.'
+                        WHERE a.draft_id = ' . $id . '
                         ORDER BY a.created_at DESC';
-    
-		$result_total 	= $this->db->query($sql_total);
-		$banyak 		= $result_total->num_rows();
 
-		if($banyak > 0){			
+        $result_total     = $this->db->query($sql_total);
+        $banyak         = $result_total->num_rows();
+
+        if ($banyak > 0) {
             $sql = 'SELECT a.id, b.message_type, a.path, a.file_name, c.name
                     FROM trans.draft_ska_document a
                     LEFT JOIN referensi.message_type b ON b.id = a.tipe_file
                     LEFT JOIN referensi.refdokumen c ON c.id = a.refdokumen_id
-                    WHERE a.draft_id = '.$id.'
+                    WHERE a.draft_id = ' . $id . '
                     ORDER BY a.created_at DESC
-                    LIMIT '.$length.' OFFSET '.$start;
-			$result 		= $this->db->query($sql);
-			$arrayReturn 	= $result->result_array();
+                    LIMIT ' . $length . ' OFFSET ' . $start;
+            $result         = $this->db->query($sql);
+            $arrayReturn     = $result->result_array();
 
-			$return['totalRow'] = $banyak;
-			$return['arrData'] 	= $arrayReturn;
-		}else{
-			$return['totalRow'] = 0;
-			$return['arrData'] 	= array();
-		}		
+            $return['totalRow'] = $banyak;
+            $return['arrData']     = $arrayReturn;
+        } else {
+            $return['totalRow'] = 0;
+            $return['arrData']     = array();
+        }
 
-		return $return;
+        return $return;
     }
 
-    function delete_document() {
+    function delete_document()
+    {
         $id = $this->input->post('id');
         $data = 0;
-        $DataUpdate = array('is_delete' => 't' );
+        $DataUpdate = array('is_delete' => 't');
 
         $this->db->where('id', $id);
-        $this->db->update('trans.document',$DataUpdate);
+        $this->db->update('trans.document', $DataUpdate);
 
         if ($this->db->affected_rows() > 0) {
             $data = 1;
@@ -421,13 +431,14 @@ class Model_create_ska extends CI_Model {
         return $data;
     }
 
-    function delete_draft() {
+    function delete_draft()
+    {
         $id = $this->input->post('id');
         $data = 0;
-        $DataUpdate = array('is_delete' => 't' );
+        $DataUpdate = array('is_delete' => 't');
 
         $this->db->where('id', $id);
-        $this->db->update('trans.draft_ska',$DataUpdate);
+        $this->db->update('trans.draft_ska', $DataUpdate);
 
         if ($this->db->affected_rows() > 0) {
             $data = 1;
@@ -436,18 +447,19 @@ class Model_create_ska extends CI_Model {
         return $data;
     }
 
-    function get_data_draft() {
-        $start 		= $this->input->post('start');
-		$length 	= $this->input->post('length');
-		$post 		= $this->input->post('formdata');
-		$arrPost 	= postajax_toarray($post);
+    function get_data_draft()
+    {
+        $start         = $this->input->post('start');
+        $length     = $this->input->post('length');
+        $post         = $this->input->post('formdata');
+        $arrPost     = postajax_toarray($post);
         $addSql     = '';
-        
-        if($arrPost['no_draft'] != '') {
-            $addSql .= ' AND a.no_draft = '.$this->db->escape($arrPost['no_draft']);
+
+        if ($arrPost['no_draft'] != '') {
+            $addSql .= ' AND a.no_draft = ' . $this->db->escape($arrPost['no_draft']);
         }
-        
-        $sql_total 	= ' SELECT a.id, a.no_draft, a.created_at, d.status_desc, b.client_name, b.npwp, b.nib, c.partner_name, a.status, e.name as cotype, f.name as ipska, a.jenis_form, a.no_serial_blanko, a.no_aju
+
+        $sql_total     = ' SELECT a.id, a.no_draft, a.created_at, d.status_desc, b.client_name, b.npwp, b.nib, c.partner_name, a.status, e.name as cotype, f.name as ipska, a.jenis_form, a.no_serial_blanko, a.no_aju
                         FROM trans.draft_ska a
                         LEFT JOIN profile.clients b ON b.id = a.client_id
                         LEFT JOIN profile.partners c ON c.id = a.partner_id
@@ -455,13 +467,13 @@ class Model_create_ska extends CI_Model {
                         LEFT JOIN referensi.refcotype e ON e.id = a.co_type_id
                         LEFT JOIN referensi.refipska f ON f.id = a.ipska_office_id
                         WHERE a.is_delete is null 
-                        AND a.client_id = '.$this->session->userdata('client_id').' '.$addSql.'
+                        AND a.client_id = ' . $this->session->userdata('client_id') . ' ' . $addSql . '
                         ORDER BY a.created_at DESC';
-		$result_total 	= $this->db->query($sql_total);
-		$banyak 		= $result_total->num_rows();
+        $result_total     = $this->db->query($sql_total);
+        $banyak         = $result_total->num_rows();
 
-		if($banyak > 0){
-			$sql = 'SELECT a.id, a.no_draft, a.created_at, d.status_desc, b.client_name, b.npwp, b.nib, c.partner_name, a.status, e.name as cotype, f.name as ipska, a.jenis_form, a.no_serial_blanko, a.no_aju
+        if ($banyak > 0) {
+            $sql = 'SELECT a.id, a.no_draft, a.created_at, d.status_desc, b.client_name, b.npwp, b.nib, c.partner_name, a.status, e.name as cotype, f.name as ipska, a.jenis_form, a.no_serial_blanko, a.no_aju
                     FROM trans.draft_ska a
                     LEFT JOIN profile.clients b ON b.id = a.client_id
                     LEFT JOIN profile.partners c ON c.id = a.partner_id
@@ -469,27 +481,27 @@ class Model_create_ska extends CI_Model {
                     LEFT JOIN referensi.refcotype e ON e.id = a.co_type_id
                     LEFT JOIN referensi.refipska f ON f.id = a.ipska_office_id
                     WHERE a.is_delete is null
-                    AND a.client_id = '.$this->session->userdata('client_id').' '.$addSql.'
+                    AND a.client_id = ' . $this->session->userdata('client_id') . ' ' . $addSql . '
                     ORDER BY a.created_at DESC
-                    LIMIT '.$length.' OFFSET '.$start;
-			$result 		= $this->db->query($sql);
-			$arrayReturn 	= $result->result_array();
+                    LIMIT ' . $length . ' OFFSET ' . $start;
+            $result         = $this->db->query($sql);
+            $arrayReturn     = $result->result_array();
 
-			$return['totalRow'] = $banyak;
-			$return['arrData'] 	= $arrayReturn;
-		}else{
-			$return['totalRow'] = 0;
-			$return['arrData'] 	= array();
-		}		
+            $return['totalRow'] = $banyak;
+            $return['arrData']     = $arrayReturn;
+        } else {
+            $return['totalRow'] = 0;
+            $return['arrData']     = array();
+        }
 
-		return $return;
+        return $return;
     }
 
     function update_draft($id, $status, $no_aju)
     {
         $this->db->trans_begin();
-        
-        if($no_aju == '') {
+
+        if ($no_aju == '') {
             $no_aju = null;
         }
 
@@ -500,9 +512,9 @@ class Model_create_ska extends CI_Model {
         );
 
         $this->db->where('id', $id);
-        $this->db->update('trans.draft_ska',$arr);
+        $this->db->update('trans.draft_ska', $arr);
 
-        if($no_aju != '') {
+        if ($no_aju != '') {
             $arr_draft = array(
                 'id_draft' => $id
             );
@@ -510,20 +522,19 @@ class Model_create_ska extends CI_Model {
             $this->db->where('no_aju', $no_aju);
             $this->db->where('partner_endpoint_id', 1);
             $this->db->where('client_id', $this->session->userdata('client_id'));
-            $this->db->update('trans.headers',$arr_draft);
+            $this->db->update('trans.headers', $arr_draft);
         }
 
-        if ($this->db->trans_status() == false){
+        if ($this->db->trans_status() == false) {
             $this->db->trans_rollback();
 
             $data = 0;
-        }else{
+        } else {
             $this->db->trans_commit();
-            
+
             $data = 1;
         }
 
         return $data;
     }
-
 }
