@@ -1,13 +1,21 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Welcome extends CI_Controller {
+/**
+ * @property CI_DB_query_builder $db2
+ * @property CI_URI $uri
+ * @property CI_Input $input
+ * @property CI_Session $session
+ */
+class Welcome extends CI_Controller
+{
 
-	function __construct(){
-            parent::__construct();
-            //load our second db and put in $db2
-            $this->db2 = $this->load->database('second', TRUE);
-     }
+	function __construct()
+	{
+		parent::__construct();
+		//load our second db and put in $db2
+		$this->db2 = $this->load->database('second', TRUE);
+	}
 
 	/**
 	 * Index Page for this controller.
