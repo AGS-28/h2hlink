@@ -861,7 +861,8 @@ class Model_cms extends CI_Model
             $sql_refdoc = "select a.refdokumen_name, b.message_type as file_extension
                                 from profile.client_refdokumens a 
                                 left join referensi.message_type b on b.id = a.message_type_id 
-                            where a.client_id = " . $this->db->escape($id);
+                            where a.client_id = " . $this->db->escape($id) ."
+                            order by a.id asc";
             $result     = $this->db->query($sql_refdoc);
             $banyak     = $result->num_rows();
 
@@ -1235,7 +1236,8 @@ class Model_cms extends CI_Model
                             b.message_type as file_extension_name
                             from profile.client_refdokumens a
                             join referensi.message_type b on a.message_type_id = b.id
-                            where a.client_id = " . $this->db->escape($id);
+                            where a.client_id = " . $this->db->escape($id) . "
+                            order by a.id asc";
 
         $result     = $this->db->query($sql);
         $banyak     = $result->num_rows();
