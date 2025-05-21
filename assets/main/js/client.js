@@ -1,5 +1,6 @@
 const packageChoiches = new Choices('#package_type', {removeItems: true,removeItemButton: true});
 const ChoichesPartner = new Choices('#partner-name', {removeItems: true,removeItemButton: true});
+const ChoichesExtension = new Choices('#file_extension', {removeItems: true,removeItemButton: true,shouldSort: false});
 
 var tablerowmethod  = 0;
 var tablerowpartner = 0;
@@ -30,7 +31,9 @@ $(document).ready(function() {
         add_partner();
       });
 
-    
+    $( "#btn-add-clientRefDocument" ).click(function() {
+        addClientRefDocument();
+      });
 });
 
 function get_data_all() {
@@ -59,11 +62,13 @@ function get_data_all() {
 }
 
 function add_client() {
-    $('#form-add-item').trigger("reset");
+    $('#form-add-item').trigger('reset');
     $('#updated').val('0');
     $('#addrowtablePartner').html('');
     $('#addrowtableMethods').html('');
     $('#addrowtableChanel').html('');
+    $('#addrowtableClientRefDocument').html('');
+
     packageChoiches.setChoices(
         [
             { value: '1', label: 'Basic'},
@@ -77,6 +82,10 @@ function add_client() {
     
     var element = getselectpartner();
     ChoichesPartner.setChoices(element,'value','label',true,);
+    
+    var elementSelectExtension = getSelectExtension();
+    ChoichesExtension.setChoices(elementSelectExtension,'value','label',true,);
+
     $('#modal_add').modal('toggle');
 }
 
@@ -117,6 +126,7 @@ function edit(id)
         getchanel(thisdata.package_id);
 
         get_edit_partner(id);
+        getEditClientRefDocument(id);
     }
     else
     {
@@ -391,4 +401,149 @@ function get_edit_partner(id)
     }
 
 }
+
+function getSelectRefDocument(id='') {
+    var postdata    = new FormData();
+    var url         = siteurl+'/cms/getselectrefdocument';
+    postdata.append('id',id);
     
+    var data = post_ajax(url,postdata);
+    var respondData = JSON.parse(data);
+    if (respondData.status == 1) {
+        return respondData.thisdata;
+    }
+    else
+    {
+        return "[{ value: '', label: 'Empty'}]";
+    }
+}
+
+function changeRefDocument(val) {
+    if (val == '') return;
+    
+    var postdata    = new FormData();
+    var url         = siteurl+'/cms/getallrefdocument';
+    postdata.append('id',val);
+    
+    var data = post_ajax(url,postdata);
+    var respondData = JSON.parse(data);
+    if (respondData.status == 1) {
+        $('#desc_refdocument').val(respondData.thisdata.kode+' - '+respondData.thisdata.uraian);
+    }
+    else
+    {
+        alert_error("General Errors..");
+    }
+}
+
+function getSelectExtension(id='') {
+    var postdata    = new FormData();
+    var url         = siteurl+'/cms/getselectmessagetype';
+    postdata.append('id',id);
+    
+    var data = post_ajax(url,postdata);
+    var respondData = JSON.parse(data);
+    if (respondData.status == 1) {
+        return respondData.thisdata;
+    }
+    else
+    {
+        return "[{ value: '', label: 'Empty'}]";
+    }
+}
+
+function addClientRefDocument() {
+    var arrID = [];
+    if ($('#arrClientRefDocument').val() !== '')
+    arrID = $('#arrClientRefDocument').val().split(",");
+    var refDocumentName        = $('#refdokumen_name').val();
+    var fileExtensionId        = $('#file_extension').val();
+    var fileExtensionName      = $('#file_extension').text();
+    var refDocumentCode        = refDocumentName.toLowerCase();
+
+    if (arrID.indexOf(refDocumentCode) === -1) {
+        var addrowtable            = '';
+
+        arrID.push(refDocumentCode);
+        $('#arrClientRefDocument').val(arrID.join());
+
+        addrowtable += '<tr id = "row_'+refDocumentCode+'">';
+        addrowtable += '<td>'+refDocumentName+'<input type="hidden" name="refDocumentName[]" value="'+refDocumentName+'"></td>';
+        addrowtable += '<td>'+fileExtensionName+'<input type="hidden" name="fileExtensionId[]" value="'+fileExtensionId+'"></td>';
+        addrowtable += '<td><button type="button" class="btn btn-danger waves-effect btn-label btn-sm waves-light" onclick="deleteRowClientRefDocument('+refDocumentCode+')"><i class="bx bxs-trash label-icon"></i> Delete</button></td>';
+        $('#addrowtableClientRefDocument').append(addrowtable);
+
+        ChoichesExtension.removeActiveItems();
+        $('#refdokumen_name').val('');
+    }
+    else
+    {
+        alert_error('Client Ref Document has been added !!');
+    }
+}
+
+function deleteRowClientRefDocument(rowCode, value = null) {
+
+    var strdata = $('#arrClientRefDocument').val();
+    $('#arrClientRefDocument').val('');
+    var arrdata = strdata.split(",");
+    var newarrdata = arrdata.filter(function(item) {
+        return item != rowCode;
+    });
+    $('#arrClientRefDocument').val(newarrdata.join());
+    $('#row_'+rowCode).remove();
+
+    if (value) {
+        var arrID = [];
+        if ($('#arrClientRefDocumentDeleted').val() !== '') arrID = $('#arrClientRefDocumentDeleted').val().split(",");
+        arrID.push(value);
+        $('#arrClientRefDocumentDeleted').val(arrID.join());
+    }
+}
+
+function getEditClientRefDocument(id) 
+{
+    var url = siteurl + '/cms/get_edit_clientrefdocument/'+Math.random();
+    var postdata = new FormData();
+    postdata.append('id',id);
+    var data = post_ajax(url,postdata);
+    var respondData = JSON.parse(data);
+    var thisdata = respondData.thisdata;
+
+    if (respondData.status == 1) {
+        for (let index = 0; index < thisdata.length; index++) {
+            var arrID = [];
+            if ($('#arrClientRefDocument').val() !== '')
+            arrID = $('#arrClientRefDocument').val().split(",");
+            var clientRefDocumentId    = thisdata[index].id;
+            var refDocumentName        = thisdata[index].refdokumen_name;
+            var fileExtensionName      = thisdata[index].file_extension_name;
+            var refDocumentCode        = refDocumentName.toLowerCase();
+
+            if (arrID.indexOf(refDocumentCode) === -1) {
+                var addrowtable            = '';
+
+                arrID.push(refDocumentCode);
+                $('#arrClientRefDocument').val(arrID.join());
+
+                addrowtable += '<tr id = "row_'+refDocumentCode+'"><input type="hidden" name="clientRefDocumentId[]" value="'+clientRefDocumentId+'">';
+                addrowtable += '<td>'+refDocumentName+'</td>';
+                addrowtable += '<td>'+fileExtensionName+'</td>';
+                addrowtable += '<td><button type="button" class="btn btn-danger waves-effect btn-label btn-sm waves-light" onclick="deleteRowClientRefDocument(\''+refDocumentCode+'\','+clientRefDocumentId+')"><i class="bx bxs-trash label-icon"></i> Delete</button></td>';
+                $('#addrowtableClientRefDocument').append(addrowtable);
+
+                ChoichesExtension.removeActiveItems();
+                $('#refdokumen_name').val('');
+            }
+            else
+            {
+                alert_error('Client Ref Document has been added !!');
+            }
+        }
+    }
+    else
+    {
+        alert_error("General Erors...!");
+    }
+
+}
