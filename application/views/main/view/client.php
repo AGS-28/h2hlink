@@ -519,6 +519,28 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
+
+                                                                        <div class="card">
+                                                                            <div class="card-header" id="view_header_clientRefDocument">
+                                                                                <i id="view_clientRefDocument_tampil" class="fa fa-chevron-left" aria-hidden="true" title="Show Form Searching" style="cursor:pointer; position:relative; float:right; margin-right:5px;" onclick="show_hide_form('view_header_chanel','view_clientRefDocument_tampil','view_clientRefDocument_card')"></i>
+                                                                                <h4 class="card-title"><i class="bx bx-edit-alt"></i> Client Ref Document</h4>
+                                                                                <p class="card-title-desc">Please click the icon at the top right corner to display data</p>
+                                                                            </div>
+                                                                            <div class="card-body p-4 view_clientRefDocument_card" style="display: none;">
+                                                                                <div class="row">
+                                                                                    <table id="VtabelClientRefDocument" class="table table-bordered dt-responsive nowrap w-100" width="100%">
+                                                                                        <thead>
+                                                                                            <th width="10%">No</th>
+                                                                                            <th width="60%">Dokumen Name</th>
+                                                                                            <th width="30%">File Extension</th>
+                                                                                        </thead>
+                                                                                        <tbody id="viewtableClientRefDocument">
+                                                                                            
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
                                                                         
                                                                         <div>
                                                                             <ul class="pager wizard twitter-bs-wizard-pager-link">

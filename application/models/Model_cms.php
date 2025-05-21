@@ -837,9 +837,9 @@ class Model_cms extends CI_Model
             $result     = $this->db->query($sql_endpoint);
             $banyak     = $result->num_rows();
 
+            $html = "";
             if ($banyak > 0) {
                 $DataEndpoints = $result->result();
-                $html = "";
                 foreach ($DataEndpoints as $key => $value) {
                     $html .= "<tr>";
                     $html .= "<td>" . ($key + 1) . "</td>";
@@ -857,12 +857,37 @@ class Model_cms extends CI_Model
             }
 
             $dataRowEndpoint = $html;
+
+            $sql_refdoc = "select a.refdokumen_name, b.message_type as file_extension
+                                from profile.client_refdokumens a 
+                                left join referensi.message_type b on b.id = a.message_type_id 
+                            where a.client_id = " . $this->db->escape($id);
+            $result     = $this->db->query($sql_refdoc);
+            $banyak     = $result->num_rows();
+
+            $html = "";
+            if ($banyak > 0) {
+                $DataClientRefDocs = $result->result();
+                foreach ($DataClientRefDocs as $key => $value) {
+                    $html .= "<tr>";
+                    $html .= "<td>" . ($key + 1) . "</td>";
+                    $html .= "<td>" . $value->refdokumen_name . "</td>";
+                    $html .= "<td>" . $value->file_extension . "</td>";
+                    $html .= "</tr>";
+                }
+            } else {
+                $html .= "Data Empty";
+            }
+
+            $dataRowClientRefDoc = $html;
         }
+
         $data = array(
-            'clientProfile' => $returnData,
-            'rowChanel'     => $dataRowChanel,
-            'rowEndpoint'   => $dataRowEndpoint,
-            'status'        => $status,
+            'clientProfile'         => $returnData,
+            'rowChanel'             => $dataRowChanel,
+            'rowEndpoint'           => $dataRowEndpoint,
+            'rowClientRefDocument'  => $dataRowClientRefDoc,
+            'status'                => $status,
         );
 
         return $data;

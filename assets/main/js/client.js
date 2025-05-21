@@ -144,11 +144,12 @@ function view(id)
     
     postdata.append('id',id);
 
-    var data            = post_ajax(url,postdata);
-    var respondData     = JSON.parse(data);
-    var clientProfile   = respondData.clientProfile;
-    var rowchanel       = respondData.rowChanel;
-    var rowendpoint     = respondData.rowEndpoint;
+    var data                    = post_ajax(url,postdata);
+    var respondData             = JSON.parse(data);
+    var clientProfile           = respondData.clientProfile;
+    var rowchanel               = respondData.rowChanel;
+    var rowendpoint             = respondData.rowEndpoint;
+    var rowClientRefDocument    = respondData.rowClientRefDocument;
 
     if (respondData.status == 1) {
         $('#view_nib').val(clientProfile.nib);
@@ -169,6 +170,9 @@ function view(id)
         
         $('#viewtableEndpoint').empty();
         $('#viewtableEndpoint').append(rowendpoint);
+
+        $('#viewtableClientRefDocument').empty();
+        $('#viewtableClientRefDocument').append(rowClientRefDocument);
         
         $('#modal_view').modal('toggle');
     }
