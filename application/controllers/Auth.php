@@ -89,7 +89,8 @@ class Auth extends CI_Controller
 	public function crypt()
 	{
 		$password = $this->input->post('password');
-		echo json_encode(encryptpassword($password));
+		// echo json_encode(encryptpassword($password));
+		echo json_encode($password);
 	}
 
 	public function login()
