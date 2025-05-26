@@ -254,4 +254,24 @@ class Model_master extends CI_Model
 
         return $url;
     }
+
+    function get_data_client_ref_document($id = '')
+    {
+        if ($id != '') {
+            $sql = "SELECT a.id, a.client_id, a.refdokumen_name, b.message_type as file_extension
+                    FROM profile.client_refdokumens a
+                    JOIN referensi.message_type b ON b.id = a.message_type_id 
+                    WHERE a.client_id = " . $id . "
+                    ORDER BY a.id ASC";
+        } else {
+            $sql = "SELECT a.id, a.client_id, a.refdokumen_name, b.message_type as file_extension
+                    FROM profile.client_refdokumens a
+                    JOIN referensi.message_type b ON b.id = a.message_type_id 
+                    ORDER BY a.id ASC";
+        }
+        $result = $this->db->query($sql);
+        $arr_result = $result->result_array();
+
+        return $arr_result;
+    }
 }

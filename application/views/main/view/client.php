@@ -107,9 +107,7 @@
                                                                                     <div class="row mb-4">
                                                                                         <label for="view_address" class="col-sm-3 col-form-label">Address</label>
                                                                                         <div class="col-sm-9">
-                                                                                            <textarea class="form-control" name="address" id="address" title="End Point" >
-                                                                                                
-                                                                                            </textarea>
+                                                                                            <textarea class="form-control" name="address" id="address" title="End Point" ></textarea>
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="row mb-4">
@@ -274,6 +272,47 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
+
+                                                                        <div class="card">
+                                                                            <div class="card-header" id="header-clientRefDocument">
+                                                                                <i id="form_tampil_clientRefDocument" class="fa fa-chevron-left" aria-hidden="true" title="Show Form Searching" style="cursor:pointer; position:relative; float:right; margin-right:5px;" onclick="show_hide_form('header-clientRefDocument','form_tampil_clientRefDocument','show_card_body_clientRefDocument')"></i>
+                                                                                <h4 class="card-title"><i class="bx bx-edit-alt"></i> Client Ref Document</h4>
+                                                                                <p class="card-title-desc">Please click the icon at the top right corner to display the add form</p>
+                                                                            </div>
+                                                                            <div class="card-body p-4 show_card_body_clientRefDocument">
+                                                                                <div class="row">
+                                                                                    <table id="tabel-methods-clientRefDocument" class="table table-bordered dt-responsive nowrap w-100" width="100%">
+                                                                                        <thead>
+                                                                                            <th width= "60%" >
+                                                                                                <div class="mb-2">
+                                                                                                    <label for="refdokumen_name" class="form-label">Dokumen Name</label>
+                                                                                                    <input type="text" class="form-control" id="refdokumen_name" />
+                                                                                                </div>
+                                                                                            </th>
+                                                                                            <th width= "30%">
+                                                                                                <div class="mb-2">
+                                                                                                    <label for="file_extension" class="form-label">File Extension</label>
+                                                                                                    <div style="text-align: left;">
+                                                                                                        <select class="form-control" name="file_extension" id="file_extension" />
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </th>
+                                                                                            <th width= "10%">
+                                                                                                <div class="mb-2">
+                                                                                                    <button type ="button" class="btn btn-primary btn-small" id="btn-add-clientRefDocument">add</button>
+                                                                                                </div>
+                                                                                            </th>
+                                                                                        </thead>
+                                                                                        <tbody id="addrowtableClientRefDocument">
+                                                                                            
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                    <input type="hidden" name="arrClientRefDocument" id="arrClientRefDocument" value="">
+                                                                                    <input type="hidden" name="arrClientRefDocumentDeleted" id="arrClientRefDocumentDeleted" value="">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
                                                                         <input type="hidden" id="updated" name="updated" value="0">
                                                                         <input type="hidden" id="id_client" name="id_client" value="">
                                                                         <div>
@@ -300,7 +339,7 @@
                             </div>
                         </div>
                         <!-- Modal view -->
-                        <div class="modal fade" id="modal_view" tabindex="-1" role="dialog" aria-labelledby="modal_addTitle" aria-hidden="true">
+                        <div class="modal fade" id="modal_view" tabindex="-1" role="dialog" aria-labelledby="modal_viewTitle" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -308,7 +347,7 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body" id="modal_body" style="text-align: center;">
-                                        <form class="form-horizontal" method="post" action="#" name="form-add-item" id="form-add-item"  >
+                                        <form class="form-horizontal" method="post" action="#" name="form-view-item" id="form-view-item"  >
                                             <div class="row">
                                                 <div class="col-lg-12">
                                                     <div class="card">
@@ -480,13 +519,35 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
+
+                                                                        <div class="card">
+                                                                            <div class="card-header" id="view_header_clientRefDocument">
+                                                                                <i id="view_clientRefDocument_tampil" class="fa fa-chevron-left" aria-hidden="true" title="Show Form Searching" style="cursor:pointer; position:relative; float:right; margin-right:5px;" onclick="show_hide_form('view_header_chanel','view_clientRefDocument_tampil','view_clientRefDocument_card')"></i>
+                                                                                <h4 class="card-title"><i class="bx bx-edit-alt"></i> Client Ref Document</h4>
+                                                                                <p class="card-title-desc">Please click the icon at the top right corner to display data</p>
+                                                                            </div>
+                                                                            <div class="card-body p-4 view_clientRefDocument_card" style="display: none;">
+                                                                                <div class="row">
+                                                                                    <table id="VtabelClientRefDocument" class="table table-bordered dt-responsive nowrap w-100" width="100%">
+                                                                                        <thead>
+                                                                                            <th width="10%">No</th>
+                                                                                            <th width="60%">Dokumen Name</th>
+                                                                                            <th width="30%">File Extension</th>
+                                                                                        </thead>
+                                                                                        <tbody id="viewtableClientRefDocument">
+                                                                                            
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
                                                                         
                                                                         <div>
                                                                             <ul class="pager wizard twitter-bs-wizard-pager-link">
                                                                                 <li class="previous"><a href="javascript: void(0);" class="btn btn-primary" onclick="nextTab()" target="_top"><i class="bx bx-chevron-left me-1"></i> Previous</a></li>
                                                                                 <!-- <li class="float-end"><a href="javascript: void(0);" class="btn btn-primary" data-bs-toggle="modal" data-bs-target=".confirmModal" target="_top">Save
                                                                                         Changes</a></li> -->
-                                                                                <button type="submit"  id="add-item-modal" class="btn btn-primary waves-effect btn-label waves-light"><i class="bx bx-check label-icon"></i> Save</button>
+                                                                                <!-- <button type="submit"  id="view-item-modal" class="btn btn-primary waves-effect btn-label waves-light"><i class="bx bx-check label-icon"></i> Save</button> -->
                                                                             </ul>
                                                                         </div>
                                                                     </div>

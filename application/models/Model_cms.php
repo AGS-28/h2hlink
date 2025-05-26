@@ -404,6 +404,10 @@ class Model_cms extends CI_Model
         $arridchanel    = $arrPost['arridchanel[]'];
         $messtypechanel = $arrPost['messtype-chanel[]'];
 
+        // client ref document
+        $arrRefDocumentName             = $arrPost['refDocumentName[]'];
+        $arridfiletype                  = $arrPost['fileExtensionId[]'];
+
         $this->db->trans_begin();
         if ($updated == 1) {
             $id_client = $arrPost['id_client'];
@@ -494,6 +498,39 @@ class Model_cms extends CI_Model
                 );
                 $this->db->insert('profile.client_chanel', $arrayInsertChanel);
             }
+
+            $arrClientRefDocumentDeleted    = $arrPost['arrClientRefDocumentDeleted'] 
+                ? explode(',', $arrPost['arrClientRefDocumentDeleted'])
+                : [];
+
+            if (sizeof($arrClientRefDocumentDeleted) > 0) {
+                foreach ($arrClientRefDocumentDeleted as $key => $value) {
+                    $this->db->where('id', $value);
+                    $this->db->delete('profile.client_refdokumens');
+                }
+            }
+
+            if (is_array($arrRefDocumentName)) {
+                foreach ($arrRefDocumentName as $key => $value) {
+                    $arrayInsertRefDoc = array(
+                        'client_id'  => $id_client,
+                        'refdokumen_name'  => $value,
+                        'message_type_id'  => $arridfiletype[$key],
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'created_by' => $this->session->userdata('username'),
+                    );
+                    $this->db->insert('profile.client_refdokumens', $arrayInsertRefDoc);
+                }
+            } else {
+                $arrayInsertRefDoc = array(
+                    'client_id'  => $id_client,
+                    'refdokumen_name'  => $arrRefDocumentName,
+                    'message_type_id'  => $arridfiletype,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'created_by' => $this->session->userdata('username'),
+                );
+                $this->db->insert('profile.client_refdokumens', $arrayInsertRefDoc);
+            }
         } else {
             $arrayInsertProfile = array(
                 'client_name'       => $client_name,
@@ -575,6 +612,28 @@ class Model_cms extends CI_Model
                     'message_id' => $messtypechanel,
                 );
                 $this->db->insert('profile.client_chanel', $arrayInsertChanel);
+            }
+            
+            if (is_array($arrRefDocumentName)) {
+                foreach ($arrRefDocumentName as $key => $value) {
+                    $arrayInsertRefDoc = array(
+                        'client_id'  => $id_client,
+                        'refdokumen_name'  => $value,
+                        'message_type_id'  => $arridfiletype[$key],
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'created_by' => $this->session->userdata('username'),
+                    );
+                    $this->db->insert('profile.client_refdokumens', $arrayInsertRefDoc);
+                }
+            } else {
+                $arrayInsertRefDoc = array(
+                    'client_id'  => $id_client,
+                    'refdokumen_name'  => $arrRefDocumentName,
+                    'message_type_id'  => $arridfiletype,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'created_by' => $this->session->userdata('username'),
+                );
+                $this->db->insert('profile.client_refdokumens', $arrayInsertRefDoc);
             }
         }
 
@@ -778,9 +837,9 @@ class Model_cms extends CI_Model
             $result     = $this->db->query($sql_endpoint);
             $banyak     = $result->num_rows();
 
+            $html = "";
             if ($banyak > 0) {
                 $DataEndpoints = $result->result();
-                $html = "";
                 foreach ($DataEndpoints as $key => $value) {
                     $html .= "<tr>";
                     $html .= "<td>" . ($key + 1) . "</td>";
@@ -798,12 +857,38 @@ class Model_cms extends CI_Model
             }
 
             $dataRowEndpoint = $html;
+
+            $sql_refdoc = "select a.refdokumen_name, b.message_type as file_extension
+                                from profile.client_refdokumens a 
+                                left join referensi.message_type b on b.id = a.message_type_id 
+                            where a.client_id = " . $this->db->escape($id) ."
+                            order by a.id asc";
+            $result     = $this->db->query($sql_refdoc);
+            $banyak     = $result->num_rows();
+
+            $html = "";
+            if ($banyak > 0) {
+                $DataClientRefDocs = $result->result();
+                foreach ($DataClientRefDocs as $key => $value) {
+                    $html .= "<tr>";
+                    $html .= "<td>" . ($key + 1) . "</td>";
+                    $html .= "<td>" . $value->refdokumen_name . "</td>";
+                    $html .= "<td>" . $value->file_extension . "</td>";
+                    $html .= "</tr>";
+                }
+            } else {
+                $html .= "Data Empty";
+            }
+
+            $dataRowClientRefDoc = $html;
         }
+
         $data = array(
-            'clientProfile' => $returnData,
-            'rowChanel'     => $dataRowChanel,
-            'rowEndpoint'   => $dataRowEndpoint,
-            'status'        => $status,
+            'clientProfile'         => $returnData,
+            'rowChanel'             => $dataRowChanel,
+            'rowEndpoint'           => $dataRowEndpoint,
+            'rowClientRefDocument'  => $dataRowClientRefDoc,
+            'status'                => $status,
         );
 
         return $data;
@@ -1029,6 +1114,139 @@ class Model_cms extends CI_Model
         }
         $data = array(
             'thisdata' => $html,
+            'status' => $status,
+        );
+
+        return $data;
+    }
+
+    public function getselectrefdocument()
+    {
+        $id         = $this->input->post('id');
+        $data       = array();
+        $status     = 0;
+        $addSql     = "";
+
+        if ($id != '') {
+            $addSql = " AND a.id = " . $this->db->escape($id);
+        }
+
+        $sql        = "SELECT a.id as value, a.name as label FROM referensi.refdokumen a WHERE 1=1 AND a.is_active = 't' " . $addSql;
+        $sql        .= " ORDER BY a.is_order ASC";
+        $result     = $this->db->query($sql);
+        $banyak     = $result->num_rows();
+        if ($banyak > 0) {
+            $returnData = $result->result_array();
+            $status     = 1;
+        }
+        $data = array(
+            'thisdata' => $returnData,
+            'status' => $status,
+        );
+
+        return $data;
+    }
+    public function getallrefdocument()
+    {
+        $id         = $this->input->post('id');
+        $data       = array();
+        $status     = 0;
+        $addSql     = "";
+
+        if ($id != '') {
+            $addSql = " AND a.id = " . $this->db->escape($id);
+        }
+
+        $sql        = "SELECT * FROM referensi.refdokumen a WHERE 1=1 AND a.is_active = 't' " . $addSql;
+        $sql        .= " ORDER BY a.is_order ASC";
+        $result     = $this->db->query($sql);
+        $banyak     = $result->num_rows();
+        if ($banyak > 0) {
+            $returnData = $result->row();
+            $status     = 1;
+        }
+        $data = array(
+            'thisdata' => $returnData,
+            'status' => $status,
+        );
+
+        return $data;
+    }
+
+    public function getselectmessagetype()
+    {
+        $id         = $this->input->post('id');
+        $data       = array();
+        $status     = 0;
+        $addSql     = "";
+
+        if ($id != '') {
+            $addSql = " AND a.id = " . $this->db->escape($id);
+        }
+
+        $sql        = "SELECT a.id as value, a.message_type as label FROM referensi.message_type a WHERE 1=1 AND a.is_active = 't' " . $addSql;
+        $sql        .= " ORDER BY a.id ASC";
+        $result     = $this->db->query($sql);
+        $banyak     = $result->num_rows();
+        if ($banyak > 0) {
+            $returnData = $result->result_array();
+            $status     = 1;
+        }
+        $data = array(
+            'thisdata' => $returnData,
+            'status' => $status,
+        );
+
+        return $data;
+    }
+    public function getallmessagetype()
+    {
+        $id         = $this->input->post('id');
+        $data       = array();
+        $status     = 0;
+        $addSql     = "";
+
+        if ($id != '') {
+            $addSql = " AND a.id = " . $this->db->escape($id);
+        }
+
+        $sql        = "SELECT * FROM referensi.message_type a WHERE 1=1 AND a.is_active = 't' " . $addSql;
+        $sql        .= " ORDER BY a.id ASC";
+        $result     = $this->db->query($sql);
+        $banyak     = $result->num_rows();
+        if ($banyak > 0) {
+            $returnData = $result->row();
+            $status     = 1;
+        }
+        $data = array(
+            'thisdata' => $returnData,
+            'status' => $status,
+        );
+
+        return $data;
+    }
+
+    public function get_edit_clientrefdocument()
+    {
+        $id         = $this->input->post('id');
+        $data       = array();
+        $status     = 0;
+
+        $sql        = "select a.id, a.client_id, a.refdokumen_name, a.message_type_id, 
+                            b.message_type as file_extension_name
+                            from profile.client_refdokumens a
+                            join referensi.message_type b on a.message_type_id = b.id
+                            where a.client_id = " . $this->db->escape($id) . "
+                            order by a.id asc";
+
+        $result     = $this->db->query($sql);
+        $banyak     = $result->num_rows();
+        if ($banyak > 0) {
+            $returnData = $result->result();
+            $status     = 1;
+        }
+        $data = array(
+            'thisdata' => $returnData,
             'status' => $status,
         );
 

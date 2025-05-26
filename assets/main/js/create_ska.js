@@ -1,37 +1,70 @@
 var tipe = $('#tipe').val();
-var extention = $('#extention').val();
-if(tipe == 0) {
-    var myDropzone = new Dropzone(".dropzone", { 
-        maxFiles: 1,
-        // acceptedFiles: ".csv, .xls, .xlsx, .txt, .rar, .json, .xml",
-        acceptedFiles: extention,
-        addRemoveLinks: true,
-        accept: function(file, done) {
-            done();
-        },
-        init: function() {
-            this.on("maxfilesexceeded", function(file){
-                this.removeFile(file);
-                alert_error('Maximum file uploaded is only one');
-            });
-        }
-    });
+// var extention = $('#extention').val();
 
-    var myDropzone1 = new Dropzone(".dropzone1", { 
-        maxFiles: 1,
-        // acceptedFiles: ".csv, .xls, .xlsx, .txt, .rar, .json, .xml",
-        acceptedFiles: extention,
-        addRemoveLinks: true,
-        // addTypeDocument: true,
-        accept: function(file, done) {
-            done();
-        },
-        init: function() {
-            this.on("maxfilesexceeded", function(file){
-                this.removeFile(file);
-                alert_error('Maximum file uploaded is only one');
-            });
-        }
+// if(tipe == 0) {
+//     var myDropzone = new Dropzone(".dropzone", { 
+//         maxFiles: 1,
+//         // acceptedFiles: ".csv, .xls, .xlsx, .txt, .rar, .json, .xml",
+//         acceptedFiles: extention,
+//         addRemoveLinks: true,
+//         accept: function(file, done) {
+//             done();
+//         },
+//         init: function() {
+//             this.on("maxfilesexceeded", function(file){
+//                 this.removeFile(file);
+//                 alert_error('Maximum file uploaded is only one');
+//             });
+//         }
+//     });
+
+//     var myDropzone1 = new Dropzone(".dropzone1", { 
+//         maxFiles: 1,
+//         // acceptedFiles: ".csv, .xls, .xlsx, .txt, .rar, .json, .xml",
+//         acceptedFiles: extention,
+//         addRemoveLinks: true,
+//         // addTypeDocument: true,
+//         accept: function(file, done) {
+//             done();
+//         },
+//         init: function() {
+//             this.on("maxfilesexceeded", function(file){
+//                 this.removeFile(file);
+//                 alert_error('Maximum file uploaded is only one');
+//             });
+//         }
+//     });
+// }
+
+var dataRefdocStr = $('#data_ref_document').val();
+var dataRefdocs = JSON.parse(dataRefdocStr);
+
+Dropzone.autoDiscover = false;
+if(tipe == 0) {
+    dataRefdocs.forEach(function (doc) {
+        new Dropzone("#dropzone-" + doc.id, {
+            maxFiles: 1,
+            acceptedFiles: `.${doc.file_extension.toLowerCase()}`,
+            addRemoveLinks: true,
+            accept: function (file, done) {
+                done();
+            },
+            init: function () {
+                this.on("maxfilesexceeded", function (file) {
+                    alert_error('Maximum file uploaded is only one');
+                    this.removeFile(file);
+                });
+    
+                this.on("addedfile", function (file) {
+                    const ext = file.name.split('.').pop().toLowerCase();
+                    const allowed = doc.file_extension.toLowerCase();
+                    if (ext !== allowed) {
+                        this.removeFile(file);
+                        alert_error(`File extension must be .${allowed}`);
+                    }
+                });
+            }
+        });
     });
 }
 
@@ -41,7 +74,7 @@ $(document).ready(function() {
         new Choices('#client_partner', {shouldSort: false});
         new Choices('#ipska', {shouldSort: false});
         new Choices('#tipe_form', {shouldSort: false});
-        new Choices('#tipe_upload', {shouldSort: false});
+        // new Choices('#tipe_upload', {shouldSort: false});
     } else {
         show_hide_input();
         get_mask_number('value');
@@ -162,16 +195,12 @@ function confirm_upload_draft() {
         errorString += "- Select a Form <br\>";
     }
 
-    var dropzone = Dropzone.forElement("#myDropzone");
-    if (dropzone.files.length == 0) {
-        errorString += "- Upload file header & barang <br\>";
-    }
-
-    var dropzone1 = Dropzone.forElement("#myDropzone1");
-    if (dropzone1.files.length == 0) {
-        errorString += "- Upload file cost structure <br\>";
-    }
-
+    dataRefdocs.forEach(function (doc) {
+        var dropzone = Dropzone.forElement("#dropzone-" + doc.id);
+        if (dropzone.files.length == 0) {
+            errorString += "- Upload file " + doc.refdokumen_name + " <br\>";
+        }
+    });
 
     var panjangAkhir = errorString.length;
     panjangAkhir = errorString.length;
@@ -195,12 +224,8 @@ function confirm_upload_draft() {
 
 function upload_draft() {
     showLoading(true);
-    var dropzone = Dropzone.forElement("#myDropzone");
-    var dropzone1 = Dropzone.forElement("#myDropzone1");
-
+    
     var formdata  = new FormData();
-    formdata.append('length', dropzone.files.length);
-    formdata.append('length1', dropzone1.files.length);
     formdata.append('client_partner', $('#client_partner').val());
     // formdata.append('invoice_number', $('#invoice_number').val());
     formdata.append('ipska', $('#ipska').val());
@@ -209,26 +234,39 @@ function upload_draft() {
     formdata.append('pengajuan', $('#pengajuan').val());
     formdata.append('no_serial', $('#no_serial').val());
 
-    for (var i = 0; i < dropzone.files.length; i++) {
-        formdata.append('file_' + i, dropzone.files[i]);
-    }
-
-    for (var i = 0; i < dropzone1.files.length; i++) {
-        formdata.append('file1_' + i, dropzone1.files[i]);
-    }
+    // handle file uploads
+    dataRefdocs.forEach(function (doc) {
+        var dropzone = Dropzone.forElement("#dropzone-" + doc.id);
+        if (dropzone.files.length > 0) {
+            for (var i = 0; i < dropzone.files.length; i++) {
+                formdata.append('file_' + doc.id + '_' + i, dropzone.files[i]);
+            }
+        }
+    });
 
     var url = baseurl + "index.php/createska/upload_draft/"+Math.random();
     var data = post_ajax(url,formdata);
     var respondData = JSON.parse(data);
     setTimeout(function(){
         showLoading(false);
-        if (respondData == 1)  {
-            // alert_sukses('',cari_data('form_table',false,'get_data_draft'));
-            alert_sukses('',location.reload());
-        } else if(respondData == 2) {
-            alert_error('Failed to upload documents, please check your type file');
+        if (typeof respondData === "number" && !isNaN(respondData)) {
+            if (respondData == 1)  {
+                // alert_sukses('',cari_data('form_table',false,'get_data_draft'));
+                alert_sukses('',location.reload());
+            } else if(respondData == 2) {
+                alert_error('Failed to upload documents, please check your type file');
+            } else {
+                alert_error('Failed to upload documents');
+            }
         } else {
-            alert_error('Failed to upload documents');
+            if (respondData.status == 'error') {
+                if (typeof respondData.messages == "string") {
+                    alert_error(respondData.messages);
+                } else {
+                    var errorMessages = Object.values(respondData.messages).join('<br>');
+                    alert_error(errorMessages);
+                }
+            }
         }
     }, 3000);
 }
