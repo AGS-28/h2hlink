@@ -35,6 +35,7 @@ class Createska extends CI_Controller
 		$param['data_type_doc']  = $this->Model_master->get_data_ref_document(1);
 		$param['data_ipska']  = $this->Model_master->get_data_ref_ipska();
 		$param['data_type_form']  = $this->Model_master->get_data_ref_form();
+		$param['data_ref_document']  = $this->Model_master->get_data_client_ref_document($this->session->userdata('client_id'));
 		$param['page_title'] 	 = $this->load->view('main/partials/page-title', $tittle, true);
 
 		$data['content']    	= $this->load->view('main/view/upload_draft', $param, true);

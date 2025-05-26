@@ -13,8 +13,6 @@ class Model_create_ska extends CI_Model
 
     function upload_draft($arr_message_type)
     {
-        $length = $this->input->post('length');
-        $length1 = $this->input->post('length1');
         $client_partner = $this->input->post('client_partner');
         // $invoice_number = $this->input->post('invoice_number');
         $ipska = $this->input->post('ipska');
@@ -58,35 +56,41 @@ class Model_create_ska extends CI_Model
         $this->db->trans_begin();
         $this->db->insert('trans.draft_ska', $draft_ska);
         $id = $this->db->insert_id();
-        // var_dump($length);die();
-        for ($i = 0; $i < $length; $i++) {
-            if (!empty($_FILES)) {
-                $file = $_FILES['file_' . $i];
+        
+        if (!empty($_FILES)) {
+            $client_refdocuments = $this->Model_master->get_data_client_ref_document($this->session->userdata('client_id'));
 
+            foreach ($_FILES as $key => $file) {
                 $nama_file = $id . '_' . md5(uniqid() . uniqid() . rand());
-                $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+                $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
                 $root = 'upload/';
                 $dir = $root . 'draft/' . date("Y-m-d") . '/';
 
-                if (in_array(strtoupper($extension), $arr_message_type)) {
-
+                $input_refdocument_id = explode('_', $key)[1];
+                $filtered = array_filter($client_refdocuments, function($item) use ($input_refdocument_id) {
+                    return $item['id'] == $input_refdocument_id;
+                });
+                $result = reset($filtered);
+                $allowed_types = strtolower($result['file_extension']);
+    
+                if ($extension == $allowed_types) {
                     if (!is_dir($dir)) {
                         mkdir($dir, 0777, true);
                     }
-
+    
                     $upload_file = array(
                         'upload_path'       => $dir,
-                        'allowed_types'     => 'xls|csv|xlsx|txt|rar|json|xml',
+                        'allowed_types'     => $allowed_types,
                         // 'max_size'          => 2097152,
                         'file_name'         => $nama_file . '.' . $extension,
                         'file_ext_tolower'  => TRUE,
                     );
-
+    
                     $this->load->library('upload', $upload_file);
                     $this->upload->initialize($upload_file);
-                    if ($this->upload->do_upload('file_' . $i)) {
+                    if ($this->upload->do_upload($key)) {
                         $path_file = $dir . $nama_file . '.' . $extension;
-
+    
                         $tipe_file = array_search(strtoupper($extension), $arr_message_type, true);
                         $data = array(
                             'draft_id' => $id,
@@ -94,63 +98,11 @@ class Model_create_ska extends CI_Model
                             'path' => $path_file,
                             'tipe_file' => $tipe_file,
                             'refdokumen_id' => 13,
+                            'client_refdokumen_id' => $input_refdocument_id,
                             'created_at' => date("Y-m-d h:i:s"),
                             'created_by' => $this->session->userdata('username')
                         );
-
-                        $draft_ska_doc[] = $data;
-                        // var_dump($draft_ska_doc);die();
-                    } else {
-                        echo $this->upload->display_errors();
-                        die();
-                    }
-                } else {
-                    $resp = 2;
-                    $draft_ska_doc = array();
-                    break;
-                }
-            }
-        }
-
-        for ($i = 0; $i < $length1; $i++) {
-            if (!empty($_FILES)) {
-                $file = $_FILES['file1_' . $i];
-
-                $nama_file = $id . '_' . md5(uniqid() . uniqid() . rand());
-                $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-                $root = 'upload/';
-                $dir = $root . 'draft/' . date("Y-m-d") . '/';
-
-                if (in_array(strtoupper($extension), $arr_message_type)) {
-
-                    if (!is_dir($dir)) {
-                        mkdir($dir, 0777, true);
-                    }
-
-                    $upload_file = array(
-                        'upload_path'       => $dir,
-                        'allowed_types'     => 'xls|csv|xlsx|txt|rar|json|xml',
-                        // 'max_size'          => 2097152,
-                        'file_name'         => $nama_file . '.' . $extension,
-                        'file_ext_tolower'  => TRUE,
-                    );
-
-                    $this->load->library('upload', $upload_file);
-                    $this->upload->initialize($upload_file);
-                    if ($this->upload->do_upload('file1_' . $i)) {
-                        $path_file = $dir . $nama_file . '.' . $extension;
-
-                        $tipe_file = array_search(strtoupper($extension), $arr_message_type, true);
-                        $data = array(
-                            'draft_id' => $id,
-                            'file_name' => $file['name'],
-                            'path' => $path_file,
-                            'tipe_file' => $tipe_file,
-                            'refdokumen_id' => 11,
-                            'created_at' => date("Y-m-d h:i:s"),
-                            'created_by' => $this->session->userdata('username')
-                        );
-
+    
                         $draft_ska_doc[] = $data;
                         // var_dump($draft_ska_doc);die();
                     } else {
@@ -384,10 +336,10 @@ class Model_create_ska extends CI_Model
         $start         = $this->input->post('start');
         $length     = $this->input->post('length');
 
-        $sql_total     = ' SELECT a.id, b.message_type, a.path, a.file_name, c.name
+        $sql_total     = ' SELECT a.id, b.message_type, a.path, a.file_name, c.refdokumen_name as name
                         FROM trans.draft_ska_document a
                         LEFT JOIN referensi.message_type b ON b.id = a.tipe_file
-                        LEFT JOIN referensi.refdokumen c ON c.id = a.refdokumen_id
+                        LEFT JOIN profile.client_refdokumens c ON c.id = a.client_refdokumen_id
                         WHERE a.draft_id = ' . $id . '
                         ORDER BY a.created_at DESC';
 
@@ -395,10 +347,10 @@ class Model_create_ska extends CI_Model
         $banyak         = $result_total->num_rows();
 
         if ($banyak > 0) {
-            $sql = 'SELECT a.id, b.message_type, a.path, a.file_name, c.name
+            $sql = 'SELECT a.id, b.message_type, a.path, a.file_name, c.refdokumen_name as name
                     FROM trans.draft_ska_document a
                     LEFT JOIN referensi.message_type b ON b.id = a.tipe_file
-                    LEFT JOIN referensi.refdokumen c ON c.id = a.refdokumen_id
+                    LEFT JOIN profile.client_refdokumens c ON c.id = a.client_refdokumen_id
                     WHERE a.draft_id = ' . $id . '
                     ORDER BY a.created_at DESC
                     LIMIT ' . $length . ' OFFSET ' . $start;

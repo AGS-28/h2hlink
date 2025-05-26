@@ -60,7 +60,7 @@
                                 <input type="text" class="form-control" title="Invoice Number" id="invoice_number" name="invoice_number">
                             </div>
                         </div> -->
-                        <div class="row mb-4">
+                        <!-- <div class="row mb-4">
                             <label for="horizontal-input" class="col-sm-3 col-form-label">File Header & Barang <font color="red">*</font></label>
                             <div class="col-sm-9">
                                 <form action="#" class="dropzone" id="myDropzone" name="myDropzone">
@@ -97,7 +97,35 @@
                                 </form>
                                 <a href="<?php echo base_url() ?>assets/file/Contoh Format Cost Structure.xls"><i>Klik disini untuk mendapatkan format file cost structure</i></a>
                             </div>
-                        </div>
+                        </div> -->
+
+                        <input type="hidden" id="data_ref_document" value='<?= htmlspecialchars(json_encode($data_ref_document), ENT_QUOTES, 'UTF-8') ?>'>
+
+                        <?php foreach($data_ref_document as $form) { ?>
+                            <div class="row mb-4">
+                                <label class="col-sm-3 col-form-label">
+                                    File <?= $form['refdokumen_name']; ?> <font color="red">*</font>
+                                </label>
+                                <div class="col-sm-9">
+                                    <form action="#"
+                                        class="dropzone" 
+                                        id="dropzone-<?= $form['id'] ?>" 
+                                        name="dropzone-<?= $form['id'] ?>">
+                                        <div class="fallback">
+                                            <input name="file" type="file" multiple="multiple">
+                                        </div>
+                                        <div id="table_text"></div>
+                                        <div class="dz-message needsclick">
+                                            <div class="mb-3">
+                                                <i class="display-4 text-muted bx bx-cloud-upload"></i>
+                                            </div>
+                                            <h5>Drop files here or click to upload.</h5>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        <?php } ?>
+
                         <hr>
                         <div class="row mb-4">
                             <label for="horizontal-input" class="col-sm-3 col-form-label"></label>
@@ -106,7 +134,7 @@
                             </div>
                         </div>
                         <div class="text-end mt-4">
-                            <input class="form-control" type="hidden" name="extention" id="extention" value="<?php echo $data_extention[0]['message_type']; ?>" readonly>
+                            <!-- <input class="form-control" type="hidden" name="extention" id="extention" value="<?php echo $data_extention[0]['message_type']; ?>" readonly> -->
                             <input class="form-control" type="hidden" name="tipe_file" id="tipe_file" value="" readonly>
                             <input class="form-control" type="hidden" name="text_file" id="text_file" value="" readonly>
                             <input class="form-control" type="hidden" id="tipe" name="tipe" value="0" readonly>
