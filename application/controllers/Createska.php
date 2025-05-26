@@ -14,6 +14,7 @@ class Createska extends CI_Controller
 		$this->load->model('Model_create_ska');
 		$this->load->model('Model_master');
 		cek_session(array(1, 2, 3), 'main');
+		$this->load->library('form_validation');
 	}
 
 	public function index()
@@ -44,8 +45,21 @@ class Createska extends CI_Controller
 
 	public function upload_draft()
 	{
-		$arr_message_type = $this->Model_master->get_message_type();
-		echo json_encode($this->Model_create_ska->upload_draft($arr_message_type));
+		$this->form_validation->set_rules('client_partner', 'Username', 'required');
+		$this->form_validation->set_rules('ipska', 'IPSKA', 'required');
+		$this->form_validation->set_rules('tipe_form', 'Tipe Form', 'required');
+		$this->form_validation->set_rules('pengajuan', 'Tipe Pengajuan', 'required');
+
+        if ($this->form_validation->run() == FALSE) {
+            $response = [
+                'status' => 'error',
+                'messages' => $this->form_validation->error_array()
+            ];
+			echo json_encode($response);
+        } else {
+			$arr_message_type = $this->Model_master->get_message_type();
+			echo json_encode($this->Model_create_ska->upload_draft($arr_message_type));
+		}
 	}
 
 	public function upload_document()

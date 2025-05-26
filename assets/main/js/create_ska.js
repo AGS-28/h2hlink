@@ -197,7 +197,6 @@ function confirm_upload_draft() {
 
     dataRefdocs.forEach(function (doc) {
         var dropzone = Dropzone.forElement("#dropzone-" + doc.id);
-        console.log("#dropzone-" + doc.id, dropzone.files.length);
         if (dropzone.files.length == 0) {
             errorString += "- Upload file " + doc.refdokumen_name + " <br\>";
         }
@@ -250,13 +249,24 @@ function upload_draft() {
     var respondData = JSON.parse(data);
     setTimeout(function(){
         showLoading(false);
-        if (respondData == 1)  {
-            // alert_sukses('',cari_data('form_table',false,'get_data_draft'));
-            alert_sukses('',location.reload());
-        } else if(respondData == 2) {
-            alert_error('Failed to upload documents, please check your type file');
+        if (typeof respondData === "number" && !isNaN(respondData)) {
+            if (respondData == 1)  {
+                // alert_sukses('',cari_data('form_table',false,'get_data_draft'));
+                alert_sukses('',location.reload());
+            } else if(respondData == 2) {
+                alert_error('Failed to upload documents, please check your type file');
+            } else {
+                alert_error('Failed to upload documents');
+            }
         } else {
-            alert_error('Failed to upload documents');
+            if (respondData.status == 'error') {
+                if (typeof respondData.messages == "string") {
+                    alert_error(respondData.messages);
+                } else {
+                    var errorMessages = Object.values(respondData.messages).join('<br>');
+                    alert_error(errorMessages);
+                }
+            }
         }
     }, 3000);
 }
