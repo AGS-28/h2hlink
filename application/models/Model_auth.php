@@ -5,7 +5,7 @@ class Model_auth extends CI_Model
     {
         //input POST
         $username   = $this->input->post('username');
-        $cryptpass  = $this->input->post('password');
+        $password  = $this->input->post('password');
 
         //default variable
         $returnData     = array();
@@ -17,10 +17,8 @@ class Model_auth extends CI_Model
         $ret = $this->db->query($get_pass);
         if ($ret->num_rows() > 0) {
             $passDB         = $ret->row()->password;
-            $passwordPost   = decryptpassword($cryptpass);
-            $isPassword     = decryptpassword($passDB);
 
-            if ($passwordPost == $isPassword) {
+            if (password_verify($password, $passDB)) {
                 $id_user    = $ret->row()->id_user;
                 $get_user    = "SELECT a.username,a.id_user,b.groupname,a.email,a.name,a.is_active,a.user_tipe,a.profile_picture,
                                       a.address,a.phone_number,a.id_groups, a.client_id
@@ -67,11 +65,11 @@ class Model_auth extends CI_Model
                 }
             } else {
                 $label  = "Opps!";
-                $txt = "Password Salah...!";
+                $txt = "Username atau Password Salah..!";
             }
         } else {
             $label  = "Opps!";
-            $txt    = "Username and tidak ditemukan.";
+            $txt    = "Username atau Password Salah.";
         }
         $returnData['status']   = $status;
         $returnData['label']    = $label;
