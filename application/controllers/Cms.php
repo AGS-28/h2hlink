@@ -420,4 +420,29 @@ class Cms extends CI_Controller
 	{
 		echo json_encode($this->Model_cms->get_edit_clientpartner());
 	}
+
+	public function getselectrefdocument()
+	{
+		echo json_encode($this->Model_cms->getselectrefdocument());
+	}
+
+	public function getallrefdocument()
+	{
+		echo json_encode($this->Model_cms->getallrefdocument());
+	}
+
+	public function getselectmessagetype()
+	{
+		echo json_encode($this->Model_cms->getselectmessagetype());
+	}
+
+	public function getallmessagetype()
+	{
+		echo json_encode($this->Model_cms->getallmessagetype());
+	}
+
+	public function get_edit_clientrefdocument()
+	{
+		echo json_encode($this->Model_cms->get_edit_clientrefdocument());
+	}
 }
