@@ -446,7 +446,6 @@ class Createska extends CI_Controller
 		);
 
 		$json_data = json_encode($array_all);
-		// echo $json_data;die();
 		$curl = curl_init();
 		curl_setopt_array($curl, array(
 			CURLOPT_URL => $url,
@@ -476,31 +475,12 @@ class Createska extends CI_Controller
 
 			echo json_encode($arr_err);
 		} else {
-			$kode = $json_decode->kode;
-			if ($kode == '200') {
-				$kode_resp = $json_decode->data->kode;
-				$no_aju = '';
-				$status = 5;
+			$arr_err = array(
+				'kode' => 200,
+				'keterangan' => 'Process Successfully'
+			);
 
-				if ($kode_resp == 'A01') {
-					$no_aju = $json_decode->data->no_aju;
-					$status = 3;
-				}
-
-				$data_update = $this->Model_create_ska->update_draft($id, $status, $no_aju);
-				if ($data_update == 1) {
-					echo $response;
-				} else {
-					$arr_err = array(
-						'kode' => 400,
-						'keterangan' => 'Gagal Update Status'
-					);
-
-					echo json_encode($arr_err);
-				}
-			} else {
-				echo $response;
-			}
+			echo json_encode($arr_err);
 		}
 	}
 
