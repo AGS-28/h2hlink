@@ -411,7 +411,8 @@ class Model_create_ska extends CI_Model
             $addSql .= ' AND a.no_draft = ' . $this->db->escape($arrPost['no_draft']);
         }
 
-        $sql_total     = ' SELECT a.id, a.no_draft, a.created_at, d.status_desc, b.client_name, b.npwp, b.nib, c.partner_name, a.status, e.name as cotype, f.name as ipska, a.jenis_form, a.no_serial_blanko, a.no_aju
+        $sql_total     = 'SELECT a.id, a.no_draft, a.created_at, d.status_desc, b.client_name, b.npwp, b.nib, c.partner_name, a.status, 
+                        e.name as cotype, f.name as ipska, a.jenis_form, a.no_serial_blanko, a.no_aju, a.url_draft_ska
                         FROM trans.draft_ska a
                         LEFT JOIN profile.clients b ON b.id = a.client_id
                         LEFT JOIN profile.partners c ON c.id = a.partner_id
@@ -425,7 +426,8 @@ class Model_create_ska extends CI_Model
         $banyak         = $result_total->num_rows();
 
         if ($banyak > 0) {
-            $sql = 'SELECT a.id, a.no_draft, a.created_at, d.status_desc, b.client_name, b.npwp, b.nib, c.partner_name, a.status, e.name as cotype, f.name as ipska, a.jenis_form, a.no_serial_blanko, a.no_aju
+            $sql = 'SELECT a.id, a.no_draft, a.created_at, d.status_desc, b.client_name, b.npwp, b.nib, c.partner_name, a.status, 
+                    e.name as cotype, f.name as ipska, a.jenis_form, a.no_serial_blanko, a.no_aju, a.url_draft_ska
                     FROM trans.draft_ska a
                     LEFT JOIN profile.clients b ON b.id = a.client_id
                     LEFT JOIN profile.partners c ON c.id = a.partner_id
