@@ -50,13 +50,13 @@ class Createska extends CI_Controller
 		$this->form_validation->set_rules('tipe_form', 'Tipe Form', 'required');
 		$this->form_validation->set_rules('pengajuan', 'Tipe Pengajuan', 'required');
 
-        if ($this->form_validation->run() == FALSE) {
-            $response = [
-                'status' => 'error',
-                'messages' => $this->form_validation->error_array()
-            ];
+		if ($this->form_validation->run() == FALSE) {
+			$response = [
+				'status' => 'error',
+				'messages' => $this->form_validation->error_array()
+			];
 			echo json_encode($response);
-        } else {
+		} else {
 			$arr_message_type = $this->Model_master->get_message_type();
 			echo json_encode($this->Model_create_ska->upload_draft($arr_message_type));
 		}
@@ -453,16 +453,16 @@ class Createska extends CI_Controller
 			CURLOPT_CUSTOMREQUEST => 'POST',
 			CURLOPT_POSTFIELDS => $json_data,
 			CURLOPT_HTTPHEADER => array(
-				'x-Gateway-APIKey: ae5653c9-1ba9-4bbb-8955-7da25cd4fd5b',
+				'X-API-KEY: host2host.token',
 				'Content-Type: application/json',
-				'Cookie: BIGipServer~k8s-dev~Shared~ingress_eska_eska_be_pengajuan_by_webservice=2791200778.28278.0000'
 			),
 		));
 
 		$response = curl_exec($curl);
+		$http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 		curl_close($curl);
 		$json_decode = json_decode($response);
-		if ($json_decode == '' or $json_decode == null) {
+		if ($http_status != 200) {
 			$arr_err = array(
 				'kode' => 400,
 				'keterangan' => 'Service error, please try again periodically.'
