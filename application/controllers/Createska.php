@@ -172,11 +172,16 @@ class Createska extends CI_Controller
 			$arr_status = array(1, 4, 5);
 			$next = '';
 			$delete = '';
+			$view_draft_ska = '';
 			if (in_array($data['status'], $arr_status)) {
 				if ($data['status'] == 1) {
 					$delete = '<li><a class="dropdown-item" href="#" onclick="confirm_kirim(delete_draft,' . $data['id'] . ');">Delete Draft</a></li>';
 				}
 				$next = '<li><a class="dropdown-item" href="#" onclick="confirm_kirim(send_draft,' . $data['id'] . ');">Send Draft</a></li>';
+			}
+
+			if ($data['status'] == 3 && isset($data['url_draft_ska']) && $data['url_draft_ska'] !== '') {
+				$view_draft_ska = '<li><a class="dropdown-item" href="' . $data['url_draft_ska'] . '" target="_blank">View Draft SKA</a></li>';
 			}
 
 			$html[] = $no;
@@ -190,6 +195,7 @@ class Createska extends CI_Controller
 							</button>
 							<ul class="dropdown-menu dropdown-menu-end">
 								<li><a class="dropdown-item" href="#" onclick="show_modal_document(' . $data['id'] . ',' . $title . ',0,' . $func_name . ')">Views Draft</a></li>
+								' . $view_draft_ska . '
 								' . $delete . '
 								' . $next . '
 							</ul>
