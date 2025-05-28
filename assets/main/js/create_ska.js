@@ -485,7 +485,7 @@ function send_draft(id) {
         if(obj.kode == '200') {
             swal.fire({
                 title: 'Succes!',
-                html: obj.data.keterangan,
+                html: obj.keterangan,
                 icon: 'success',
                 button: "Close",
             }).then((result) => {
