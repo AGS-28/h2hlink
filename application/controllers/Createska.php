@@ -437,7 +437,7 @@ class Createska extends CI_Controller
 		$id = $this->input->post('id');
 		// $url = 'http://103.191.92.175:8290/getDraftCoo';
 		// $url = $this->Model_master->get_url_wso2(1);
-		$url = 'http://127.0.0.1:8210/api/v1/send-request-ska';
+		$url = ENV_API_SKA_STORE.'/api/v1/send-request-ska';
 		$data = $this->Model_master->get_data_client_channel($id);
 
 		$array_all = array(
