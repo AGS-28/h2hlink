@@ -436,7 +436,8 @@ class Createska extends CI_Controller
 	{
 		$id = $this->input->post('id');
 		// $url = 'http://103.191.92.175:8290/getDraftCoo';
-		$url = $this->Model_master->get_url_wso2(1);
+		// $url = $this->Model_master->get_url_wso2(1);
+		$url = 'http://127.0.0.1:8210/api/v1/send-request-ska';
 		$data = $this->Model_master->get_data_client_channel($id);
 
 		$array_all = array(
@@ -459,15 +460,38 @@ class Createska extends CI_Controller
 			CURLOPT_CUSTOMREQUEST => 'POST',
 			CURLOPT_POSTFIELDS => $json_data,
 			CURLOPT_HTTPHEADER => array(
-				'x-Gateway-APIKey: ae5653c9-1ba9-4bbb-8955-7da25cd4fd5b',
+				'x-Gateway-APIKey: b1b83e16-6bfd-4ab5-9547-2a322a84f247',
+				'X-API-KEY: host2host.token',
 				'Content-Type: application/json',
 				'Cookie: BIGipServer~k8s-dev~Shared~ingress_eska_eska_be_pengajuan_by_webservice=2791200778.28278.0000'
 			),
 		));
 
 		$response = curl_exec($curl);
+		$httpResponseCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 		curl_close($curl);
 		$json_decode = json_decode($response);
+
+		if ($httpResponseCode != 200) {
+			if ($httpResponseCode == 401) {
+				$arr_err = array(
+					'kode' => 401,
+					'keterangan' => 'Unauthorized, ' . $json_decode->notification->message
+				);
+
+				echo json_encode($arr_err);
+				return;
+			}
+
+			$arr_err = array(
+				'kode' => 400,
+				'keterangan' => 'Service error, please try again periodically.'
+			);
+
+			echo json_encode($arr_err);
+			return;
+		}
+
 		if ($json_decode == '' or $json_decode == null) {
 			$arr_err = array(
 				'kode' => 400,
@@ -476,31 +500,12 @@ class Createska extends CI_Controller
 
 			echo json_encode($arr_err);
 		} else {
-			$kode = $json_decode->kode;
-			if ($kode == '200') {
-				$kode_resp = $json_decode->data->kode;
-				$no_aju = '';
-				$status = 5;
+			$arr_err = array(
+				'kode' => 200,
+				'keterangan' => 'Process Successfully'
+			);
 
-				if ($kode_resp == 'A01') {
-					$no_aju = $json_decode->data->no_aju;
-					$status = 3;
-				}
-
-				$data_update = $this->Model_create_ska->update_draft($id, $status, $no_aju);
-				if ($data_update == 1) {
-					echo $response;
-				} else {
-					$arr_err = array(
-						'kode' => 400,
-						'keterangan' => 'Gagal Update Status'
-					);
-
-					echo json_encode($arr_err);
-				}
-			} else {
-				echo $response;
-			}
+			echo json_encode($arr_err);
 		}
 	}
 
