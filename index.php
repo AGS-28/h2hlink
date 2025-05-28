@@ -306,6 +306,18 @@ switch (ENVIRONMENT)
 
 	define('VIEWPATH', $view_folder.DIRECTORY_SEPARATOR);
 
+
+	$customConfigPath = __DIR__ . '/application/config/custom.php';
+	if (!file_exists($customConfigPath)) {
+		die('ERROR: Config file <b>custom.php</b> tidak ditemukan');
+	}
+
+	require_once $customConfigPath;
+
+	if (isset($config['ENV_API_SKA_STORE'])) {
+		define('ENV_API_SKA_STORE', $config['ENV_API_SKA_STORE']);
+	}
+
 /*
  * --------------------------------------------------------------------
  * LOAD THE BOOTSTRAP FILE

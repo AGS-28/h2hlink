@@ -1,0 +1,4 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+$config['ENV_API_SKA_STORE'] = 'http://127.0.0.1:8210';
