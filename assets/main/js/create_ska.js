@@ -36,11 +36,11 @@ var tipe = $('#tipe').val();
 //     });
 // }
 
-var dataRefdocStr = $('#data_ref_document').val();
-var dataRefdocs = JSON.parse(dataRefdocStr);
-
 Dropzone.autoDiscover = false;
 if(tipe == 0) {
+    var dataRefdocStr = $('#data_ref_document').val();
+    var dataRefdocs = JSON.parse(dataRefdocStr);
+
     dataRefdocs.forEach(function (doc) {
         new Dropzone("#dropzone-" + doc.id, {
             maxFiles: 1,
@@ -310,7 +310,7 @@ function upload_document() {
     setTimeout(function(){
         showLoading(false);
         if (respondData == 1)  {
-            alert_sukses('',cari_data('form_table',false,'get_data_document'));
+            alert_sukses('',location.reload());
         } else {
             alert_error('Failed to upload documents');
         }
@@ -433,9 +433,11 @@ function send_document(id) {
                 if(obj.kode == '200') {
                     swal.fire({
                         title: 'Succes!',
-                        html: obj.data.keterangan,
+                        html: obj.keterangan,
                         icon: 'success',
                         button: "Close",
+                    }).then((result) => {
+                        location.reload(true);
                     });
                 } else{
                     swal.fire({
