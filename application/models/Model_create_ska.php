@@ -56,57 +56,67 @@ class Model_create_ska extends CI_Model
         $this->db->trans_begin();
         $this->db->insert('trans.draft_ska', $draft_ska);
         $id = $this->db->insert_id();
-        
+
         if (!empty($_FILES)) {
             $client_refdocuments = $this->Model_master->get_data_client_ref_document($this->session->userdata('client_id'));
+
+            $s3 = new \Aws\S3\S3Client([
+                'version' => 'latest',
+                'region'  => 'id-id',
+                'endpoint' => ENV_S3_ENDPOINT_URL,
+                'credentials' => [
+                    'key'    => ENV_S3_ACCESS_KEY,
+                    'secret' => ENV_S3_SECRET_KEY,
+                ],
+                'use_path_style_endpoint' => true,
+                'suppress_php_deprecation_warning' => true,
+            ]);
+            $bucket = ENV_S3_BUCKET_NAME;
 
             foreach ($_FILES as $key => $file) {
                 $nama_file = $id . '_' . md5(uniqid() . uniqid() . rand());
                 $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-                $root = 'upload/';
+                $root = 'ska/';
                 $dir = $root . 'draft/' . date("Y-m-d") . '/';
 
                 $input_refdocument_id = explode('_', $key)[1];
-                $filtered = array_filter($client_refdocuments, function($item) use ($input_refdocument_id) {
+                $filtered = array_filter($client_refdocuments, function ($item) use ($input_refdocument_id) {
                     return $item['id'] == $input_refdocument_id;
                 });
                 $result = reset($filtered);
                 $allowed_types = strtolower($result['file_extension']);
-    
+
                 if ($extension == $allowed_types) {
-                    if (!is_dir($dir)) {
-                        mkdir($dir, 0777, true);
-                    }
-    
-                    $upload_file = array(
-                        'upload_path'       => $dir,
-                        'allowed_types'     => $allowed_types,
-                        // 'max_size'          => 2097152,
-                        'file_name'         => $nama_file . '.' . $extension,
-                        'file_ext_tolower'  => TRUE,
-                    );
-    
-                    $this->load->library('upload', $upload_file);
-                    $this->upload->initialize($upload_file);
-                    if ($this->upload->do_upload($key)) {
-                        $path_file = $dir . $nama_file . '.' . $extension;
-    
+                    // Path/key file di S3 (bisa custom sesuai kebutuhan lu)
+                    $s3_key = $dir . $nama_file . '.' . $extension;
+
+                    // File upload-an ada di $_FILES['tmp_name']
+                    $file_tmp = $file['tmp_name'];
+
+                    try {
+                        $s3->putObject([
+                            'Bucket'      => $bucket,
+                            'Key'         => $s3_key,
+                            'SourceFile'  => $file_tmp,
+                            'ACL'         => 'private',
+                            'ContentType' => $file['type'],
+                        ]);
+
                         $tipe_file = array_search(strtoupper($extension), $arr_message_type, true);
                         $data = array(
                             'draft_id' => $id,
                             'file_name' => $file['name'],
-                            'path' => $path_file,
+                            'path' => $s3_key, // path di S3
                             'tipe_file' => $tipe_file,
                             'refdokumen_id' => 13,
                             'client_refdokumen_id' => $input_refdocument_id,
                             'created_at' => date("Y-m-d h:i:s"),
                             'created_by' => $this->session->userdata('username')
                         );
-    
+
                         $draft_ska_doc[] = $data;
-                        // var_dump($draft_ska_doc);die();
-                    } else {
-                        echo $this->upload->display_errors();
+                    } catch (Exception $e) {
+                        echo "Gagal upload ke S3: " . $e->getMessage();
                         die();
                     }
                 } else {
@@ -115,6 +125,69 @@ class Model_create_ska extends CI_Model
                     break;
                 }
             }
+
+            // !old logic local storage
+            // foreach ($_FILES as $key => $file) {
+            //     $nama_file = $id . '_' . md5(uniqid() . uniqid() . rand());
+            //     $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+            //     $root = 'upload/';
+            //     $dir = $root . 'draft/' . date("Y-m-d") . '/';
+
+            //     $input_refdocument_id = explode('_', $key)[1];
+            //     $filtered = array_filter($client_refdocuments, function ($item) use ($input_refdocument_id) {
+            //         return $item['id'] == $input_refdocument_id;
+            //     });
+            //     $result = reset($filtered);
+            //     $allowed_types = strtolower($result['file_extension']);
+
+            //     if ($extension == $allowed_types) {
+            //         // Path/key file di S3
+            //         $s3_key = $dir . $nama_file . '.' . $extension;
+
+            //         // File upload-an ada di $_FILES['tmp_name']
+            //         $file_tmp = $file['tmp_name'];
+
+            //         if (!is_dir($dir)) {
+            //             mkdir($dir, 0777, true);
+            //         }
+
+            //         $upload_file = array(
+            //             'upload_path'       => $dir,
+            //             'allowed_types'     => $allowed_types,
+            //             // 'max_size'          => 2097152,
+            //             'file_name'         => $nama_file . '.' . $extension,
+            //             'file_ext_tolower'  => TRUE,
+            //         );
+
+            //         $this->load->library('upload', $upload_file);
+            //         $this->upload->initialize($upload_file);
+            //         if ($this->upload->do_upload($key)) {
+            //             $path_file = $dir . $nama_file . '.' . $extension;
+
+            //             $tipe_file = array_search(strtoupper($extension), $arr_message_type, true);
+            //             $data = array(
+            //                 'draft_id' => $id,
+            //                 'file_name' => $file['name'],
+            //                 'path' => $path_file,
+            //                 'tipe_file' => $tipe_file,
+            //                 'refdokumen_id' => 13,
+            //                 'client_refdokumen_id' => $input_refdocument_id,
+            //                 'created_at' => date("Y-m-d h:i:s"),
+            //                 'created_by' => $this->session->userdata('username')
+            //             );
+
+            //             $draft_ska_doc[] = $data;
+            //             // var_dump($draft_ska_doc);die();
+            //         } else {
+            //             echo $this->upload->display_errors();
+            //             die();
+            //         }
+            //     } else {
+            //         $resp = 2;
+            //         $draft_ska_doc = array();
+            //         break;
+            //     }
+            // }
         }
 
         // var_dump($draft_ska_doc);die();
@@ -421,7 +494,7 @@ class Model_create_ska extends CI_Model
                         LEFT JOIN referensi.refipska f ON f.id = a.ipska_office_id
                         WHERE a.is_delete is null 
                         AND a.client_id = ' . $this->session->userdata('client_id') . ' ' . $addSql . '
-                        ORDER BY a.created_at DESC';
+                        ORDER BY a.id DESC';
         $result_total     = $this->db->query($sql_total);
         $banyak         = $result_total->num_rows();
 
@@ -436,7 +509,7 @@ class Model_create_ska extends CI_Model
                     LEFT JOIN referensi.refipska f ON f.id = a.ipska_office_id
                     WHERE a.is_delete is null
                     AND a.client_id = ' . $this->session->userdata('client_id') . ' ' . $addSql . '
-                    ORDER BY a.created_at DESC
+                    ORDER BY a.id DESC
                     LIMIT ' . $length . ' OFFSET ' . $start;
             $result         = $this->db->query($sql);
             $arrayReturn     = $result->result_array();

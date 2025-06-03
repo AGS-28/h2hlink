@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------
@@ -79,7 +79,7 @@ $db['default'] = array(
 	//'hostname' => '10.127.221.55',
 	'username' => 'main',
 	'password' => 'Pass123abc.',
-	'database' => 'public',
+	'database' => 'host2host',
 	'dbdriver' => 'postgre',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

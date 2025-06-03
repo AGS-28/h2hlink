@@ -467,7 +467,8 @@ class Createska extends CI_Controller
 		$response = curl_exec($curl);
 		$http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 		curl_close($curl);
-		$json_decode = json_decode($response);
+		// var_dump($response);
+		// die;
 		if ($http_status != 200) {
 			$arr_err = array(
 				'kode' => 400,

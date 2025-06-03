@@ -1,1 +1,4 @@
 application/config/custom.php
+upload/*
+vendor
+composer.lock
