@@ -68,10 +68,10 @@ class Model_master extends CI_Model
         return $arr_result;
     }
 
-    function get_data_aju($end_point = '')
+    function get_data_aju($end_point = '', $client_id = '')
     {
-        if ($end_point != '') {
-            $sql = "SELECT id, no_aju FROM trans.headers WHERE no_aju IS NOT NULL AND partner_endpoint_id = " . $end_point;
+        if ($end_point != '' && $client_id != '') {
+            $sql = "SELECT id, no_aju FROM trans.headers WHERE no_aju IS NOT NULL AND partner_endpoint_id = " . $end_point . " AND client_id = " . $client_id;
         } else {
             $sql = "SELECT id, no_aju FROM trans.headers WHERE no_aju IS NOT NULL";
         }

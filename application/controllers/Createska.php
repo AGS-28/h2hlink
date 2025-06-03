@@ -78,7 +78,7 @@ class Createska extends CI_Controller
 		//Page Data Content
 		$param['page_title'] 	 = $this->load->view('main/partials/page-title', $tittle, true);
 		$param['ref_document'] 	 = $this->Model_master->get_data_ref_document();
-		$param['data_aju'] 	     = $this->Model_master->get_data_aju(1);
+		$param['data_aju'] 	     = $this->Model_master->get_data_aju(1, $this->session->userdata('client_id'));
 		$param['ref_kppbc'] 	 = $this->Model_master->get_data_ref_kppbc();
 
 		$data['content']    	= $this->load->view('main/view/upload_document', $param, true);
@@ -322,88 +322,49 @@ class Createska extends CI_Controller
 
 	public function send_document()
 	{
-		$id = $this->input->post('id');
-		$arrRet = $this->Model_create_ska->get_view_document($id, 1);
-		$arrData = $arrRet['arrData'];
-		$jmlData = $arrRet['totalRow'];
+		$url = ENV_API_SKA_STORE.'/api/v1/upload-file-coo';
 
-		if ($jmlData > 0) {
-			$username = $arrData[0]['user_endpoint'];
-			$npwp = $arrData[0]['npwp'];
-			$nib = $arrData[0]['nib'];
-			$no_aju = $arrData[0]['no_aju'];
+		$payload = array(
+			'id' => $this->input->post('id'),
+			'client_id' => $this->session->userdata('client_id'),
+		);
 
-			$support_doc = array();
-			foreach ($arrData as $key => $value) {
-				$doc_type = (int)$value['kode'];
-				$kppbc = $value['refkppbc_id'];
-				if ($kppbc == '') {
-					$kppbc = '';
-				}
+		$json_data = json_encode($payload);
+		$curl = curl_init();
+		curl_setopt_array($curl, array(
+			CURLOPT_URL => $url,
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => '',
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 0,
+			CURLOPT_FOLLOWLOCATION => true,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => 'POST',
+			CURLOPT_POSTFIELDS => $json_data,
+			CURLOPT_HTTPHEADER => array(
+				'X-API-KEY: host2host.token',
+				'Content-Type: application/json',
+			),
+		));
 
-				$val = (float)$value['value'];
-				if ($val == '') {
-					$val = '';
-				}
+		$response = curl_exec($curl);
+		$http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+		curl_close($curl);
 
-				$doc_no = $value['document_number'];
-				$doc_date = $value['document_date'];
-				$file = base64_encode(file_get_contents($value['path']));
-
-				$support_doc[] = array(
-					'doc_type' => strval($doc_type),
-					'kppbc' => $kppbc,
-					'value' => strval($val),
-					'doc_no' => $doc_no,
-					'doc_date' => $doc_date,
-					'file' => 'data:application/pdf;base64,' . $file
-				);
-			}
-
-			$array_all = array(
-				'username' => $username,
-				'npwp' => $npwp,
-				'nib' => $nib,
-				'no_aju' => $no_aju,
-				'supporting_doc' => $support_doc
+		if ($http_status != 200) {
+			$arr_res = array(
+				'kode' => 400,
+				'keterangan' => 'Service error, please try again periodically.'
 			);
 
-			$url = $this->Model_master->get_url_wso2(2);
+			echo json_encode($arr_res);
+		} else {
+			$arr_res = array(
+				'kode' => 200,
+				'keterangan' => 'Process Successfully'
+			);
 
-			$json_data = json_encode($array_all);
-			// echo $json_data;die();
-			$curl = curl_init();
-			curl_setopt_array($curl, array(
-				CURLOPT_URL => $url,
-				CURLOPT_RETURNTRANSFER => true,
-				CURLOPT_ENCODING => '',
-				CURLOPT_MAXREDIRS => 10,
-				CURLOPT_TIMEOUT => 0,
-				CURLOPT_FOLLOWLOCATION => true,
-				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-				CURLOPT_CUSTOMREQUEST => 'POST',
-				CURLOPT_POSTFIELDS => $json_data,
-				CURLOPT_HTTPHEADER => array(
-					'x-Gateway-APIKey: ae5653c9-1ba9-4bbb-8955-7da25cd4fd5b',
-					'Content-Type: application/json',
-					'Cookie: BIGipServer~k8s-dev~Shared~ingress_eska_eska_be_pengajuan_by_webservice=2791200778.28278.0000'
-				),
-			));
-
-			$response = curl_exec($curl);
-			curl_close($curl);
-
-			$json_decode = json_decode($response);
-			if ($json_decode == '' or $json_decode == null) {
-				$arr_err = array(
-					'kode' => 400,
-					'keterangan' => 'Service error, please try again periodically.'
-				);
-
-				echo json_encode($arr_err);
-			} else {
-				echo $response;
-			}
+			echo json_encode($arr_res);
 		}
 	}
 
