@@ -18,10 +18,10 @@ class Model_create_ska extends CI_Model
         $ipska = $this->input->post('ipska');
         $tipe_form = $this->input->post('tipe_form');
         $pengajuan = $this->input->post('pengajuan');
-        $no_serial = $this->input->post('no_serial');
-        if ($no_serial == '') {
-            $no_serial = null;
-        }
+        // $no_serial = $this->input->post('no_serial');
+        // if ($no_serial == '') {
+        //     $no_serial = null;
+        // }
 
         $draft_ska_doc = array();
         $resp = 0;
@@ -47,7 +47,7 @@ class Model_create_ska extends CI_Model
             'co_type_id' => $tipe_form,
             'ipska_office_id' => $ipska,
             'jenis_form' => $pengajuan,
-            'no_serial_blanko' => $no_serial,
+            // 'no_serial_blanko' => $no_serial,
             'created_at' => date("Y-m-d h:i:s"),
             'created_by' => $this->session->userdata('username'),
             'status' => '1'

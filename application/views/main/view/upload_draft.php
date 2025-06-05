@@ -44,6 +44,14 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="row mb-4">
+                            <label for="horizontal-input" class="col-sm-3 col-form-label">Pengajuan <font color="red">*</font></label>
+                            <input type="hidden" class="form-control" id="pengajuan" name="pengajuan" readonly>
+                            <div class="col-sm-9">
+                                <input type="radio" id="btn_radio" name="btn_radio" value="1" onchange="changeradiobtn(this);"> e-form &nbsp;&nbsp;&nbsp; 
+                                <input type="radio" id="btn_radio" name="btn_radio" value="0" onchange="changeradiobtn(this);"> Konvensional
+                            </div>
+                        </div>
                         <!-- <div class="row mb-4">
                             <label for="horizontal-input" class="col-sm-3 col-form-label">Document Type <font color="red">*</font></label>
                             <div class="col-sm-9">

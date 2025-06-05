@@ -186,7 +186,7 @@ class Createska extends CI_Controller
 			}
 
 			$html[] = $no;
-			$html[] = '<b> Draft Number : <font color="#d75350">' . $data['no_draft'] . '</font><br/><b> Aju Number : <font color="#d75350">' . $data['no_aju'] . '</font><br/><b> IPSKA : <font color="#4549a2">' . $data['ipska'] . '</font><br/><b> Form : <font color="#4549a2">' . $data['cotype'] . '</font><br/></b><b> Jenis Pengajuan : <font color="#4549a2">' . $jenis_form . '</font></b><br/><b> Nomor Serial Blanko : <font color="#4549a2">' . $no_serial . '</font><br/></b><b> Status : <font color="#d75350">' . $data['status_desc'] . '</font></b><br/><b> Created Date : </b>' . $data['created_at'];
+			$html[] = '<b> Draft Number : <font color="#d75350">' . $data['no_draft'] . '</font><br/><b> Aju Number : <font color="#d75350">' . $data['no_aju'] . '</font><br/><b> IPSKA : <font color="#4549a2">' . $data['ipska'] . '</font><br/><b> Form : <font color="#4549a2">' . $data['cotype'] . '</font><br/></b><b> Jenis Pengajuan : <font color="#4549a2">' . $jenis_form . '</font></b><br/></b><b> Status : <font color="#d75350">' . $data['status_desc'] . '</font></b><br/><b> Created Date : </b>' . $data['created_at'];
 			$html[] = '<b> Name : <font color="#d75350">' . $data['client_name'] . '</font></b><br/><b> NIB : </b>' . $data['nib'] . '<br/><b> NPWP : </b>' . $data['npwp'];
 			$html[] = '<b> Name : <font color="#4549a2">' . $data['partner_name'] . '</font>';
 			$html[] = '
