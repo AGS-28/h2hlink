@@ -249,7 +249,7 @@ class Createska extends CI_Controller
 			$func_name = "'get_path_document'";
 			$btn_delete = $data['status'] != 3 ? '<li><a class="dropdown-item" href="#" onclick="delete_document(' . $data['id'] . ', ' . $id . ')">Delete Document</a></li>' : '';
 			$html[] = $no;
-			$html[] = '<b> Name : ' . $data['name'] . '</b><br/><b> Status : <font color="#d75350">' . $data['status'] . '</font></b>';
+			$html[] = '<b> Name : ' . $data['name'] . '</b><br/><b> Status : <font color="#d75350">' . $data['status_desc'] . '</font></b>';
 			$html[] = $data['document_number'];
 			$html[] = $data['document_date'];
 			$html[] = $data['kppbc'];

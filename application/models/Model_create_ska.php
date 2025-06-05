@@ -312,7 +312,7 @@ class Model_create_ska extends CI_Model
         $length     = $this->input->post('length');
 
         if ($tipe == '') {
-            $sql_total     = ' SELECT a.id, b.name, a.document_number, a.document_date, a.created_at AS created_at_document, c.name as kppbc, a.value, d.status_desc as status
+            $sql_total     = ' SELECT a.id, b.name, a.document_number, a.document_date, a.created_at AS created_at_document, c.name as kppbc, a.value, a.status, d.status_desc
                             FROM trans.document a 
                             LEFT JOIN referensi.refdokumen b ON b.id = a.refdokumen_id
                             LEFT JOIN referensi.refkppbc c ON c.code = a.refkppbc_id
@@ -337,7 +337,7 @@ class Model_create_ska extends CI_Model
 
         if ($banyak > 0) {
             if ($tipe == '') {
-                $sql = 'SELECT a.id, b.name, a.document_number, a.document_date, a.created_at AS created_at_document, c.name as kppbc, a.value, d.status_desc as status
+                $sql = 'SELECT a.id, b.name, a.document_number, a.document_date, a.created_at AS created_at_document, c.name as kppbc, a.value, a.status, d.status_desc
                         FROM trans.document a 
                         LEFT JOIN referensi.refdokumen b ON b.id = a.refdokumen_id
                         LEFT JOIN referensi.refkppbc c ON c.code = a.refkppbc_id
