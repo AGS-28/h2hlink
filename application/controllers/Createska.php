@@ -102,6 +102,7 @@ class Createska extends CI_Controller
 
 			$title = "'Views Document'";
 			$func_send = "send_document";
+			$btn_send = $data['send_status'] == 't' ? '<li><a class="dropdown-item" href="#" onclick="confirm_kirim(' . $func_send . ',' . $data['id'] . ')">Send Document</a></li>' : '';
 			$func_name = "'get_view_document'";
 			$html[] = $no;
 			$html[] = '<b> Aju Number : <font color="#4549a2">' . $data['no_aju'] . '</font><br/> Created Date : </b>' . $data['created_at_message'];
@@ -114,7 +115,7 @@ class Createska extends CI_Controller
 							</button>
 							<ul class="dropdown-menu dropdown-menu-end">
 								<li><a class="dropdown-item" href="#" onclick="show_modal_document(' . $data['id'] . ',' . $title . ',0,' . $func_name . ')">Views Document</a></li>
-								<li><a class="dropdown-item" href="#" onclick="confirm_kirim(' . $func_send . ',' . $data['id'] . ')">Send Document</a></li>
+								' . $btn_send . '
 							</ul>
 						</div>
 					';
@@ -246,8 +247,9 @@ class Createska extends CI_Controller
 
 			$title = "'Views Document " . $data['name'] . "'";
 			$func_name = "'get_path_document'";
+			$btn_delete = $data['status'] != 3 ? '<li><a class="dropdown-item" href="#" onclick="delete_document(' . $data['id'] . ', ' . $id . ')">Delete Document</a></li>' : '';
 			$html[] = $no;
-			$html[] = $data['name'];
+			$html[] = '<b> Name : ' . $data['name'] . '</b><br/><b> Status : <font color="#d75350">' . $data['status'] . '</font></b>';
 			$html[] = $data['document_number'];
 			$html[] = $data['document_date'];
 			$html[] = $data['kppbc'];
@@ -259,7 +261,7 @@ class Createska extends CI_Controller
 							</button>
 							<ul class="dropdown-menu dropdown-menu-end">
 								<li><a class="dropdown-item" href="#" onclick="show_modal_document(' . $data['id'] . ',' . $title . ',1,' . $func_name . ')">Views Document</a></li>
-								<li><a class="dropdown-item" href="#" onclick="delete_document(' . $data['id'] . ', ' . $id . ')">Delete Document</a></li>
+								' . $btn_delete . '
 							</ul>
 						</div>
 					';

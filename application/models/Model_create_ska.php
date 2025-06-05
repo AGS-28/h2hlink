@@ -231,11 +231,30 @@ class Model_create_ska extends CI_Model
             $addSql .= ' AND a.no_aju = ' . $this->db->escape($arrPost['no_aju']);
         }
 
-        $sql_total     = ' SELECT a.id, a.no_aju, b.client_name, b.npwp, b.nib, c.partner_name, d.method_name as partner_endpoint, a.created_at as created_at_message
+        $sql_total     = 'SELECT a.id, a.no_aju, b.client_name, b.npwp, b.nib, c.partner_name, 
+                        d.method_name AS partner_endpoint, a.created_at AS created_at_message,
+                        doc.total_docs, doc.send_success,
+                        CASE 
+                            WHEN doc.total_docs > 0 THEN
+                                CASE 
+                                    WHEN doc.total_docs = doc.send_success THEN false
+                                    ELSE true
+                                END
+                            ELSE false
+                        END AS send_status
                         FROM trans.headers a 
                         LEFT JOIN profile.clients b ON b.id = a.client_id
                         LEFT JOIN profile.partners c ON c.id = a.partner_id
                         LEFT JOIN profile.partner_endpoints d ON d.id = a.partner_endpoint_id
+                        LEFT JOIN (
+                            SELECT 
+                                transaction_id, 
+                                COUNT(*) AS total_docs,
+                                SUM(CASE WHEN status = 3 THEN 1 ELSE 0 END) AS send_success
+                            FROM trans.document
+                            where is_delete = false
+                            GROUP BY transaction_id
+                        ) doc ON doc.transaction_id = a.id
                         WHERE a.partner_endpoint_id = 1
                         AND a.no_aju IS NOT NULL
                         AND a.client_id = ' . $this->session->userdata('client_id') . ' ' . $addSql . '
@@ -245,11 +264,30 @@ class Model_create_ska extends CI_Model
         $banyak         = $result_total->num_rows();
 
         if ($banyak > 0) {
-            $sql = 'SELECT a.id, a.no_aju, b.client_name, b.npwp, b.nib, c.partner_name, d.method_name as partner_endpoint, a.created_at as created_at_message
+            $sql = 'SELECT a.id, a.no_aju, b.client_name, b.npwp, b.nib, c.partner_name, 
+                    d.method_name AS partner_endpoint, a.created_at AS created_at_message,
+                    doc.total_docs, doc.send_success,
+                    CASE 
+                        WHEN doc.total_docs > 0 THEN
+                            CASE 
+                                WHEN doc.total_docs = doc.send_success THEN false
+                                ELSE true
+                            END
+                        ELSE false
+                    END AS send_status
                     FROM trans.headers a 
                     LEFT JOIN profile.clients b ON b.id = a.client_id
                     LEFT JOIN profile.partners c ON c.id = a.partner_id
                     LEFT JOIN profile.partner_endpoints d ON d.id = a.partner_endpoint_id
+                    LEFT JOIN (
+                        SELECT 
+                            transaction_id, 
+                            COUNT(*) AS total_docs,
+                            SUM(CASE WHEN status = 3 THEN 1 ELSE 0 END) AS send_success
+                        FROM trans.document
+                        where is_delete = false
+                        GROUP BY transaction_id
+                    ) doc ON doc.transaction_id = a.id
                     WHERE a.partner_endpoint_id = 1
                     AND a.no_aju IS NOT NULL
                     AND a.client_id = ' . $this->session->userdata('client_id') . ' ' . $addSql . '
@@ -274,10 +312,11 @@ class Model_create_ska extends CI_Model
         $length     = $this->input->post('length');
 
         if ($tipe == '') {
-            $sql_total     = ' SELECT a.id, b.name, a.document_number, a.document_date, a.created_at AS created_at_document, c.name as kppbc, a.value
+            $sql_total     = ' SELECT a.id, b.name, a.document_number, a.document_date, a.created_at AS created_at_document, c.name as kppbc, a.value, d.status_desc as status
                             FROM trans.document a 
                             LEFT JOIN referensi.refdokumen b ON b.id = a.refdokumen_id
                             LEFT JOIN referensi.refkppbc c ON c.code = a.refkppbc_id
+                            LEFT JOIN referensi.tblrefstatus d ON d.id = a.status
                             WHERE a.is_delete = false 
                             AND a.client_id = ' . $this->session->userdata('client_id') . ' 
                             AND a.transaction_id = ' . $id . '
@@ -298,10 +337,11 @@ class Model_create_ska extends CI_Model
 
         if ($banyak > 0) {
             if ($tipe == '') {
-                $sql = 'SELECT a.id, b.name, a.document_number, a.document_date, a.created_at AS created_at_document, c.name as kppbc, a.value
+                $sql = 'SELECT a.id, b.name, a.document_number, a.document_date, a.created_at AS created_at_document, c.name as kppbc, a.value, d.status_desc as status
                         FROM trans.document a 
                         LEFT JOIN referensi.refdokumen b ON b.id = a.refdokumen_id
                         LEFT JOIN referensi.refkppbc c ON c.code = a.refkppbc_id
+                        LEFT JOIN referensi.tblrefstatus d ON d.id = a.status
                         WHERE a.is_delete = false 
                         AND a.client_id = ' . $this->session->userdata('client_id') . ' 
                         AND a.transaction_id = ' . $id . '
