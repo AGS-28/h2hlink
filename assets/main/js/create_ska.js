@@ -195,6 +195,10 @@ function confirm_upload_draft() {
         errorString += "- Select a Form <br\>";
     }
 
+    if (!$('#pengajuan').val()) {
+        errorString += "- Select a pengajuan <br\>";
+    }
+
     dataRefdocs.forEach(function (doc) {
         var dropzone = Dropzone.forElement("#dropzone-" + doc.id);
         if (dropzone.files.length == 0) {
@@ -205,18 +209,19 @@ function confirm_upload_draft() {
     var panjangAkhir = errorString.length;
     panjangAkhir = errorString.length;
     if (panjangAwal == panjangAkhir) {
-        $('#modal_header1').html('Serial Blanko');
+        // $('#modal_header1').html('Serial Blanko');
 
-        loading('modal_body1', true);
-        $('#exampleModalScrollable1').modal('toggle');
+        // loading('modal_body1', true);
+        // $('#exampleModalScrollable1').modal('toggle');
         
-        var url = baseurl + "index.php/createska/v_serial_blanko/"+Math.random();
-        $.post( url, { })
-        .done(function( data ) {
-            loading('modal_body1', false);
-            $('#modal_body1').html(data);
-            $('#judul').html('Input Serial Blangko Yang Akan Digunakan Pada Pengajuan COO <font color="red">'+$('#tipe_form option:selected').text()+'</font>');
-        });
+        // var url = baseurl + "index.php/createska/v_serial_blanko/"+Math.random();
+        // $.post( url, { })
+        // .done(function( data ) {
+        //     loading('modal_body1', false);
+        //     $('#modal_body1').html(data);
+        //     $('#judul').html('Input Serial Blangko Yang Akan Digunakan Pada Pengajuan COO <font color="red">'+$('#tipe_form option:selected').text()+'</font>');
+        // });
+        confirm_kirim(upload_draft);
     } else {
         alert_error(errorString);
     }
