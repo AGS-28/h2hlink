@@ -222,25 +222,55 @@ class Model_create_ska extends CI_Model
 
             $nama_file = md5(uniqid() . uniqid() . rand());
             $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-            $root = 'upload/';
+            $root = 'ska/';
             $dir = $root . 'document/' . date("Y-m-d") . '/';
 
-            if (!is_dir($dir)) {
-                mkdir($dir, 0777, true);
+            // if (!is_dir($dir)) {
+            //     mkdir($dir, 0777, true);
+            // }
+
+            // $upload_file = array(
+            //     'upload_path'       => $dir,
+            //     'allowed_types'     => 'pdf',
+            //     // 'max_size'          => 2097152,
+            //     'file_name'         => $nama_file . '.' . $extension,
+            //     'file_ext_tolower'  => TRUE,
+            // );
+
+            // $this->load->library('upload', $upload_file);
+            // $this->upload->initialize($upload_file);
+            // if ($this->upload->do_upload('file')) {
+            //     $path_file = $dir . $nama_file . '.' . $extension;
+            //     $status = true;
+            // }
+            $s3 = new \Aws\S3\S3Client([
+                'version' => 'latest',
+                'region'  => 'id-id',
+                'endpoint' => ENV_S3_ENDPOINT_URL,
+                'credentials' => [
+                    'key'    => ENV_S3_ACCESS_KEY,
+                    'secret' => ENV_S3_SECRET_KEY,
+                ],
+                'use_path_style_endpoint' => true,
+                'suppress_php_deprecation_warning' => true,
+            ]);
+            $bucket = ENV_S3_BUCKET_NAME;
+
+            if ($extension != 'pdf') {
+                echo "extensi tidak sesuai";
+                die;
             }
+            $s3_key = $dir . $nama_file . '.' . $extension;
+            $file_tmp = $file['tmp_name'];
+            $result = $s3->putObject([
+                'Bucket'      => $bucket,
+                'Key'         => $s3_key,
+                'SourceFile'  => $file_tmp,
+                'ACL'         => 'private',
+                'ContentType' => $file['type'],
+            ]);
 
-            $upload_file = array(
-                'upload_path'       => $dir,
-                'allowed_types'     => 'pdf',
-                // 'max_size'          => 2097152,
-                'file_name'         => $nama_file . '.' . $extension,
-                'file_ext_tolower'  => TRUE,
-            );
-
-            $this->load->library('upload', $upload_file);
-            $this->upload->initialize($upload_file);
-            if ($this->upload->do_upload('file')) {
-                $path_file = $dir . $nama_file . '.' . $extension;
+            if (isset($result['ObjectURL'])) {
                 $status = true;
             }
         }
@@ -269,7 +299,7 @@ class Model_create_ska extends CI_Model
                 'no_aju' => $data_client[0]['no_aju'],
                 'document_number' => $arrPost['document_number'],
                 'client_id' => $data_client[0]['client_id'],
-                'path' => $path_file,
+                'path' => $s3_key,
                 'document_date' => $arrPost['document_date'],
                 'refdokumen_id' => $arrPost['document_type'],
                 'refkppbc_id' => $refkkpbc,
