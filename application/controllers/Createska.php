@@ -183,11 +183,11 @@ class Createska extends CI_Controller
 				$next = '<li><a class="dropdown-item" href="#" onclick="confirm_kirim(send_draft,' . $data['id'] . ');">Send Draft</a></li>';
 			}
 
-			if ($data['status'] == 3 && isset($data['url_draft_ska']) && $data['url_draft_ska'] !== '') {
+			if (in_array($data['status'], [3, 7, 8])  && isset($data['url_draft_ska']) && $data['url_draft_ska'] !== '') {
 				$view_draft_ska = '<li><a class="dropdown-item" href="' . $data['url_draft_ska'] . '" target="_blank">View Draft SKA</a></li>';
 			}
 
-			if ($data['status'] == 3 || $data['status'] == 8) {
+			if (in_array($data['status'], [3, 8])) {
 				$submit_draft_ska = '<li><a class="dropdown-item" href="#" onclick="confirm_kirim(submit_draft,' . $data['id'] . ');">Submit Draft SKA</a></li>';
 			}
 
@@ -558,11 +558,16 @@ class Createska extends CI_Controller
 		curl_close($curl);
 		// var_dump($response);
 		// die;
+		$result = json_decode($response);
 		if ($http_status != 200) {
 			$arr_err = array(
 				'kode' => 400,
-				'keterangan' => 'Service error, please try again periodically.'
-			);
+				'keterangan' => 'Service error, ' . (
+					isset($result->notification) && isset($result->notification->message)
+						? $result->notification->message
+						: 'please try again periodically.'
+				)
+			);			
 
 			echo json_encode($arr_err);
 		} else {
