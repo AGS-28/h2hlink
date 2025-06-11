@@ -185,6 +185,9 @@ class Createska extends CI_Controller
 
 			if ($data['status'] == 3 && isset($data['url_draft_ska']) && $data['url_draft_ska'] !== '') {
 				$view_draft_ska = '<li><a class="dropdown-item" href="' . $data['url_draft_ska'] . '" target="_blank">View Draft SKA</a></li>';
+			}
+
+			if ($data['status'] == 3 || $data['status'] == 8) {
 				$submit_draft_ska = '<li><a class="dropdown-item" href="#" onclick="confirm_kirim(submit_draft,' . $data['id'] . ');">Submit Draft SKA</a></li>';
 			}
 
