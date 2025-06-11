@@ -192,7 +192,7 @@ class Createska extends CI_Controller
 			}
 
 			if ($data['status'] == 7) {
-				$get_coo = '<li><a class="dropdown-item" href="#" onclick="confirm_kirim(get_coo,' . $data['id'] . ');">Perbarui Status</a></li>';
+				$get_coo = '<li><a class="dropdown-item" href="#" onclick="confirm_kirim(get_coo,' . $data['id'] . ');">Get Status COO</a></li>';
 			}
 
 			$html[] = $no;
