@@ -297,6 +297,7 @@ if (!isset($config['ENV_API_SKA_STORE'])) {
 }
 
 define('ENV_API_SKA_STORE', $config['ENV_API_SKA_STORE']);
+define('ENV_API_SKA_GET', $config['ENV_API_SKA_GET']);
 define('ENV_S3_ENDPOINT_URL', $config['ENV_S3_ENDPOINT_URL']);
 define('ENV_S3_ACCESS_KEY', $config['ENV_S3_ACCESS_KEY']);
 define('ENV_S3_SECRET_KEY', $config['ENV_S3_SECRET_KEY']);
