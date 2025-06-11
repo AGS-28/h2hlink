@@ -174,6 +174,8 @@ class Createska extends CI_Controller
 			$next = '';
 			$delete = '';
 			$view_draft_ska = '';
+			$submit_draft_ska = '';
+			$get_coo = '';
 			if (in_array($data['status'], $arr_status)) {
 				if ($data['status'] == 1) {
 					$delete = '<li><a class="dropdown-item" href="#" onclick="confirm_kirim(delete_draft,' . $data['id'] . ');">Delete Draft</a></li>';
@@ -183,10 +185,15 @@ class Createska extends CI_Controller
 
 			if ($data['status'] == 3 && isset($data['url_draft_ska']) && $data['url_draft_ska'] !== '') {
 				$view_draft_ska = '<li><a class="dropdown-item" href="' . $data['url_draft_ska'] . '" target="_blank">View Draft SKA</a></li>';
+				$submit_draft_ska = '<li><a class="dropdown-item" href="#" onclick="confirm_kirim(submit_draft,' . $data['id'] . ');">Submit Draft SKA</a></li>';
+			}
+
+			if ($data['status'] == 7) {
+				$get_coo = '<li><a class="dropdown-item" href="#" onclick="confirm_kirim(get_coo,' . $data['id'] . ');">Perbarui Status</a></li>';
 			}
 
 			$html[] = $no;
-			$html[] = '<b> Draft Number : <font color="#d75350">' . $data['no_draft'] . '</font><br/><b> Aju Number : <font color="#d75350">' . $data['no_aju'] . '</font><br/><b> IPSKA : <font color="#4549a2">' . $data['ipska'] . '</font><br/><b> Form : <font color="#4549a2">' . $data['cotype'] . '</font><br/></b><b> Jenis Pengajuan : <font color="#4549a2">' . $jenis_form . '</font></b><br/></b><b> Status : <font color="#d75350">' . $data['status_desc'] . '</font></b><br/><b> Created Date : </b>' . $data['created_at'];
+			$html[] = '<b> Draft Number : <font color="#d75350">' . $data['no_draft'] . '</font><br/><b> Aju Number : <font color="#d75350">' . $data['no_aju'] . '</font><br/><b> IPSKA : <font color="#4549a2">' . $data['ipska'] . '</font><br/><b> Form : <font color="#4549a2">' . $data['cotype'] . '</font><br/></b><b> Jenis Pengajuan : <font color="#4549a2">' . $jenis_form . '</font></b><br/></b><b> Status : <font color="#d75350">' . $data['status_desc'] . '</font></b>' . ($data['status_ska'] ? '<br/><b> Status SKA : <font color="#d75350">' . $data['status_ska'] . '</font></b>' : '') . '<br/><b> Created Date : </b>' . $data['created_at'];
 			$html[] = '<b> Name : <font color="#d75350">' . $data['client_name'] . '</font></b><br/><b> NIB : </b>' . $data['nib'] . '<br/><b> NPWP : </b>' . $data['npwp'];
 			$html[] = '<b> Name : <font color="#4549a2">' . $data['partner_name'] . '</font>';
 			$html[] = '
@@ -197,6 +204,8 @@ class Createska extends CI_Controller
 							<ul class="dropdown-menu dropdown-menu-end">
 								<li><a class="dropdown-item" href="#" onclick="show_modal_document(' . $data['id'] . ',' . $title . ',0,' . $func_name . ')">Views Draft</a></li>
 								' . $view_draft_ska . '
+								' . $submit_draft_ska . '
+								' . $get_coo . '
 								' . $delete . '
 								' . $next . '
 							</ul>
@@ -457,5 +466,109 @@ class Createska extends CI_Controller
 	public function delete_draft()
 	{
 		echo json_encode($this->Model_create_ska->delete_draft());
+	}
+
+	public function submit_draft()
+	{
+		$id = $this->input->post('id');
+		$url = ENV_API_SKA_STORE.'/api/v1/submit-request-ska';
+		$data = $this->Model_master->get_data_client_channel($id);
+
+		$array_all = array(
+			'idDraft' => $id,
+			'idClient' => $data[0]['id_client'],
+			'idChannel' => $data[0]['id_channel']
+		);
+
+		$json_data = json_encode($array_all);
+		$curl = curl_init();
+		curl_setopt_array($curl, array(
+			CURLOPT_URL => $url,
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => '',
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 0,
+			CURLOPT_FOLLOWLOCATION => true,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => 'POST',
+			CURLOPT_POSTFIELDS => $json_data,
+			CURLOPT_HTTPHEADER => array(
+				'X-API-KEY: host2host.token',
+				'Content-Type: application/json',
+			),
+		));
+
+		$response = curl_exec($curl);
+		$http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+		curl_close($curl);
+		// var_dump($response);
+		// die;
+		if ($http_status != 200) {
+			$arr_err = array(
+				'kode' => 400,
+				'keterangan' => 'Service error, please try again periodically.'
+			);
+
+			echo json_encode($arr_err);
+		} else {
+			$arr_err = array(
+				'kode' => 200,
+				'keterangan' => 'Process Successfully'
+			);
+
+			echo json_encode($arr_err);
+		}
+	}
+
+	public function get_coo()
+	{
+		$id = $this->input->post('id');
+		$url = ENV_API_SKA_GET.'/api/v1/get-coo';
+		$data = $this->Model_master->get_data_client_channel($id);
+
+		$array_all = array(
+			'idDraft' => $id,
+			'idClient' => $data[0]['id_client'],
+			'idChannel' => $data[0]['id_channel']
+		);
+
+		$json_data = json_encode($array_all);
+		$curl = curl_init();
+		curl_setopt_array($curl, array(
+			CURLOPT_URL => $url,
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => '',
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 0,
+			CURLOPT_FOLLOWLOCATION => true,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => 'POST',
+			CURLOPT_POSTFIELDS => $json_data,
+			CURLOPT_HTTPHEADER => array(
+				'X-API-KEY: host2host.token',
+				'Content-Type: application/json',
+			),
+		));
+
+		$response = curl_exec($curl);
+		$http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+		curl_close($curl);
+		// var_dump($response);
+		// die;
+		if ($http_status != 200) {
+			$arr_err = array(
+				'kode' => 400,
+				'keterangan' => 'Service error, please try again periodically.'
+			);
+
+			echo json_encode($arr_err);
+		} else {
+			$arr_err = array(
+				'kode' => 200,
+				'keterangan' => 'Process Successfully'
+			);
+
+			echo json_encode($arr_err);
+		}
 	}
 }
