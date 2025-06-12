@@ -273,32 +273,24 @@ class Model_create_ska extends CI_Model
             if (isset($result['ObjectURL'])) {
                 $status = true;
             }
-            $s3_key = $dir . $nama_file . '.' . $extension;
-            $file_tmp = $file['tmp_name'];
-            $s3->putObject([
-                'Bucket'      => $bucket,
-                'Key'         => $s3_key,
-                'SourceFile'  => $file_tmp,
-                'ACL'         => 'private',
-                'ContentType' => $file['type'],
-            ]);
         }
 
-        if (isset($arrPost['kppbc'])) {
-            $refkkpbc = $arrPost['kppbc'];
-        } else {
-            $refkkpbc = null;
-        }
+        if ($status) {
+            if (isset($arrPost['kppbc'])) {
+                $refkkpbc = $arrPost['kppbc'];
+            } else {
+                $refkkpbc = null;
+            }
 
-        if ($arrPost['document_type'] != '6') {
-            $refkkpbc = null;
-        }
+            if ($arrPost['document_type'] != '6') {
+                $refkkpbc = null;
+            }
 
-        if ($arrPost['document_type'] == '1' or $arrPost['document_type'] == '6') {
-            $value = str_replace(',', '', $arrPost['value']);
-        } else {
-            $value = null;
-        }
+            if ($arrPost['document_type'] == '1' or $arrPost['document_type'] == '6') {
+                $value = str_replace(',', '', $arrPost['value']);
+            } else {
+                $value = null;
+            }
 
             $this->db->trans_begin();
             $array_data = array(
@@ -318,12 +310,13 @@ class Model_create_ska extends CI_Model
                 'is_delete' => 'f'
             );
 
-        $this->db->insert('trans.document', $array_data);
-        if ($this->db->trans_status() == false) {
-            $this->db->trans_rollback();
-        } else {
-            $this->db->trans_commit();
-            $resp = 1;
+            $this->db->insert('trans.document', $array_data);
+            if ($this->db->trans_status() == false) {
+                $this->db->trans_rollback();
+            } else {
+                $this->db->trans_commit();
+                $resp = 1;
+            }
         }
 
         return $resp;
