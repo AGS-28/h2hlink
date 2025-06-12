@@ -175,6 +175,7 @@ class Createska extends CI_Controller
 			$delete = '';
 			$view_draft_ska = '';
 			$submit_draft_ska = '';
+			$view_doc_ska = '';
 			$get_coo = '';
 			if (in_array($data['status'], $arr_status)) {
 				if ($data['status'] == 1) {
@@ -192,11 +193,20 @@ class Createska extends CI_Controller
 			}
 
 			if ($data['status'] == 7) {
-				$get_coo = '<li><a class="dropdown-item" href="#" onclick="confirm_kirim(get_coo,' . $data['id'] . ');">Get Status COO</a></li>';
+				if (isset($data['url_doc_ska']) && $data['url_doc_ska'] !== '') {
+					$view_doc_ska = '<li><a class="dropdown-item" href="' . $data['url_doc_ska'] . '" target="_blank">View COO</a></li>';
+				} else {
+					$get_coo = '<li><a class="dropdown-item" href="#" onclick="confirm_kirim(get_coo,' . $data['id'] . ');">Get Status COO</a></li>';
+				}
 			}
 
+			$status_ska_color = strtolower($data['status_ska']) == 'diterbitkan' ? 'rgb(127, 34, 254)' : 'rgb(255, 105, 0)';
+			$status_ska = $data['status_ska']
+				? '<br/><b> Status SKA : </b><strong style="color: white; background-color: ' . $status_ska_color . '; height: 1rem; line-height: 1rem; border-radius: 0.25rem; padding: 0px 0.25rem;">' . $data['status_ska'] . '</strong>'
+				: '';
+
 			$html[] = $no;
-			$html[] = '<b> Draft Number : <font color="#d75350">' . $data['no_draft'] . '</font><br/><b> Aju Number : <font color="#d75350">' . $data['no_aju'] . '</font><br/><b> IPSKA : <font color="#4549a2">' . $data['ipska'] . '</font><br/><b> Form : <font color="#4549a2">' . $data['cotype'] . '</font><br/></b><b> Jenis Pengajuan : <font color="#4549a2">' . $jenis_form . '</font></b><br/></b><b> Status : <font color="#d75350">' . $data['status_desc'] . '</font></b>' . ($data['status_ska'] ? '<br/><b> Status SKA : <font color="#d75350">' . $data['status_ska'] . '</font></b>' : '') . '<br/><b> Created Date : </b>' . $data['created_at'];
+			$html[] = '<b> Draft Number : <font color="#d75350">' . $data['no_draft'] . '</font><br/><b> Aju Number : <font color="#d75350">' . $data['no_aju'] . '</font><br/><b> IPSKA : <font color="#4549a2">' . $data['ipska'] . '</font><br/><b> Form : <font color="#4549a2">' . $data['cotype'] . '</font><br/></b><b> Jenis Pengajuan : <font color="#4549a2">' . $jenis_form . '</font></b><br/></b><b> Status : <font color="#d75350">' . $data['status_desc'] . '</font></b>' . $status_ska . '<br/><b> Created Date : </b>' . $data['created_at'];
 			$html[] = '<b> Name : <font color="#d75350">' . $data['client_name'] . '</font></b><br/><b> NIB : </b>' . $data['nib'] . '<br/><b> NPWP : </b>' . $data['npwp'];
 			$html[] = '<b> Name : <font color="#4549a2">' . $data['partner_name'] . '</font>';
 			$html[] = '
@@ -209,6 +219,7 @@ class Createska extends CI_Controller
 								' . $view_draft_ska . '
 								' . $submit_draft_ska . '
 								' . $get_coo . '
+								' . $view_doc_ska . '
 								' . $delete . '
 								' . $next . '
 							</ul>
