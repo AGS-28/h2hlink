@@ -2,6 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 $config['ENV_API_SKA_STORE'] = 'http://127.0.0.1:8210';
+$config['ENV_API_SKA_GET'] = 'http://127.0.0.1:8211';
 $config['ENV_S3_ENDPOINT_URL'] = 'https://is3.cloudhost.id';
 $config['ENV_S3_ACCESS_KEY'] = '';
 $config['ENV_S3_SECRET_KEY'] = '';

@@ -564,3 +564,53 @@ function delete_draft(id) {
         }
     });
 }
+
+function submit_draft(id) {
+    showLoading(true);
+    $.post(baseurl + "index.php/createska/submit_draft/"+Math.random(),{id:id}).done(function( data ) {
+        showLoading(false);
+        const obj = JSON.parse(data);
+        if(obj.kode == '200') {
+            swal.fire({
+                title: 'Succes!',
+                html: obj.keterangan,
+                icon: 'success',
+                button: "Close",
+            }).then((result) => {
+                location.reload(true);
+            });
+        } else {
+            swal.fire({
+                title: 'Warning!',
+                html: obj.keterangan,
+                icon: 'warning',
+                button: "Close",
+            });
+        }
+    });
+}
+
+function get_coo(id) {
+    showLoading(true);
+    $.post(baseurl + "index.php/createska/get_coo/"+Math.random(),{id:id}).done(function( data ) {
+        showLoading(false);
+        const obj = JSON.parse(data);
+        if(obj.kode == '200') {
+            swal.fire({
+                title: 'Succes!',
+                html: obj.keterangan,
+                icon: 'success',
+                button: "Close",
+            }).then((result) => {
+                location.reload(true);
+            });
+        } else {
+            swal.fire({
+                title: 'Warning!',
+                html: obj.keterangan,
+                icon: 'warning',
+                button: "Close",
+            });
+        }
+    });
+}

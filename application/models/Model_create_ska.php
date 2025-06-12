@@ -262,55 +262,61 @@ class Model_create_ska extends CI_Model
             }
             $s3_key = $dir . $nama_file . '.' . $extension;
             $file_tmp = $file['tmp_name'];
-            $s3->putObject([
+            $result = $s3->putObject([
                 'Bucket'      => $bucket,
                 'Key'         => $s3_key,
                 'SourceFile'  => $file_tmp,
                 'ACL'         => 'private',
                 'ContentType' => $file['type'],
             ]);
+
+            if (isset($result['ObjectURL'])) {
+                $status = true;
+            }
         }
 
-        if (isset($arrPost['kppbc'])) {
-            $refkkpbc = $arrPost['kppbc'];
-        } else {
-            $refkkpbc = null;
-        }
+        if ($status) {
+            if (isset($arrPost['kppbc'])) {
+                $refkkpbc = $arrPost['kppbc'];
+            } else {
+                $refkkpbc = null;
+            }
 
-        if ($arrPost['document_type'] != '6') {
-            $refkkpbc = null;
-        }
+            if ($arrPost['document_type'] != '6') {
+                $refkkpbc = null;
+            }
 
-        if ($arrPost['document_type'] == '1' or $arrPost['document_type'] == '6') {
-            $value = str_replace(',', '', $arrPost['value']);
-        } else {
-            $value = null;
-        }
+            if ($arrPost['document_type'] == '1' or $arrPost['document_type'] == '6') {
+                $value = str_replace(',', '', $arrPost['value']);
+            } else {
+                $value = null;
+            }
 
-        $this->db->trans_begin();
-        $array_data = array(
-            'transaction_id' => $arrPost['aju_number'],
-            'partner_id' => $data_client[0]['partner_id'],
-            'no_aju' => $data_client[0]['no_aju'],
-            'document_number' => $arrPost['document_number'],
-            'client_id' => $data_client[0]['client_id'],
-            'path' => $s3_key,
-            'document_date' => $arrPost['document_date'],
-            'refdokumen_id' => $arrPost['document_type'],
-            'refkppbc_id' => $refkkpbc,
-            'value' => $value,
-            'flag' => 0,
-            'created_by' => $this->session->userdata('username'),
-            'created_at' => date("Y-m-d h:i:s"),
-            'is_delete' => 'f'
-        );
+            $this->db->trans_begin();
+            $array_data = array(
+                'transaction_id' => $arrPost['aju_number'],
+                'partner_id' => $data_client[0]['partner_id'],
+                'no_aju' => $data_client[0]['no_aju'],
+                'document_number' => $arrPost['document_number'],
+                'client_id' => $data_client[0]['client_id'],
+                'path' => $s3_key,
+                'document_date' => $arrPost['document_date'],
+                'refdokumen_id' => $arrPost['document_type'],
+                'refkppbc_id' => $refkkpbc,
+                'value' => $value,
+                'flag' => 0,
+                'created_by' => $this->session->userdata('username'),
+                'created_at' => date("Y-m-d h:i:s"),
+                'is_delete' => 'f'
+            );
 
-        $this->db->insert('trans.document', $array_data);
-        if ($this->db->trans_status() == false) {
-            $this->db->trans_rollback();
-        } else {
-            $this->db->trans_commit();
-            $resp = 1;
+            $this->db->insert('trans.document', $array_data);
+            if ($this->db->trans_status() == false) {
+                $this->db->trans_rollback();
+            } else {
+                $this->db->trans_commit();
+                $resp = 1;
+            }
         }
 
         return $resp;
@@ -548,8 +554,8 @@ class Model_create_ska extends CI_Model
             $addSql .= ' AND a.no_draft = ' . $this->db->escape($arrPost['no_draft']);
         }
 
-        $sql_total     = 'SELECT a.id, a.no_draft, a.created_at, d.status_desc, b.client_name, b.npwp, b.nib, c.partner_name, a.status, 
-                        e.name as cotype, f.name as ipska, a.jenis_form, a.no_serial_blanko, a.no_aju, a.url_draft_ska
+        $sql_total     = 'SELECT a.id, a.no_draft, a.created_at, d.status_desc, b.client_name, b.npwp, b.nib, c.partner_name, a.status, a.status_ska, 
+                        e.name as cotype, f.name as ipska, a.jenis_form, a.no_serial_blanko, a.no_aju, a.url_draft_ska, a.url_doc_ska
                         FROM trans.draft_ska a
                         LEFT JOIN profile.clients b ON b.id = a.client_id
                         LEFT JOIN profile.partners c ON c.id = a.partner_id
@@ -563,8 +569,8 @@ class Model_create_ska extends CI_Model
         $banyak         = $result_total->num_rows();
 
         if ($banyak > 0) {
-            $sql = 'SELECT a.id, a.no_draft, a.created_at, d.status_desc, b.client_name, b.npwp, b.nib, c.partner_name, a.status, 
-                    e.name as cotype, f.name as ipska, a.jenis_form, a.no_serial_blanko, a.no_aju, a.url_draft_ska
+            $sql = 'SELECT a.id, a.no_draft, a.created_at, d.status_desc, b.client_name, b.npwp, b.nib, c.partner_name, a.status, a.status_ska, 
+                    e.name as cotype, f.name as ipska, a.jenis_form, a.no_serial_blanko, a.no_aju, a.url_draft_ska, a.url_doc_ska
                     FROM trans.draft_ska a
                     LEFT JOIN profile.clients b ON b.id = a.client_id
                     LEFT JOIN profile.partners c ON c.id = a.partner_id
