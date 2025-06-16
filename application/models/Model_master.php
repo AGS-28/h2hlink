@@ -222,8 +222,44 @@ class Model_master extends CI_Model
         $arr_result = $result->result_array();
         $path = $arr_result[0]['path'];
 
-        $bas64doc = chunk_split(base64_encode(file_get_contents($path)));
-        return $bas64doc;
+        $s3 = new \Aws\S3\S3Client([
+            'version' => 'latest',
+            'region'  => 'id-id',
+            'endpoint' => ENV_S3_ENDPOINT_URL,
+            'credentials' => [
+                'key'    => ENV_S3_ACCESS_KEY,
+                'secret' => ENV_S3_SECRET_KEY,
+            ],
+            'use_path_style_endpoint' => true,
+            'suppress_php_deprecation_warning' => true,
+        ]);
+
+        $s3_key = $path;
+
+        $cmd = $s3->getCommand('GetObject', [
+            'Bucket' => ENV_S3_BUCKET_NAME,
+            'Key'    => $s3_key,
+        ]);
+
+        $request = $s3->createPresignedRequest($cmd, '+10 minutes');
+        $presignedUrl = (string) $request->getUri();
+
+        $fileContents = file_get_contents($presignedUrl);
+
+        if ($fileContents === false) {
+            show_error('Gagal mengambil file dari S3.');
+        }
+
+        $base64 = base64_encode($fileContents);
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode([
+                'filename' => basename($s3_key),
+                'data' => $base64
+            ]));
+
+        return $base64;
     }
 
     function get_data_client_channel($id)
