@@ -361,7 +361,7 @@ class Model_create_ska extends CI_Model
                         WHERE a.partner_endpoint_id = 1
                         AND a.no_aju IS NOT NULL
                         AND a.client_id = ' . $this->session->userdata('client_id') . ' ' . $addSql . '
-                        ORDER BY a.created_at DESC';
+                        ORDER BY a.ID DESC';
 
         $result_total     = $this->db->query($sql_total);
         $banyak         = $result_total->num_rows();
@@ -394,7 +394,7 @@ class Model_create_ska extends CI_Model
                     WHERE a.partner_endpoint_id = 1
                     AND a.no_aju IS NOT NULL
                     AND a.client_id = ' . $this->session->userdata('client_id') . ' ' . $addSql . '
-                    ORDER BY a.created_at DESC
+                    ORDER BY a.ID DESC
                     LIMIT ' . $length . ' OFFSET ' . $start;
             $result         = $this->db->query($sql);
             $arrayReturn     = $result->result_array();
