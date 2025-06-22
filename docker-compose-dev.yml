@@ -1,0 +1,9 @@
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: h2hlink
+    ports:
+      - "8080:80"
+    restart: unless-stopped

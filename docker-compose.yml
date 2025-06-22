@@ -1,0 +1,12 @@
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: h2hlink
+    ports:
+      - "8213:80"
+    volumes:
+      - ./application:/var/www/html/application
+      - ./assets:/var/www/html/assets
+    restart: unless-stopped
