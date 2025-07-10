@@ -26,18 +26,7 @@ class Model_create_ska extends CI_Model
         $draft_ska_doc = array();
         $resp = 0;
 
-        $val_draft = false;
-        while ($val_draft == false) {
-            $no_draft = uniqid() . rand();
-
-            $val_sql = "SELECT no_draft FROM trans.draft_ska WHERE no_draft = " . $this->db->escape($no_draft);
-            $result_val_sql = $this->db->query($val_sql);
-            if ($result_val_sql->num_rows() == 0) {
-                $val_draft = true;
-            } else {
-                $val_draft = false;
-            }
-        }
+        $no_draft = \Ramsey\Uuid\Uuid::uuid4()->toString();
 
         $draft_ska = array(
             'client_id' => $this->session->userdata('client_id'),
