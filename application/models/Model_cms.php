@@ -405,8 +405,13 @@ class Model_cms extends CI_Model
         $messtypechanel = $arrPost['messtype-chanel[]'];
 
         // client ref document
-        $arrRefDocumentName             = $arrPost['refDocumentName[]'];
-        $arridfiletype                  = $arrPost['fileExtensionId[]'];
+        $arrRefDocumentName     = isset($arrPost['refDocumentName[]']) ? $arrPost['refDocumentName[]'] : [];
+        $arridfiletype          = isset($arrPost['fileExtensionId[]']) ? $arrPost['fileExtensionId[]'] : [];
+
+        if (!is_array($arrRefDocumentName)) {
+            $arrRefDocumentName = [$arrRefDocumentName];
+            $arridfiletype      = [$arridfiletype];
+        }
 
         $this->db->trans_begin();
         if ($updated == 1) {
@@ -510,7 +515,7 @@ class Model_cms extends CI_Model
                 }
             }
 
-            if (is_array($arrRefDocumentName)) {
+            if (sizeof($arrRefDocumentName) > 0) {
                 foreach ($arrRefDocumentName as $key => $value) {
                     $arrayInsertRefDoc = array(
                         'client_id'  => $id_client,
@@ -521,15 +526,6 @@ class Model_cms extends CI_Model
                     );
                     $this->db->insert('profile.client_refdokumens', $arrayInsertRefDoc);
                 }
-            } else {
-                $arrayInsertRefDoc = array(
-                    'client_id'  => $id_client,
-                    'refdokumen_name'  => $arrRefDocumentName,
-                    'message_type_id'  => $arridfiletype,
-                    'created_at' => date('Y-m-d H:i:s'),
-                    'created_by' => $this->session->userdata('username'),
-                );
-                $this->db->insert('profile.client_refdokumens', $arrayInsertRefDoc);
             }
         } else {
             $arrayInsertProfile = array(
