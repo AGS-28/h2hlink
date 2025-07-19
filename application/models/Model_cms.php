@@ -164,7 +164,7 @@ class Model_cms extends CI_Model
         $sql_total     = ' select a.*,b.package_name 
                             from profile.clients a
                             left join referensi.package b on b.id = a.package_id 
-                        WHERE 1=1 ' . $addSql . ' AND a.is_deleted = ' . $this->db->escape('f') . ';';
+                        WHERE 1=1 ' . $addSql . ' AND a.deleted_at is null ;';
 
         $result_total     = $this->db->query($sql_total);
         $banyak         = $result_total->num_rows();
@@ -173,7 +173,7 @@ class Model_cms extends CI_Model
             $sql = 'select a.*,b.package_name 
                         from profile.clients a
                         left join referensi.package b on b.id = a.package_id 
-                    WHERE 1=1 ' . $addSql . ' AND a.is_deleted = ' . $this->db->escape('f') . ' 
+                    WHERE 1=1 ' . $addSql . ' AND a.deleted_at is null 
                     order by a.id ASC 
                     LIMIT ' . $length . ' OFFSET ' . $start . ';';
             $result         = $this->db->query($sql);
@@ -427,7 +427,7 @@ class Model_cms extends CI_Model
                 'handphone_no'      => $hp,
                 'telephone_no'      => $tlp,
                 'is_active'         => 't',
-                'is_deleted'        => 'f',
+                'deleted_at'        => date('Y-m-d H:i:s'),
                 'validate'          => $startdate,
                 'valid_until'       => $enddate,
                 'package_id'        => $package_type,
@@ -539,7 +539,7 @@ class Model_cms extends CI_Model
                 'handphone_no'      => $hp,
                 'telephone_no'      => $tlp,
                 'is_active'         => 't',
-                'is_deleted'        => 'f',
+                'deleted_at'        => date('Y-m-d H:i:s'),
                 'validate'          => $startdate,
                 'valid_until'       => $enddate,
                 'package_id'        => $package_type,
